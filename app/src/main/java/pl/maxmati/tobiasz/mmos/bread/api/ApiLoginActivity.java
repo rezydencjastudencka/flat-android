@@ -1,4 +1,4 @@
-package pl.maxmati.tobiasz.mmos.bread;
+package pl.maxmati.tobiasz.mmos.bread.api;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,31 +16,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
-import pl.maxmati.tobiasz.mmos.bread.api.BreadManager;
-import pl.maxmati.tobiasz.mmos.bread.api.session.InvalidPasswordException;
-import pl.maxmati.tobiasz.mmos.bread.api.Session;
-import pl.maxmati.tobiasz.mmos.bread.api.session.AuthenticationException;
-import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
-import pl.maxmati.tobiasz.mmos.bread.api.session.UserNotFoundException;
-
+import pl.maxmati.tobiasz.mmos.bread.R;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class ApiLoginActivity extends ActionBarActivity {
+public abstract class ApiLoginActivity extends ActionBarActivity {
     private static final String TAG = "ApiLoginActivity";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    protected AsyncTask<Void, Void, Boolean> mAuthTask = null;
 
     // UI references.
-    private EditText mUsernameView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    protected EditText mUsernameView;
+    protected EditText mPasswordView;
+    protected View mProgressView;
+    protected View mLoginFormView;
+
+    protected abstract AsyncTask<Void, Void, Boolean> getLoginTask(String username, String password);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +104,7 @@ public class ApiLoginActivity extends ActionBarActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
+            mAuthTask = getLoginTask(username, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -119,7 +113,7 @@ public class ApiLoginActivity extends ActionBarActivity {
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
+    protected void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -148,61 +142,6 @@ public class ApiLoginActivity extends ActionBarActivity {
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mUsername;
-        private final String mPassword;
-
-        private AuthenticationException loginException;
-
-        UserLoginTask(String username, String password) {
-            mUsername = username;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                APIConnector apiConnector = new APIConnector("http://api.flat.maxmati.pl:8888/", mUsername, mPassword);
-                Log.d(TAG, "Got " + BreadManager.get(apiConnector) + " breads");
-            } catch (AuthenticationException e) {
-                loginException = e;
-                return null;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean result) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (result != null) {
-                finish();
-            } else {
-                if(loginException instanceof UserNotFoundException) {
-                    mUsernameView.setError(getString(R.string.error_invalid_username));
-                    mUsernameView.requestFocus();
-                } else if(loginException instanceof InvalidPasswordException) {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
-                } else {
-                    Log.e(TAG, "Session creation failed: " + loginException.getMessage(), loginException);
-                }
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
         }
     }
 }

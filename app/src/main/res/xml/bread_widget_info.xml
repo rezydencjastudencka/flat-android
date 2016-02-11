@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="pl.maxmati.tobiasz.mmos.bread.ApiLoginActivity"
+    android:configure="pl.maxmati.tobiasz.mmos.bread.widget.BreadWidgetConfigure"
     android:initialKeyguardLayout="@layout/bread_widget"
     android:initialLayout="@layout/bread_widget"
     android:minHeight="40dp"
