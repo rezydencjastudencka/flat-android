@@ -46,7 +46,7 @@ public class APIConnector {
         if(request.getCustomResponseErrorHandler() != null)
             requestRestTemplate.setErrorHandler(request.getCustomResponseErrorHandler());
 
-        Log.d(TAG, "Rest exchange: " + fullUri);
+        Log.d(TAG, "REST exchange: " + fullUri);
         return requestRestTemplate.exchange(fullUri, request.getMethod(), buildHttpEntity(request.getData(), requestHeaders), responseType);
     }
 

@@ -56,10 +56,13 @@ public class SessionManager {
         } catch (JSONException e) {
             throw new AuthenticationException("Failed do create JSON request", e);
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND))
+            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                Log.d(TAG, "User not found");
                 throw new UserNotFoundException(e);
-            if (e.getStatusCode().equals(HttpStatus.FORBIDDEN))
+            } if (e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
+                Log.d(TAG, "Invalid password");
                 throw new InvalidPasswordException(e);
+            }
 
             throw new AuthenticationException("Got unexpected response during session creation", e);
         }
