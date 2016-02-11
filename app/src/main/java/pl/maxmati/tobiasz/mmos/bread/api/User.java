@@ -1,12 +1,11 @@
 package pl.maxmati.tobiasz.mmos.bread.api;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by mmos on 10.02.16.
  * @author mmos
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class User {
     private String name;
     private String room;

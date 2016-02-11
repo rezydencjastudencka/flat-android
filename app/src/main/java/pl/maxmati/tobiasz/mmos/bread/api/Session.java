@@ -13,11 +13,11 @@ public class Session {
         this.sessionCookie = sessionCookie;
     }
 
-    @Override
-    public String toString() {
-        return "Session{" +
-                "user=" + user +
-                ", sessionCookie='" + sessionCookie + '\'' +
-                '}';
+    public User getUser() {
+        return user;
+    }
+
+    public String getSessionCookie() {
+        return sessionCookie;
     }
 }

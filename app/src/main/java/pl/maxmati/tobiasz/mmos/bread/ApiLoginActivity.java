@@ -17,11 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import pl.maxmati.tobiasz.mmos.bread.api.InvalidPasswordException;
+import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
+import pl.maxmati.tobiasz.mmos.bread.api.BreadManager;
+import pl.maxmati.tobiasz.mmos.bread.api.session.InvalidPasswordException;
 import pl.maxmati.tobiasz.mmos.bread.api.Session;
-import pl.maxmati.tobiasz.mmos.bread.api.SessionException;
-import pl.maxmati.tobiasz.mmos.bread.api.SessionManager;
-import pl.maxmati.tobiasz.mmos.bread.api.UserNotFoundException;
+import pl.maxmati.tobiasz.mmos.bread.api.session.AuthenticationException;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
+import pl.maxmati.tobiasz.mmos.bread.api.session.UserNotFoundException;
 
 
 /**
@@ -153,12 +155,12 @@ public class ApiLoginActivity extends ActionBarActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Session> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mUsername;
         private final String mPassword;
 
-        private SessionException loginException;
+        private AuthenticationException loginException;
 
         UserLoginTask(String username, String password) {
             mUsername = username;
@@ -166,17 +168,19 @@ public class ApiLoginActivity extends ActionBarActivity {
         }
 
         @Override
-        protected Session doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             try {
-                return SessionManager.create(mUsername, mPassword);
-            } catch (SessionException e) {
+                APIConnector apiConnector = new APIConnector("http://api.flat.maxmati.pl:8888/", mUsername, mPassword);
+                Log.d(TAG, "Got " + BreadManager.get(apiConnector) + " breads");
+            } catch (AuthenticationException e) {
                 loginException = e;
                 return null;
             }
+            return true;
         }
 
         @Override
-        protected void onPostExecute(final Session result) {
+        protected void onPostExecute(final Boolean result) {
             mAuthTask = null;
             showProgress(false);
 

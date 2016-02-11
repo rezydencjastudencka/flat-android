@@ -24,8 +24,6 @@ android {
     packagingOptions {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/license.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
     }
 }
 
@@ -40,5 +38,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:19.1.0'
     compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.1-1'
+    compile 'com.google.code.gson:gson:2.5'
 }
