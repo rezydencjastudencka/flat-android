@@ -1,4 +1,4 @@
-package pl.maxmati.tobiasz.mmos.bread.api;
+package pl.maxmati.tobiasz.mmos.bread.api.session;
 
 
 /**
@@ -6,12 +6,14 @@ package pl.maxmati.tobiasz.mmos.bread.api;
  * @author mmos
  */
 
-public class User {
+public class UserRecord {
     private String name;
     private String room;
     private int id;
     private String createdAt;
     private String updatedAt;
+
+    private String password;
 
     public String getName() {
         return name;
@@ -53,9 +55,17 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
-        return "User{" +
+        return "UserRecord{" +
                 "name='" + name + '\'' +
                 ", room='" + room + '\'' +
                 ", id=" + id +
