@@ -15,4 +15,9 @@
     <!-- See: http://www.wykop.pl/wpis/16479039/coolstory-heheszki-mieszkam-z-dziewczyna-mamy-kota/ -->
     <string name="notification_title">Drodzu ludzia</string>
     <string name="notification_body">nie maciu chlebo, kupujcia - Android</string>
+
+    <!-- Strings related to resource count change -->
+    <string name="title_activity_resource_update">Aktualizacja ilości chleba</string>
+    <string name="decrease_resource_switch_label">Zmniejsz ilość</string>
+    <string name="update_button_label">Aktualizuj</string>
 </resources>

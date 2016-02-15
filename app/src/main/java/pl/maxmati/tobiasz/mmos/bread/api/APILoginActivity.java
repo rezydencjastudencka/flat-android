@@ -3,11 +3,12 @@ package pl.maxmati.tobiasz.mmos.bread.api;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,8 +22,8 @@ import pl.maxmati.tobiasz.mmos.bread.R;
 /**
  * A login screen that offers login via email/password.
  */
-public abstract class ApiLoginActivity extends ActionBarActivity {
-    private static final String TAG = "ApiLoginActivity";
+public abstract class APILoginActivity extends Activity {
+    private static final String TAG = "APILoginActivity";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -40,6 +41,11 @@ public abstract class ApiLoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "Activity created");
+
+        setResult(RESULT_CANCELED);
+
         setContentView(R.layout.activity_api_login);
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
@@ -68,11 +74,6 @@ public abstract class ApiLoginActivity extends ActionBarActivity {
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;

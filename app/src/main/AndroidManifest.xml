@@ -27,12 +27,15 @@
 
         <activity
             android:name=".widget.BreadWidgetConfigure"
-            android:label="@string/title_activity_api_login"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/title_activity_api_login">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".widget.BreadWidgetUpdateActivity"
+            android:label="@string/title_activity_resource_update"/>
     </application>
 
 </manifest>
