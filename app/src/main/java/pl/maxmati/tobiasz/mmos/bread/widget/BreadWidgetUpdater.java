@@ -17,17 +17,20 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
 
 import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.mmos.bread.api.APIAuthActivity;
 import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
 import pl.maxmati.tobiasz.mmos.bread.api.resource.ResourceManager;
 import pl.maxmati.tobiasz.mmos.bread.api.resource.ResourceUpdateActivity;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionExpiredException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 
 public class BreadWidgetUpdater extends Service {
     private static final String TAG = "BreadWidgetUpdater";
+
+    public static final String EXTRA_RESOURCE_COUNT = "resourceCount";
 
     private ServiceHandler mServiceHandler;
 
@@ -45,14 +48,19 @@ public class BreadWidgetUpdater extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Message msg = mServiceHandler.obtainMessage();
-        msg.arg1 = startId;
-        mServiceHandler.sendMessage(msg);
-
+        sendUpdateMessage(intent, startId);
         return START_STICKY;
     }
 
-    private void updateNotification(int breadCount) {
+    private void sendUpdateMessage(Intent intent, int startId) {
+        Message msg = mServiceHandler.obtainMessage();
+        msg.arg1 = startId;
+        if(intent != null && intent.hasExtra(EXTRA_RESOURCE_COUNT))
+            msg.obj = intent.getIntExtra(EXTRA_RESOURCE_COUNT, 0);
+        mServiceHandler.sendMessage(msg);
+    }
+
+    private void updateMissingNotification(int breadCount) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context
                 .NOTIFICATION_SERVICE);
         Notification.Builder mBuilder;
@@ -65,15 +73,15 @@ public class BreadWidgetUpdater extends Service {
 
         mBuilder = new Notification.Builder(this).setPriority(Notification.PRIORITY_MAX)
                 .setOngoing(true).setSmallIcon(R.drawable.bread).setContentTitle
-                        (getString(R.string.notification_title)).setContentText(getString(R.string.notification_body));
+                        (getString(R.string.notification_title_missing)).setContentText(
+                        getString(R.string.notification_content_missing));
 
         Log.d(TAG, "Creating notification");
         mNotificationManager.notify(0, mBuilder.build());
     }
 
     private void updateWidget(int breadCount) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        appWidgetManager.updateAppWidget(new ComponentName(this, BreadWidget.class), buildViews(breadCount));
+        setWidgetsViews(buildViews(breadCount));
     }
 
     private RemoteViews buildViews(int breadCount) {
@@ -91,13 +99,50 @@ public class BreadWidgetUpdater extends Service {
     }
 
     private int getBreadCount() throws SessionException {
-        APIConnector apiConnector = new APIConnector(SessionManager.restoreSession(BreadWidgetUpdater.this));
+        APIConnector apiConnector = new APIConnector(SessionManager.restoreSession(
+                BreadWidgetUpdater.this));
         try {
             return ResourceManager.get(apiConnector, BreadWidget.RESOURCE_NAME);
         } catch (HttpClientErrorException e) {
             throw new SessionException("Cannot get bread count", e);
         }
     }
+
+    private void showAuthNotification() {
+        Notification.Builder notificationBuilder = new Notification.Builder(this);
+
+        notificationBuilder.setSmallIcon(R.drawable.bread);
+        notificationBuilder.setContentTitle(getString(R.string.notification_title_authentication))
+                .setContentText(getString(R.string.notification_content_authentication));
+        // TODO: use for >= LOLLIPOP
+        // notificationBuilder.setCategory(Notification.CATEGORY_ERROR);
+
+        notificationBuilder.setContentIntent(getReauthPendingIntent());
+
+        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(0,
+                notificationBuilder.build());
+    }
+
+    private RemoteViews buildAuthViews() {
+        RemoteViews views = new RemoteViews(getPackageName(), R.layout.bread_widget);
+        views.setTextViewText(R.id.breadCounter, getString(R.string.widget_missing_placeholder));
+        views.setOnClickPendingIntent(R.id.imageButton, getReauthPendingIntent());
+        return views;
+    }
+
+    private void setWidgetsViews(RemoteViews remoteViews) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        appWidgetManager.updateAppWidget(new ComponentName(this, BreadWidget.class), remoteViews);
+    }
+
+    private PendingIntent getReauthPendingIntent() {
+        Intent apiAuthIntent = new Intent(this, APIAuthActivity.class);
+        apiAuthIntent.putExtra(APIAuthActivity.EXTRA_AUTH_NOTIFICATION_ID, 0);
+        apiAuthIntent.putExtra(APIAuthActivity.EXTRA_AUTH_SERVICE_INTENT, new Intent(this,
+                BreadWidgetUpdater.class));
+        return PendingIntent.getActivity(this, 0, apiAuthIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -111,14 +156,18 @@ public class BreadWidgetUpdater extends Service {
 
         @Override
         public void handleMessage(Message msg) {
-            Log.d(TAG, "Got update request");
+            Log.d(TAG, "Got update request (widget id: " + msg.arg1 + ")");
 
             try {
-                int breadCount = getBreadCount();
+                int breadCount = msg.obj != null ? (int) msg.obj : getBreadCount();
                 updateWidget(breadCount);
-                updateNotification(breadCount);
+                updateMissingNotification(breadCount);
+            } catch (SessionExpiredException e) {
+                Log.w(TAG, "Session expired, bringing authentication notification");
+                setWidgetsViews(buildAuthViews());
+                showAuthNotification();
             } catch (SessionException e) {
-                Log.d(TAG, "Update failed: " + e.getMessage());
+                Log.e(TAG, "Update failed: " + e.getMessage());
             }
 
             stopSelf(msg.arg1);

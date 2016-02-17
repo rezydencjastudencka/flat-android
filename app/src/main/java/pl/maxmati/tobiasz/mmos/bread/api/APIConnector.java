@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionExpiredException;
 
 /**
  * Created by mmos on 11.02.16.
@@ -21,34 +22,36 @@ public class APIConnector {
     private static final String TAG = "APIConnector";
     public static final String API_URI = "http://api.flat.maxmati.pl:8888/";
 
-    private Session session;
+    private final Session session;
 
     public APIConnector(Session session) throws SessionException {
         this.session = session;
     }
 
-    public <T> ResponseEntity<T> sendRequest(APIRequest request, Class<T> responseType) {
-        String fullUri = API_URI + request.getRequestPath();
-        HttpHeaders requestHeaders = null;
-        RestTemplate requestRestTemplate;
+    public <T> ResponseEntity<T> sendRequest(APIRequest request, Class<T> responseType) throws
+            SessionException {
+        final String fullUri;
+        final HttpHeaders requestHeaders;
+        final RestTemplate requestRestTemplate;
 
-        if(session != null) {
-            requestHeaders = new HttpHeaders();
-            session = SessionManager.check(session);
-            addSessionCookie(requestHeaders, session);
-        }
+        if(!SessionManager.check(session))
+            throw new SessionExpiredException("Session expired");
+
+        fullUri = API_URI + request.getRequestPath();
+        requestHeaders = new HttpHeaders();
+        SessionManager.addSessionCookieToHeader(requestHeaders, session);
 
         requestRestTemplate = new RestTemplate();
         requestRestTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
         if(request.getCustomResponseErrorHandler() != null)
             requestRestTemplate.setErrorHandler(request.getCustomResponseErrorHandler());
 
-        Log.d(TAG, "REST exchange: " + fullUri + "; " + request.getData());
+        Log.d(TAG, "REST exchange: " + fullUri);
         return requestRestTemplate.exchange(fullUri, request.getMethod(), buildHttpEntity(request.getData(), requestHeaders), responseType);
     }
 
     public static <T> HttpEntity<T> buildHttpEntity(T data, HttpHeaders customHeaders) {
-        HttpHeaders requestHeaders;
+        final HttpHeaders requestHeaders;
 
         if(customHeaders != null) {
             requestHeaders = customHeaders;
@@ -61,12 +64,6 @@ public class APIConnector {
             return new HttpEntity<>(requestHeaders);
         else
             return new HttpEntity<>(data, requestHeaders);
-    }
-
-    private void addSessionCookie(HttpHeaders headers, Session session) {
-        if(session == null)
-            return;
-        headers.add("Cookie", session.getSessionCookie());
     }
 
     public Session getSession() {

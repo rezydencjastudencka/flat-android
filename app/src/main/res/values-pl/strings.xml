@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Chleb</string>
-    <string name="title_activity_api_login">Logowanie</string>
 
     <!-- Strings related to login -->
+    <string name="title_activity_api_login">Logowanie</string>
     <string name="prompt_username">Nazwa użytkownika</string>
     <string name="prompt_password">Hasło</string>
     <string name="action_sign_in">Zaloguj się</string>
@@ -13,8 +13,8 @@
 
     <!-- Strings related to notification -->
     <!-- See: http://www.wykop.pl/wpis/16479039/coolstory-heheszki-mieszkam-z-dziewczyna-mamy-kota/ -->
-    <string name="notification_title">Drodzu ludzia</string>
-    <string name="notification_body">nie maciu chlebo, kupujcia - Android</string>
+    <string name="notification_title_missing">Drodzu ludzia</string>
+    <string name="notification_content_missing">nie maciu chlebo, kupujcia - Android</string>
 
     <!-- Strings related to resource count change -->
     <string name="title_activity_resource_update">Aktualizacja ilości chleba</string>

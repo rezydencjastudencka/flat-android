@@ -22,8 +22,11 @@ import pl.maxmati.tobiasz.mmos.bread.R;
 /**
  * A login screen that offers login via email/password.
  */
-public abstract class APILoginActivity extends Activity {
-    private static final String TAG = "APILoginActivity";
+public class APIAuthActivity extends Activity {
+    public static final String TAG = "APIAuthActivity";
+
+    public static final String EXTRA_AUTH_NOTIFICATION_ID = "authNotificationId";
+    public static final String EXTRA_AUTH_SERVICE_INTENT = "authCallback";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -36,15 +39,16 @@ public abstract class APILoginActivity extends Activity {
     protected View mProgressView;
     protected View mLoginFormView;
 
-    protected abstract AsyncTask<Void, Void, Boolean> getLoginTask(String username, String password);
+    protected AsyncTask<Void, Void, Boolean> getLoginTask(final String username, final String
+            password) {
+        return new LoginTask(this, username, password);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Log.d(TAG, "Activity created");
-
-        setResult(RESULT_CANCELED);
 
         setContentView(R.layout.activity_api_login);
         // Set up the login form.
@@ -145,5 +149,7 @@ public abstract class APILoginActivity extends Activity {
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
+
 }
 

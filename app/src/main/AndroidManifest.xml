@@ -26,16 +26,24 @@
             android:exported="true" />
 
         <activity
+            android:name=".api.APIAuthActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/title_activity_api_login" />
+
+        <activity
             android:name=".widget.BreadWidgetConfigure"
+            android:enabled="true"
             android:exported="true"
             android:label="@string/title_activity_api_login">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".widget.BreadWidgetUpdateActivity"
-            android:label="@string/title_activity_resource_update"/>
+            android:label="@string/title_activity_resource_update" />
     </application>
 
 </manifest>

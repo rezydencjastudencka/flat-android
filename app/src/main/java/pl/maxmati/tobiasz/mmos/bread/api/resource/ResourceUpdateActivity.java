@@ -12,9 +12,11 @@ import android.widget.Switch;
 import org.springframework.web.client.HttpClientErrorException;
 
 import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.mmos.bread.api.APIAuthActivity;
 import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionExpiredException;
 import pl.maxmati.tobiasz.mmos.bread.widget.BreadWidgetUpdater;
 
 public class ResourceUpdateActivity extends Activity {
@@ -52,33 +54,59 @@ public class ResourceUpdateActivity extends Activity {
         });
     }
 
-    private AsyncTask<Void, Void, Void> updateResourceCount() {
-        return new AsyncTask<Void, Void, Void>() {
+    private AsyncTask<Void, Void, Integer> updateResourceCount() {
+        return new AsyncTask<Void, Void, Integer>() {
             private int changeCount;
+            private boolean sessionExpired;
 
             @Override
             protected void onPreExecute() {
                 changeCount = ((NumberPicker) findViewById(R.id.countPicker)).getValue();
                 if(((Switch) findViewById(R.id.decreaseSwitch)).isChecked())
                     changeCount = -changeCount;
+                sessionExpired = false;
+                // TODO: add progress view
             }
 
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected Integer doInBackground(Void... voids) {
                 try {
                     APIConnector apiConnector = new APIConnector(SessionManager.restoreSession
                             (ResourceUpdateActivity.this));
                     int updatedCount = ResourceManager.update(apiConnector, resourceName, new
-                            ResourceUpdate(changeCount)); // FIXME: add extra passing updated count
-                    startService(new Intent(ResourceUpdateActivity.this, BreadWidgetUpdater.class));
+                            ResourceUpdate(changeCount));
+                    Intent updaterIntent = new Intent(ResourceUpdateActivity.this,
+                            BreadWidgetUpdater.class);
+                    updaterIntent.putExtra(BreadWidgetUpdater.EXTRA_RESOURCE_COUNT, updatedCount);
+                    startService(updaterIntent);
 
                     setResult(RESULT_OK);
                     finish();
-                } catch (SessionException | HttpClientErrorException e) {
+                } catch (SessionExpiredException e) {
+                    sessionExpired = true;
+                    Log.d(TAG, "Session expired, bringing authentication activity");
+                } catch (SessionException |
+                        HttpClientErrorException e) {
                     Log.e(TAG, "Resource count update failed: " + e.getMessage());
                 }
                 return null;
             }
+
+            @Override
+            protected void onPostExecute(Integer result) {
+                if(!sessionExpired)
+                    return;
+
+                startActivityForResult(new Intent(ResourceUpdateActivity.this, APIAuthActivity.class), 0);
+            }
         };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK) {
+            Log.d(TAG, "Authenticated, retrying update...");
+            updateResourceCount().execute();
+        }
     }
 }

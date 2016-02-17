@@ -1,6 +1,5 @@
 package pl.maxmati.tobiasz.mmos.bread.api;
 
-import pl.maxmati.tobiasz.mmos.bread.User;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
 
 /**
@@ -8,19 +7,12 @@ import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
  * @author mmos
  */
 public class Session {
-    private final User user;
     private final String sessionCookie;
 
-    public Session(User user, String sessionCookie) throws SessionException {
-        if(user == null || user.getName() == null || user.getPassword() == null)
-            throw new SessionException("Session requires credentials");
-
-        this.user = user;
+    public Session(String sessionCookie) throws SessionException {
+        if(sessionCookie == null)
+            throw new SessionException("Session requires session cookie");
         this.sessionCookie = sessionCookie;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public String getSessionCookie() {

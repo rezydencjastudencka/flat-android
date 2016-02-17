@@ -25,11 +25,13 @@ import pl.maxmati.tobiasz.mmos.bread.api.Session;
  */
 public class SessionManager {
     private static final String TAG = "SessionManager";
-    private static final String CREATE_URI = "session/create";
+
+    private static final String SESSION_PATH = "session";
+
+    private static final String CREATE_URI = SESSION_PATH + "/create";
+    private static final String CHECK_URI = SESSION_PATH + "/check";
 
     private static final String STORE_NAME = "SessionStore";
-    private static final String STORE_FIELD_NAME_USERNAME = "username";
-    private static final String STORE_FIELD_NAME_PASSWORD = "password";
     private static final String STORE_FIELD_NAME_SESSION_COOKIE = "sessionCookie";
 
     private SessionManager() {
@@ -57,7 +59,7 @@ public class SessionManager {
             Log.d(TAG, "Requesting new session");
             ResponseEntity<UserRecord> response = restTemplate.exchange(APIConnector.API_URI + CREATE_URI, HttpMethod.POST, entity, UserRecord.class);
 
-            session = new Session(new User(username, password), getCookie(response.getHeaders()));
+            session = new Session(getCookie(response.getHeaders()));
 
             return session;
         } catch (JSONException e) {
@@ -75,35 +77,45 @@ public class SessionManager {
         }
     }
 
-    public static Session check(Session session) { // TODO: implement
-        Log.w(TAG, "check() is stub method");
-        //updateStoredCookie();
-        return session;
+    public static boolean check(Session session) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        HttpEntity<String> httpEntity;
+
+        addSessionCookieToHeader(httpHeaders, session);
+        httpEntity = new HttpEntity<>(httpHeaders);
+
+        try {
+            restTemplate.exchange(APIConnector.API_URI + CHECK_URI, HttpMethod.GET, httpEntity,
+                    String.class, "");
+        } catch(HttpClientErrorException e) {
+            if(e.getStatusCode().equals(HttpStatus.NOT_FOUND))
+                return false;
+
+            Log.w(TAG, "Unhandled response from server during session check");
+            return false;
+        }
+        return true;
+    }
+
+    public static void addSessionCookieToHeader(HttpHeaders headers, Session session) {
+        headers.add("Cookie", session.getSessionCookie());
     }
 
     public static void storeSession(Context context, Session session) {
         SharedPreferences.Editor mPreferencesEditor = context.getSharedPreferences(STORE_NAME,
                 Context.MODE_PRIVATE).edit();
-        mPreferencesEditor.putString(STORE_FIELD_NAME_USERNAME, session.getUser().getName());
-        mPreferencesEditor.putString(STORE_FIELD_NAME_PASSWORD, session.getUser().getPassword());
         mPreferencesEditor.putString(STORE_FIELD_NAME_SESSION_COOKIE, session.getSessionCookie());
         mPreferencesEditor.apply();
     }
 
     public static Session restoreSession(Context context) throws SessionException {
         SharedPreferences store = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
-        try {
-            return new Session(new User(store.getString(STORE_FIELD_NAME_USERNAME, null),
-                    store.getString(STORE_FIELD_NAME_PASSWORD, null)), store.getString
-                    (STORE_FIELD_NAME_SESSION_COOKIE, null));
-        } catch (InvalidCredentialsException e) {
-            throw new SessionException("No valid session in store", e);
-        }
+        return new Session(store.getString(STORE_FIELD_NAME_SESSION_COOKIE, null));
     }
 
     public static boolean hasSessionInStore(Context context) {
         SharedPreferences store = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
-        return store.contains(STORE_FIELD_NAME_USERNAME) && store.contains
-                (STORE_FIELD_NAME_PASSWORD);
+        return store.contains(STORE_FIELD_NAME_SESSION_COOKIE);
     }
 }

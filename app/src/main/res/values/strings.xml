@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Bread</string>
-    <string name="title_activity_api_login">Sign in</string>
+
+    <string name="widget_missing_placeholder">\?</string>
 
     <!-- Strings related to login -->
+    <string name="title_activity_api_login">Sign in</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
@@ -11,12 +13,16 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
 
-    <!-- Strings related to notification -->
-    <string name="notification_title">We have no bread</string>
-    <string name="notification_body">Come get some</string>
+    <!-- Strings related to missing notification -->
+    <string name="notification_title_missing">We have no bread</string>
+    <string name="notification_content_missing">Come get some</string>
 
     <!-- Strings related to resource count change -->
     <string name="title_activity_resource_update">Update bread count</string>
     <string name="decrease_resource_switch_label">Decrease resource</string>
     <string name="update_button_label">Update</string>
+
+    <!-- Strings related to authentication notification -->
+    <string name="notification_title_authentication">The session has expired</string>
+    <string name="notification_content_authentication">Tap here to authenticate</string>
 </resources>

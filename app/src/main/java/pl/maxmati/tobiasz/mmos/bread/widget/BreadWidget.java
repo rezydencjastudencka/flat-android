@@ -14,13 +14,17 @@ public class BreadWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Intent updaterIntent;
+
         Log.d(TAG, "Update requested");
-        context.startService(new Intent(context, BreadWidgetUpdater.class));
+
+        updaterIntent = new Intent(context, BreadWidgetUpdater.class);
+        updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+        context.startService(updaterIntent);
     }
 
     @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        // FIXME: this is workaround, as onDisabled is not being called
+    public void onDisabled(Context context) {
         Log.d(TAG, "Widget disabled; canceling notifications");
         cancelNotifications(context);
     }
