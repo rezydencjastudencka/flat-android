@@ -63,21 +63,25 @@ public class BreadWidgetUpdater extends Service {
     private void updateMissingNotification(int breadCount) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context
                 .NOTIFICATION_SERVICE);
-        Notification.Builder mBuilder;
 
         if(breadCount > 0) {
             mNotificationManager.cancelAll();
             Log.d(TAG, "Removing notification");
             return;
         }
-
-        mBuilder = new Notification.Builder(this).setPriority(Notification.PRIORITY_MAX)
-                .setOngoing(true).setSmallIcon(R.drawable.bread).setContentTitle
-                        (getString(R.string.notification_title_missing)).setContentText(
-                        getString(R.string.notification_content_missing));
-
         Log.d(TAG, "Creating notification");
-        mNotificationManager.notify(0, mBuilder.build());
+        mNotificationManager.notify(0, getUpdateNotification());
+    }
+
+    private Notification getUpdateNotification() {
+        Notification.Builder mBuilder = new Notification.Builder(this);
+        mBuilder.setDefaults(Notification.DEFAULT_ALL);
+        mBuilder.setSmallIcon(R.drawable.bread);
+        mBuilder.setContentTitle(getString(R.string.notification_title_missing))
+                .setContentText(getString(R.string.notification_content_missing));
+        mBuilder.setPriority(Notification.PRIORITY_MAX).setOngoing(true);
+        mBuilder.setContentIntent(getUpdatePendingIntent());
+        return mBuilder.build();
     }
 
     private void updateWidget(int breadCount) {
@@ -86,16 +90,16 @@ public class BreadWidgetUpdater extends Service {
 
     private RemoteViews buildViews(int breadCount) {
         RemoteViews views = new RemoteViews(getPackageName(), R.layout.bread_widget);
-        Intent updateActivityIntent = new Intent(this, BreadWidgetUpdateActivity.class);
-
         views.setTextViewText(R.id.breadCounter, String.valueOf(breadCount));
-
-        updateActivityIntent.putExtra(ResourceUpdateActivity.RESOURCE_FIELD_NAME, "bread");
-
-        views.setOnClickPendingIntent(R.id.imageButton,
-                PendingIntent.getActivity(this, 0, updateActivityIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT));
+        views.setOnClickPendingIntent(R.id.imageButton, getUpdatePendingIntent());
         return views;
+    }
+
+    private PendingIntent getUpdatePendingIntent() {
+        Intent updateActivityIntent = new Intent(this, BreadWidgetUpdateActivity.class);
+        updateActivityIntent.putExtra(ResourceUpdateActivity.RESOURCE_FIELD_NAME, "bread");
+        return PendingIntent.getActivity(this, 0, updateActivityIntent, PendingIntent
+                .FLAG_UPDATE_CURRENT);
     }
 
     private int getBreadCount() throws SessionException {

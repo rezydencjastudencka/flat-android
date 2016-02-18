@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import pl.maxmati.tobiasz.mmos.bread.api.APIAuthActivity;
 import pl.maxmati.tobiasz.mmos.bread.api.LoginTask;
@@ -26,16 +27,23 @@ public class BreadWidgetConfigure extends APIAuthActivity {
         return new LoginTask(BreadWidgetConfigure.this, username, password) {
             @Override
             protected Boolean doInBackground(Void... voids) {
-                if(super.doInBackground(voids)) {
-                    startService(new Intent(BreadWidgetConfigure.this, BreadWidgetUpdater.class));
-                    return true;
-                }
-                return false;
+                Boolean loginSuccess = super.doInBackground(voids);
+                if(loginSuccess == null || !loginSuccess)
+                    return false;
+
+                startService(new Intent(BreadWidgetConfigure.this, BreadWidgetUpdater.class));
+                return true;
             }
 
             @Override
             protected void onPostExecute(Boolean success) {
+                if(success == null)
+                    return;
+
                 super.onPostExecute(success);
+
+                if(!success)
+                    return;
 
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
@@ -48,6 +56,8 @@ public class BreadWidgetConfigure extends APIAuthActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "Widget configuration activity created");
+
         Bundle extras;
 
         extras = getIntent().getExtras();
@@ -60,12 +70,14 @@ public class BreadWidgetConfigure extends APIAuthActivity {
             finish();
         }
 
-        super.onCreate(savedInstanceState);
 
-        // FIXME: this is not a solution, activity blinks
+        // FIXME: make this activity blank, start another from here
         if(SessionManager.hasSessionInStore(this)) {
+            Log.d(TAG, "Session already taken, leaving configuration activity");
             setResult(RESULT_OK);
             finish();
         }
+
+        super.onCreate(savedInstanceState);
     }
 }

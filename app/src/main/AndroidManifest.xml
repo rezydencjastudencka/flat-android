@@ -2,7 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pl.maxmati.tobiasz.mmos.bread">
 
+    <permission
+        android:name="pl.maxmati.tobiasz.mmos.bread.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- GCM related -->
+    <uses-permission android:name="pl.maxmati.tobiasz.mmos.bread.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +38,6 @@
             android:enabled="true"
             android:exported="true"
             android:label="@string/title_activity_api_login" />
-
         <activity
             android:name=".widget.BreadWidgetConfigure"
             android:enabled="true"
@@ -40,10 +47,40 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".widget.BreadWidgetUpdateActivity"
             android:label="@string/title_activity_resource_update" />
+
+        <!-- GCM related -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="pl.maxmati.tobiasz.mmos.bread.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".gcm.ListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".gcm.IDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".gcm.RegistrationIntentService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

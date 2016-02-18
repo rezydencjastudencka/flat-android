@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Chleb</string>
 
+    <string name="widget_missing_placeholder">\?</string>
+
     <!-- Strings related to login -->
     <string name="title_activity_api_login">Logowanie</string>
     <string name="prompt_username">Nazwa użytkownika</string>
@@ -20,4 +22,8 @@
     <string name="title_activity_resource_update">Aktualizacja ilości chleba</string>
     <string name="decrease_resource_switch_label">Zmniejsz ilość</string>
     <string name="update_button_label">Aktualizuj</string>
+
+    <!-- Strings related to authentication notification -->
+    <string name="notification_title_authentication">Sesja wygasła</string>
+    <string name="notification_content_authentication">Dotknij tutaj, aby się zalogować</string>
 </resources>

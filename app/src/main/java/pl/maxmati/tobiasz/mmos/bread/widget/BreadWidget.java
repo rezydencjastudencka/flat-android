@@ -7,10 +7,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
+import pl.maxmati.tobiasz.mmos.bread.gcm.RegistrationIntentService;
+
 public class BreadWidget extends AppWidgetProvider {
     public static final String RESOURCE_NAME = "bread";
 
     private static final String TAG = "BreadWidget";
+
+    @Override
+    public void onEnabled(Context context) {
+        Log.d(TAG, "onEnabled called, starting GCM register service, FIXME");
+        Intent intent = new Intent(context, RegistrationIntentService.class);
+        context.startService(intent);
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -27,11 +37,6 @@ public class BreadWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         Log.d(TAG, "Widget disabled; canceling notifications");
         cancelNotifications(context);
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
     }
 
     private void cancelNotifications(Context context) {
