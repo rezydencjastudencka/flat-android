@@ -17,8 +17,9 @@ public class BreadWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        Log.d(TAG, "onEnabled called, starting GCM register service, FIXME");
+        Log.d(TAG, "onEnabled called, starting GCM register service");
         Intent intent = new Intent(context, RegistrationIntentService.class);
+        intent.putExtra(RegistrationIntentService.EXTRA_TOPIC, "counter_bread");
         context.startService(intent);
     }
 
