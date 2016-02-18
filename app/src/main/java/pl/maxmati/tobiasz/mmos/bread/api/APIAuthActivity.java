@@ -149,7 +149,5 @@ public class APIAuthActivity extends Activity {
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
-
 }
 
