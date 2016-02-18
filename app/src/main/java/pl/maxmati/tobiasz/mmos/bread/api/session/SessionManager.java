@@ -15,9 +15,7 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import pl.maxmati.tobiasz.mmos.bread.User;
 import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
-import pl.maxmati.tobiasz.mmos.bread.api.Session;
 
 /**
  * Created by mmos on 10.02.16.
@@ -102,16 +100,23 @@ public class SessionManager {
         headers.add("Cookie", session.getSessionCookie());
     }
 
+    public static SharedPreferences getStore(Context context) {
+        return context.getApplicationContext().getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
+    }
+
     public static void storeSession(Context context, Session session) {
-        SharedPreferences.Editor mPreferencesEditor = context.getSharedPreferences(STORE_NAME,
-                Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor mPreferencesEditor = getStore(context).edit();
         mPreferencesEditor.putString(STORE_FIELD_NAME_SESSION_COOKIE, session.getSessionCookie());
         mPreferencesEditor.apply();
     }
 
     public static Session restoreSession(Context context) throws SessionException {
-        SharedPreferences store = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
-        return new Session(store.getString(STORE_FIELD_NAME_SESSION_COOKIE, null));
+        return new Session(getStore(context).getString(STORE_FIELD_NAME_SESSION_COOKIE, null));
+    }
+
+    public static void clearStore(Context context) {
+        getStore(context).edit().clear().apply();
+        Log.d(TAG, "Session store cleared");
     }
 
     public static boolean hasSessionInStore(Context context) {

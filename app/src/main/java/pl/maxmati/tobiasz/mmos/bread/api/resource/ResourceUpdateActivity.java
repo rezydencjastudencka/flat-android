@@ -35,6 +35,8 @@ public class ResourceUpdateActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "Creating activity");
+
         super.onCreate(savedInstanceState);
 
         setResult(RESULT_CANCELED);

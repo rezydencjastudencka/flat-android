@@ -1,6 +1,4 @@
-package pl.maxmati.tobiasz.mmos.bread.api;
-
-import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
+package pl.maxmati.tobiasz.mmos.bread.api.session;
 
 /**
  * Created by mmos on 10.02.16.

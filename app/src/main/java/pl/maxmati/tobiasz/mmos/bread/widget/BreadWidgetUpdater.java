@@ -66,10 +66,10 @@ public class BreadWidgetUpdater extends Service {
 
         if(breadCount > 0) {
             mNotificationManager.cancelAll();
-            Log.d(TAG, "Removing notification");
+            Log.d(TAG, "Resource number positive; cancelling all notifications");
             return;
         }
-        Log.d(TAG, "Creating notification");
+        Log.d(TAG, "Creating missing notification");
         mNotificationManager.notify(0, getUpdateNotification());
     }
 
@@ -98,6 +98,7 @@ public class BreadWidgetUpdater extends Service {
     private PendingIntent getUpdatePendingIntent() {
         Intent updateActivityIntent = new Intent(this, BreadWidgetUpdateActivity.class);
         updateActivityIntent.putExtra(ResourceUpdateActivity.RESOURCE_FIELD_NAME, "bread");
+        updateActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return PendingIntent.getActivity(this, 0, updateActivityIntent, PendingIntent
                 .FLAG_UPDATE_CURRENT);
     }
@@ -123,6 +124,7 @@ public class BreadWidgetUpdater extends Service {
 
         notificationBuilder.setContentIntent(getReauthPendingIntent());
 
+        Log.d(TAG, "Bringing authentication notification");
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(0,
                 notificationBuilder.build());
     }
@@ -147,7 +149,6 @@ public class BreadWidgetUpdater extends Service {
         return PendingIntent.getActivity(this, 0, apiAuthIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -162,14 +163,21 @@ public class BreadWidgetUpdater extends Service {
         public void handleMessage(Message msg) {
             Log.d(TAG, "Got update request (widget id: " + msg.arg1 + ")");
 
+            if(!SessionManager.hasSessionInStore(BreadWidgetUpdater.this)) {
+                Log.w(TAG, "Got update, but no session in store; ignoring update");
+                stopSelf();
+                return;
+            }
+
             try {
                 int breadCount = msg.obj != null ? (int) msg.obj : getBreadCount();
                 updateWidget(breadCount);
                 updateMissingNotification(breadCount);
             } catch (SessionExpiredException e) {
-                Log.w(TAG, "Session expired, bringing authentication notification");
+                Log.w(TAG, "The session has expired");
                 setWidgetsViews(buildAuthViews());
                 showAuthNotification();
+                // TODO: cancel GCM updates till success authentication
             } catch (SessionException e) {
                 Log.e(TAG, "Update failed: " + e.getMessage());
             }

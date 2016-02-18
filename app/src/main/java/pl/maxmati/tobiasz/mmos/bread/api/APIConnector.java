@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import pl.maxmati.tobiasz.mmos.bread.api.session.Session;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionExpiredException;

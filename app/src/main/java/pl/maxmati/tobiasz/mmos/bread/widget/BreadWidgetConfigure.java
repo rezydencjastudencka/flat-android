@@ -1,6 +1,7 @@
 package pl.maxmati.tobiasz.mmos.bread.widget;
 
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import pl.maxmati.tobiasz.mmos.bread.api.APIAuthActivity;
 import pl.maxmati.tobiasz.mmos.bread.api.LoginTask;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
+import pl.maxmati.tobiasz.mmos.bread.gcm.RegistrationIntentService;
 
 /**
  * Created by mmos on 11.02.16.
@@ -31,7 +33,9 @@ public class BreadWidgetConfigure extends APIAuthActivity {
                 if(loginSuccess == null || !loginSuccess)
                     return false;
 
-                startService(new Intent(BreadWidgetConfigure.this, BreadWidgetUpdater.class));
+                BreadWidget.updateCounter(BreadWidgetConfigure.this);
+                BreadWidget.subscribeCounterUpdates(BreadWidgetConfigure.this);
+
                 return true;
             }
 
@@ -69,7 +73,6 @@ public class BreadWidgetConfigure extends APIAuthActivity {
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
         }
-
 
         // FIXME: make this activity blank, start another from here
         if(SessionManager.hasSessionInStore(this)) {

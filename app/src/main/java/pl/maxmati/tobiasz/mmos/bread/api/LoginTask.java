@@ -10,6 +10,7 @@ import android.util.Log;
 import pl.maxmati.tobiasz.mmos.bread.R;
 import pl.maxmati.tobiasz.mmos.bread.api.session.AuthenticationException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.InvalidPasswordException;
+import pl.maxmati.tobiasz.mmos.bread.api.session.Session;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 import pl.maxmati.tobiasz.mmos.bread.api.session.UserNotFoundException;
