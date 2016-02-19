@@ -46,16 +46,19 @@ public class SessionManager {
         return headers.get("Set-cookie").get(0).split(";")[0];
     }
 
-    public static Session create(String username, String password) throws SessionException {
+    public static Session create(String apiUri, String username, String password)
+            throws SessionException {
         try {
-            HttpEntity<String> entity = APIConnector.buildHttpEntity(buildCreateSessionJson(username, password).toString(), null);
+            HttpEntity<String> entity = APIConnector.buildHttpEntity(buildCreateSessionJson(username,
+                    password).toString(), null);
             RestTemplate restTemplate = new RestTemplate();
             Session session;
 
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
             Log.d(TAG, "Requesting new session");
-            ResponseEntity<UserRecord> response = restTemplate.exchange(APIConnector.API_URI + CREATE_URI, HttpMethod.POST, entity, UserRecord.class);
+            ResponseEntity<UserRecord> response = restTemplate.exchange(apiUri + CREATE_URI,
+                    HttpMethod.POST, entity, UserRecord.class);
 
             session = new Session(getCookie(response.getHeaders()));
 
@@ -75,7 +78,7 @@ public class SessionManager {
         }
     }
 
-    public static boolean check(Session session) {
+    public static boolean check(String apiUri, Session session) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         HttpEntity<String> httpEntity;
@@ -84,8 +87,8 @@ public class SessionManager {
         httpEntity = new HttpEntity<>(httpHeaders);
 
         try {
-            restTemplate.exchange(APIConnector.API_URI + CHECK_URI, HttpMethod.GET, httpEntity,
-                    String.class, "");
+            restTemplate.exchange(apiUri + CHECK_URI, HttpMethod.GET,
+                    httpEntity, String.class, "");
         } catch(HttpClientErrorException e) {
             if(e.getStatusCode().equals(HttpStatus.NOT_FOUND))
                 return false;

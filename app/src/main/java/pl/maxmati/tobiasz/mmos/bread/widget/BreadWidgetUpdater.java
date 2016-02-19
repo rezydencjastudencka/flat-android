@@ -104,7 +104,7 @@ public class BreadWidgetUpdater extends Service {
     }
 
     private int getBreadCount() throws SessionException {
-        APIConnector apiConnector = new APIConnector(SessionManager.restoreSession(
+        APIConnector apiConnector = new APIConnector(this, SessionManager.restoreSession(
                 BreadWidgetUpdater.this));
         try {
             return ResourceManager.get(apiConnector, BreadWidget.RESOURCE_NAME);

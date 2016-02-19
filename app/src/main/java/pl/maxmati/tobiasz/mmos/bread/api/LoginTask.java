@@ -44,7 +44,8 @@ public class LoginTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-            Session session = SessionManager.create(username, password);
+            Session session = SessionManager.create(APIConnector.getAPIUri(apiAuthActivity),
+                    username, password);
             SessionManager.storeSession(apiAuthActivity.getApplicationContext(), session);
         } catch (SessionException e) {
             sessionException = e;

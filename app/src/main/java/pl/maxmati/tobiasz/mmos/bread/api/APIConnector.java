@@ -1,5 +1,6 @@
 package pl.maxmati.tobiasz.mmos.bread.api;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.springframework.http.HttpEntity;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import pl.maxmati.tobiasz.mmos.bread.R;
 import pl.maxmati.tobiasz.mmos.bread.api.session.Session;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
@@ -21,12 +23,13 @@ import pl.maxmati.tobiasz.mmos.bread.api.session.SessionExpiredException;
  */
 public class APIConnector {
     private static final String TAG = "APIConnector";
-    public static final String API_URI = "http://api.flat.maxmati.pl:8888/";
 
+    private final String apiUri;
     private final Session session;
 
-    public APIConnector(Session session) throws SessionException {
+    public APIConnector(Context context, Session session) throws SessionException {
         this.session = session;
+        this.apiUri = getAPIUri(context);
     }
 
     public <T> ResponseEntity<T> sendRequest(APIRequest request, Class<T> responseType) throws
@@ -35,10 +38,10 @@ public class APIConnector {
         final HttpHeaders requestHeaders;
         final RestTemplate requestRestTemplate;
 
-        if(!SessionManager.check(session))
+        if(!SessionManager.check(apiUri, session))
             throw new SessionExpiredException("Session expired");
 
-        fullUri = API_URI + request.getRequestPath();
+        fullUri = apiUri + request.getRequestPath();
         requestHeaders = new HttpHeaders();
         SessionManager.addSessionCookieToHeader(requestHeaders, session);
 
@@ -69,5 +72,9 @@ public class APIConnector {
 
     public Session getSession() {
         return session;
+    }
+
+    public static String getAPIUri(Context context) {
+        return context.getString(R.string.api_uri);
     }
 }

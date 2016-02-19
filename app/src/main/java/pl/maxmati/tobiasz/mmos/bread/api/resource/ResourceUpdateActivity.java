@@ -83,8 +83,8 @@ public class ResourceUpdateActivity extends Activity {
             @Override
             protected Integer doInBackground(Void... voids) {
                 try {
-                    APIConnector apiConnector = new APIConnector(SessionManager.restoreSession
-                            (ResourceUpdateActivity.this));
+                    APIConnector apiConnector = new APIConnector(ResourceUpdateActivity.this,
+                            SessionManager.restoreSession(ResourceUpdateActivity.this));
                     int updatedCount = ResourceManager.update(apiConnector, resourceName, new
                             ResourceUpdate(changeCount));
                     Intent updaterIntent = new Intent(ResourceUpdateActivity.this,
