@@ -1,4 +1,4 @@
-package pl.maxmati.tobiasz.mmos.bread.api.session;
+package pl.maxmati.tobiasz.mmos.bread.api.user;
 
 
 /**

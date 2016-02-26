@@ -1,8 +1,12 @@
 package pl.maxmati.tobiasz.mmos.bread.api;
 
+import com.google.gson.Gson;
+
 import org.json.JSONObject;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResponseErrorHandler;
+
+import java.util.Objects;
 
 /**
  * Created by mmos on 11.02.16.
@@ -12,10 +16,11 @@ import org.springframework.web.client.ResponseErrorHandler;
 public class APIRequest {
     private final HttpMethod method;
     private final String requestPath;
-    private final JSONObject data;
+    private final Object data;
     private final ResponseErrorHandler customResponseErrorHandler;
 
-    public APIRequest(HttpMethod method, String requestPath, JSONObject data, ResponseErrorHandler customResponseErrorHandler) {
+    public APIRequest(HttpMethod method, String requestPath, Object data, ResponseErrorHandler
+            customResponseErrorHandler) {
         this.method = method;
         this.requestPath = requestPath;
         this.data = data;
@@ -30,7 +35,7 @@ public class APIRequest {
         return requestPath;
     }
 
-    public JSONObject getData() {
+    public Object getData() {
         return data;
     }
 

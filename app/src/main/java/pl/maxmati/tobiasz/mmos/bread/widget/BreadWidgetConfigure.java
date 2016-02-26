@@ -1,16 +1,17 @@
 package pl.maxmati.tobiasz.mmos.bread.widget;
 
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-import pl.maxmati.tobiasz.mmos.bread.api.APIAuthActivity;
-import pl.maxmati.tobiasz.mmos.bread.api.LoginTask;
+import pl.maxmati.tobiasz.mmos.bread.activity.APIAuthActivity;
+import pl.maxmati.tobiasz.mmos.bread.activity.LoginTask;
+import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
-import pl.maxmati.tobiasz.mmos.bread.gcm.RegistrationIntentService;
+import pl.maxmati.tobiasz.mmos.bread.api.user.UserManager;
 
 /**
  * Created by mmos on 11.02.16.
@@ -35,6 +36,13 @@ public class BreadWidgetConfigure extends APIAuthActivity {
 
                 BreadWidget.updateCounter(BreadWidgetConfigure.this);
                 BreadWidget.subscribeCounterUpdates(BreadWidgetConfigure.this);
+                try {
+                    UserManager.storeUsers(BreadWidgetConfigure.this, UserManager.get(new
+                            APIConnector(BreadWidgetConfigure.this, session)));
+                } catch (SessionException e) {
+                    Log.e(TAG, "User store failed: " + e.getMessage());
+                    return false;
+                }
 
                 return true;
             }

@@ -1,4 +1,4 @@
-package pl.maxmati.tobiasz.mmos.bread.api;
+package pl.maxmati.tobiasz.mmos.bread.activity;
 
 import android.app.Activity;
 import android.app.NotificationManager;
@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
 import pl.maxmati.tobiasz.mmos.bread.api.session.AuthenticationException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.InvalidPasswordException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.Session;
@@ -33,7 +34,8 @@ public class LoginTask extends AsyncTask<Void, Void, Boolean> {
     private final String username;
     private final String password;
 
-    SessionException sessionException;
+    protected SessionException sessionException;
+    protected Session session;
 
     public LoginTask(APIAuthActivity apiAuthActivity, String username, String password) {
         this.apiAuthActivity = apiAuthActivity;
@@ -44,7 +46,7 @@ public class LoginTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-            Session session = SessionManager.create(APIConnector.getAPIUri(apiAuthActivity),
+            session = SessionManager.create(APIConnector.getAPIUri(apiAuthActivity),
                     username, password);
             SessionManager.storeSession(apiAuthActivity.getApplicationContext(), session);
         } catch (SessionException e) {

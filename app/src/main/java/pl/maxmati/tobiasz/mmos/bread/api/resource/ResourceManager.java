@@ -16,7 +16,6 @@ public class ResourceManager {
     private static final String RESOURCE_PATH = "counter/";
     private static final String RESOURCE_UPDATE_ACTION = "/modify";
 
-
     public static int get(APIConnector apiConnector, String resourceName) throws SessionException {
         ResponseEntity<ResourceStatus> response = apiConnector.sendRequest(new APIRequest
                 (HttpMethod.GET, RESOURCE_PATH + resourceName, null, null), ResourceStatus.class);

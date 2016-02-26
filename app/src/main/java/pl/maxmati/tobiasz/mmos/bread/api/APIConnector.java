@@ -3,11 +3,14 @@ package pl.maxmati.tobiasz.mmos.bread.api;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import pl.maxmati.tobiasz.mmos.bread.R;
@@ -51,10 +54,14 @@ public class APIConnector {
             requestRestTemplate.setErrorHandler(request.getCustomResponseErrorHandler());
 
         Log.d(TAG, "REST exchange: " + fullUri);
-        return requestRestTemplate.exchange(fullUri, request.getMethod(), buildHttpEntity(request.getData(), requestHeaders), responseType);
+        try {
+            return requestRestTemplate.exchange(fullUri, request.getMethod(), buildHttpEntity(request.getData(), requestHeaders), responseType);
+        } catch (RestClientException e) {
+            throw new SessionException("REST exchange failed: " + e.getMessage());
+        }
     }
 
-    public static <T> HttpEntity<T> buildHttpEntity(T data, HttpHeaders customHeaders) {
+    public static HttpEntity<Object> buildHttpEntity(Object data, HttpHeaders customHeaders) {
         final HttpHeaders requestHeaders;
 
         if(customHeaders != null) {

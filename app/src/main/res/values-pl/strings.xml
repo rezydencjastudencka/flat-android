@@ -20,10 +20,24 @@
 
     <!-- Strings related to resource count change -->
     <string name="title_activity_resource_update">Aktualizacja ilości chleba</string>
-    <string name="decrease_resource_switch_label">Zmniejsz ilość</string>
+    <string name="increment_button_label">Zwiększ</string>
+    <string name="decrement_button_label">Zmniejsz</string>
     <string name="update_button_label">Aktualizuj</string>
 
     <!-- Strings related to authentication notification -->
     <string name="notification_title_authentication">Sesja wygasła</string>
     <string name="notification_content_authentication">Dotknij tutaj, aby się zalogować</string>
+
+    <!-- Strings related to value picker -->
+    <string name="value_title">Kwota</string>
+    <string name="value_separator">,</string>
+    <string name="value_currency">PLN</string>
+
+    <!-- Strings related to user picker -->
+    <string name="users_title">Użytkownicy</string>
+    <string name="users_everybody_label">Wszyscy</string>
+    <string name="users_selected_label">Wybrani</string>
+
+    <!-- Strings related to charges -->
+    <string name="charge_name">Chleb «przez widżet»</string>
 </resources>

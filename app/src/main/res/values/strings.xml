@@ -19,10 +19,24 @@
 
     <!-- Strings related to resource count change -->
     <string name="title_activity_resource_update">Update bread count</string>
-    <string name="decrease_resource_switch_label">Decrease resource</string>
+    <string name="increment_button_label">Increment</string>
+    <string name="decrement_button_label">Decrement</string>
     <string name="update_button_label">Update</string>
 
     <!-- Strings related to authentication notification -->
     <string name="notification_title_authentication">The session has expired</string>
     <string name="notification_content_authentication">Tap here to authenticate</string>
+
+    <!-- Strings related to value picker -->
+    <string name="value_title">Value</string>
+    <string name="value_separator">.</string>
+    <string name="value_currency">PLN</string>
+
+    <!-- Strings related to user picker -->
+    <string name="users_title">Users</string>
+    <string name="users_everybody_label">Everybody</string>
+    <string name="users_selected_label">Selected</string>
+
+    <!-- Strings related to charges -->
+    <string name="charge_name">Bread «by widget»</string>
 </resources>

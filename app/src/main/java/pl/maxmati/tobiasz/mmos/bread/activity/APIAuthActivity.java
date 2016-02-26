@@ -1,4 +1,4 @@
-package pl.maxmati.tobiasz.mmos.bread.api;
+package pl.maxmati.tobiasz.mmos.bread.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

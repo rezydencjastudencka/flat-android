@@ -16,6 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
+import pl.maxmati.tobiasz.mmos.bread.api.user.UserRecord;
 
 /**
  * Created by mmos on 10.02.16.
@@ -26,8 +27,8 @@ public class SessionManager {
 
     private static final String SESSION_PATH = "session";
 
-    private static final String CREATE_URI = SESSION_PATH + "/create";
-    private static final String CHECK_URI = SESSION_PATH + "/check";
+    private static final String SESSION_CREATE_ACTION = SESSION_PATH + "/create";
+    private static final String SESSION_CHECK_ACTION = SESSION_PATH + "/check";
 
     private static final String STORE_NAME = "SessionStore";
     private static final String STORE_FIELD_NAME_SESSION_COOKIE = "sessionCookie";
@@ -49,7 +50,7 @@ public class SessionManager {
     public static Session create(String apiUri, String username, String password)
             throws SessionException {
         try {
-            HttpEntity<String> entity = APIConnector.buildHttpEntity(buildCreateSessionJson(username,
+            HttpEntity<Object> entity = APIConnector.buildHttpEntity(buildCreateSessionJson(username,
                     password).toString(), null);
             RestTemplate restTemplate = new RestTemplate();
             Session session;
@@ -57,7 +58,8 @@ public class SessionManager {
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
             Log.d(TAG, "Requesting new session");
-            ResponseEntity<UserRecord> response = restTemplate.exchange(apiUri + CREATE_URI,
+            ResponseEntity<UserRecord> response = restTemplate.exchange(apiUri +
+                    SESSION_CREATE_ACTION,
                     HttpMethod.POST, entity, UserRecord.class);
 
             session = new Session(getCookie(response.getHeaders()));
@@ -87,7 +89,7 @@ public class SessionManager {
         httpEntity = new HttpEntity<>(httpHeaders);
 
         try {
-            restTemplate.exchange(apiUri + CHECK_URI, HttpMethod.GET,
+            restTemplate.exchange(apiUri + SESSION_CHECK_ACTION, HttpMethod.GET,
                     httpEntity, String.class, "");
         } catch(HttpClientErrorException e) {
             if(e.getStatusCode().equals(HttpStatus.NOT_FOUND))
@@ -103,7 +105,7 @@ public class SessionManager {
         headers.add("Cookie", session.getSessionCookie());
     }
 
-    public static SharedPreferences getStore(Context context) {
+    private static SharedPreferences getStore(Context context) {
         return context.getApplicationContext().getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
     }
 

@@ -19,10 +19,10 @@ import android.widget.RemoteViews;
 import org.springframework.web.client.HttpClientErrorException;
 
 import pl.maxmati.tobiasz.mmos.bread.R;
-import pl.maxmati.tobiasz.mmos.bread.api.APIAuthActivity;
+import pl.maxmati.tobiasz.mmos.bread.activity.APIAuthActivity;
 import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
 import pl.maxmati.tobiasz.mmos.bread.api.resource.ResourceManager;
-import pl.maxmati.tobiasz.mmos.bread.api.resource.ResourceUpdateActivity;
+import pl.maxmati.tobiasz.mmos.bread.activity.ResourceUpdateActivity;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionExpiredException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
@@ -70,17 +70,17 @@ public class BreadWidgetUpdater extends Service {
             return;
         }
         Log.d(TAG, "Creating missing notification");
-        mNotificationManager.notify(0, getUpdateNotification());
+        mNotificationManager.notify(0, getUpdateNotification(breadCount));
     }
 
-    private Notification getUpdateNotification() {
+    private Notification getUpdateNotification(int breadCount) {
         Notification.Builder mBuilder = new Notification.Builder(this);
         mBuilder.setDefaults(Notification.DEFAULT_ALL);
         mBuilder.setSmallIcon(R.drawable.bread);
         mBuilder.setContentTitle(getString(R.string.notification_title_missing))
                 .setContentText(getString(R.string.notification_content_missing));
         mBuilder.setPriority(Notification.PRIORITY_MAX).setOngoing(true);
-        mBuilder.setContentIntent(getUpdatePendingIntent());
+        mBuilder.setContentIntent(getUpdatePendingIntent(breadCount));
         return mBuilder.build();
     }
 
@@ -91,13 +91,15 @@ public class BreadWidgetUpdater extends Service {
     private RemoteViews buildViews(int breadCount) {
         RemoteViews views = new RemoteViews(getPackageName(), R.layout.bread_widget);
         views.setTextViewText(R.id.breadCounter, String.valueOf(breadCount));
-        views.setOnClickPendingIntent(R.id.imageButton, getUpdatePendingIntent());
+        views.setOnClickPendingIntent(R.id.imageButton, getUpdatePendingIntent(breadCount));
         return views;
     }
 
-    private PendingIntent getUpdatePendingIntent() {
+    private PendingIntent getUpdatePendingIntent(int breadCount) {
         Intent updateActivityIntent = new Intent(this, BreadWidgetUpdateActivity.class);
         updateActivityIntent.putExtra(ResourceUpdateActivity.RESOURCE_FIELD_NAME, "bread");
+        updateActivityIntent.putExtra(ResourceUpdateActivity
+                .ENABLE_DECREASE_BUTTON_MAX_VALUE_FIELD_NAME, breadCount);
         updateActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return PendingIntent.getActivity(this, 0, updateActivityIntent, PendingIntent
                 .FLAG_UPDATE_CURRENT);
@@ -165,7 +167,7 @@ public class BreadWidgetUpdater extends Service {
 
             if(!SessionManager.hasSessionInStore(BreadWidgetUpdater.this)) {
                 Log.w(TAG, "Got update, but no session in store; ignoring update");
-                stopSelf();
+                stopSelf(msg.arg1);
                 return;
             }
 

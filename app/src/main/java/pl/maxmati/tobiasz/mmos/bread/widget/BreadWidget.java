@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
+import pl.maxmati.tobiasz.mmos.bread.api.user.UserManager;
 import pl.maxmati.tobiasz.mmos.bread.gcm.RegistrationIntentService;
 
 public class BreadWidget extends AppWidgetProvider {
@@ -32,6 +33,7 @@ public class BreadWidget extends AppWidgetProvider {
 
         SessionManager.clearStore(context);
         RegistrationIntentService.clearStore(context);
+        UserManager.clearStore(context);
     }
 
     static void updateCounter(Context context) {
