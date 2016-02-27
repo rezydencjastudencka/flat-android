@@ -8,8 +8,9 @@ android {
         applicationId "pl.maxmati.tobiasz.mmos.bread"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 4
-        versionName "1.1.0a"
+        versionCode 6
+        versionName "1.1.2a"
+        setProperty("archivesBaseName", "app-$versionName")
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7

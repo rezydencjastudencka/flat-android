@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 import pl.maxmati.tobiasz.mmos.bread.api.user.User;
 import pl.maxmati.tobiasz.mmos.bread.api.user.UserManager;
 
@@ -53,6 +56,7 @@ public class UserFragment extends Fragment {
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
         allUsers = UserManager.restoreUsers(activity);
+        // FIXME: if allUsers returns null, expect NullPointerException
         if(selectedUsers == null) {
             selectedUsers = new HashSet<>();
             Log.d(TAG, "First creation of selected users set");

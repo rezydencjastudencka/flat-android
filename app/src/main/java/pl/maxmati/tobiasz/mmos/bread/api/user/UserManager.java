@@ -15,6 +15,7 @@ import java.util.Arrays;
 import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
 import pl.maxmati.tobiasz.mmos.bread.api.APIRequest;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 
 /**
  * Created by mmos on 20.02.16.
@@ -61,8 +62,21 @@ public class UserManager {
     }
 
     public static User[] restoreUsers(Context context) {
-        User[] users = new Gson().fromJson(getStore(context).getString(STORE_FIELD_NAME_USERS, null),
-                User[].class);
+        User[] users;
+
+        if(getStore(context).contains(STORE_FIELD_NAME_USERS)) {
+            users = new Gson().fromJson(getStore(context).getString(STORE_FIELD_NAME_USERS, null),
+                    User[].class);
+        } else {
+            try {
+                users = get(new APIConnector(context, SessionManager.restoreSession(context)));
+                storeUsers(context, users);
+                return users;
+            } catch (SessionException e) {
+                Log.d(TAG, "Failed to fetch user list: " + e.getMessage());
+                return null;
+            }
+        }
         Log.d(TAG, "Restored users: " + Arrays.toString(users));
         return users;
     }
