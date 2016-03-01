@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
@@ -80,7 +81,7 @@ public class SessionManager {
         }
     }
 
-    public static boolean check(String apiUri, Session session) {
+    public static boolean check(String apiUri, Session session) throws RestClientException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         HttpEntity<String> httpEntity;
@@ -91,12 +92,12 @@ public class SessionManager {
         try {
             restTemplate.exchange(apiUri + SESSION_CHECK_ACTION, HttpMethod.GET,
                     httpEntity, String.class, "");
-        } catch(HttpClientErrorException e) {
+        } catch (HttpClientErrorException e) {
             if(e.getStatusCode().equals(HttpStatus.NOT_FOUND))
                 return false;
 
             Log.w(TAG, "Unhandled response from server during session check");
-            return false;
+            throw e;
         }
         return true;
     }

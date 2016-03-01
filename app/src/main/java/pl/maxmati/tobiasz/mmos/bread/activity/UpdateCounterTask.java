@@ -19,10 +19,16 @@ public class UpdateCounterTask extends ProgressBarAsyncTask<Void, Void, Integer>
     private final String resourceName;
     private final int amount;
 
+    private SessionException sessionException;
+
     public UpdateCounterTask(ProgressBarActivity progressBarActivity, String resourceName, int amount) {
         super(progressBarActivity);
         this.resourceName = resourceName;
         this.amount = amount;
+    }
+
+    public SessionException getSessionException() {
+        return sessionException;
     }
 
     @Override
@@ -30,9 +36,10 @@ public class UpdateCounterTask extends ProgressBarAsyncTask<Void, Void, Integer>
         try {
             Log.d(TAG, "Starting update of resource " + resourceName);
             ResourceUpdate resourceUpdate = new ResourceUpdate(amount);
-            ResourceManager.update(new APIConnector(progressBarActivity, SessionManager.restoreSession
+            return ResourceManager.update(new APIConnector(progressBarActivity, SessionManager.restoreSession
                     (progressBarActivity)), resourceName, resourceUpdate);
         } catch (SessionException e) {
+            sessionException = e;
             Log.e(TAG, "Resource update failed: " + e.getMessage());
         }
         return null;

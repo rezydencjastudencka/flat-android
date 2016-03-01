@@ -105,7 +105,11 @@ public class UserFragment extends Fragment {
             return;
 
         selectedUsers = (HashSet<User>) savedInstanceState.getSerializable(STATE_CHECKED_USERS);
-        Log.d(TAG, "Restored " + selectedUsers.size() + " users");
+        if(selectedUsers == null) {
+            Log.e(TAG, "Failed to restore selected users");
+        } else {
+            Log.d(TAG, "Restored " + selectedUsers.size() + " users");
+        }
     }
 
     private void restoreViewData(Bundle savedInstanceState) {

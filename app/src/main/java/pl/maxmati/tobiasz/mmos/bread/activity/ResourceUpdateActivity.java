@@ -3,6 +3,7 @@ package pl.maxmati.tobiasz.mmos.bread.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import java.util.Date;
 
 import pl.maxmati.tobiasz.mmos.bread.R;
 import pl.maxmati.tobiasz.mmos.bread.api.charge.Charge;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionExpiredException;
 import pl.maxmati.tobiasz.mmos.bread.api.user.User;
 import pl.maxmati.tobiasz.mmos.bread.fragment.BillingFragment;
 import pl.maxmati.tobiasz.mmos.bread.fragment.QuantityFragment;
@@ -103,6 +105,11 @@ public class ResourceUpdateActivity extends ProgressBarActivity implements
             @Override
             protected void onPostExecute(Integer integer) {
                 super.onPostExecute(integer);
+                if(integer == null) {
+                    handleSessionExpire(this);
+                    return;
+                }
+                // TODO: do async update of counter listeners
                 setResult(RESULT_OK);
                 finish();
             }
@@ -114,16 +121,36 @@ public class ResourceUpdateActivity extends ProgressBarActivity implements
         new UpdateCounterTask(this, resourceName, quantity) {
             @Override
             protected void onPostExecute(Integer integer) {
+                super.onPostExecute(integer);
+                if(integer == null) {
+                    handleSessionExpire(this);
+                    return;
+                }
                 if(users.length != 0)
                     new CreateChargeTask(ResourceUpdateActivity.this, new Charge(getString(R.string
                             .charge_name)
                             , new Date(), users, value)).execute();
 
+                // TODO: do async update of counter listeners
                 setResult(RESULT_OK);
                 finish();
             }
         }.execute();
+    }
 
+    private void handleSessionExpire(UpdateCounterTask updateCounterTask) {
+        if(updateCounterTask.getSessionException() == null)
+            return;
+
+        if(updateCounterTask.getSessionException() instanceof SessionExpiredException)
+            startActivity(new Intent(this, APIAuthActivity.class));
+            // TODO: finalize activity automatically after auth success
+        else {
+            // This is really weird
+            Log.e(TAG, "Unhandled session exception: " + updateCounterTask.getSessionException()
+                    .getMessage());
+            // TODO: notify user about error
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)

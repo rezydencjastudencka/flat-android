@@ -41,8 +41,12 @@ public class APIConnector {
         final HttpHeaders requestHeaders;
         final RestTemplate requestRestTemplate;
 
-        if(!SessionManager.check(apiUri, session))
-            throw new SessionExpiredException("Session expired");
+        try {
+            if(!SessionManager.check(apiUri, session))
+                throw new SessionExpiredException("Session expired");
+        } catch (RestClientException e) {
+            throw new SessionException("Failed to check session expire", e);
+        }
 
         fullUri = apiUri + request.getRequestPath();
         requestHeaders = new HttpHeaders();
