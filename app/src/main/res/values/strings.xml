@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Bread</string>
+    <string name="app_name">Flat</string>
 
     <string name="widget_missing_placeholder">\?</string>
 
@@ -39,4 +39,13 @@
 
     <!-- Strings related to charges -->
     <string name="charge_name">Bread «by widget»</string>
+
+    <!-- Strings related to shopping -->
+    <string name="pending_order_details_description">Description</string>
+    <string name="pending_order_details_maximum_price">Maximum price</string>
+    <string name="pending_order_details_maximum_price_value">%.2f PLN</string>
+    <string name="pending_order_details_creation_date">Creation date</string>
+
+    <string name="title_activity_pending_orders">Pending orders</string>
+    <string name="title_activity_add_pending_order">Add pending order</string>
 </resources>

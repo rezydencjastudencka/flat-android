@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_quantity"
-    tools:context=".fragment.QuantityFragment">
+    tools:context="pl.maxmati.tobiasz.flat.fragment.QuantityFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

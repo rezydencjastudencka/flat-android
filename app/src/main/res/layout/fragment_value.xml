@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-    tools:context=".fragment.QuantityFragment"
+    tools:context="pl.maxmati.tobiasz.flat.fragment.QuantityFragment"
               android:padding="5dp"
     android:id="@+id/fragment_value"
     >

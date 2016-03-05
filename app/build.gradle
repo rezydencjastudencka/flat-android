@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "pl.maxmati.tobiasz.mmos.bread"
+        applicationId "pl.maxmati.tobiasz.flat"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 7
-        versionName "1.1.3b"
+        versionCode 8
+        versionName "1.2.0a"
         setProperty("archivesBaseName", "app-$versionName")
     }
     compileOptions {
@@ -34,6 +34,9 @@ dependencies {
     compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:design:23.2.0'
+    compile 'com.android.support:cardview-v7:23.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

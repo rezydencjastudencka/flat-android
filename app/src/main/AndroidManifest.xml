@@ -14,11 +14,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/bread"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".widget.BreadWidget">
+        <receiver android:name="pl.maxmati.tobiasz.flat.bread.widget.BreadWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -30,17 +29,17 @@
 
         <!-- FIXME: add permission -->
         <service
-            android:name=".widget.BreadWidgetUpdater"
+            android:name="pl.maxmati.tobiasz.flat.bread.widget.BreadWidgetUpdater"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".activity.APIAuthActivity"
+            android:name="pl.maxmati.tobiasz.flat.activity.APIAuthActivity"
             android:enabled="true"
             android:exported="true"
             android:label="@string/title_activity_api_login" />
         <activity
-            android:name=".widget.BreadWidgetConfigure"
+            android:name="pl.maxmati.tobiasz.flat.bread.widget.BreadWidgetConfigure"
             android:enabled="true"
             android:exported="true"
             android:label="@string/title_activity_api_login">
@@ -49,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".widget.BreadWidgetUpdateActivity"
+            android:name="pl.maxmati.tobiasz.flat.bread.widget.BreadWidgetUpdateActivity"
             android:label="@string/title_activity_resource_update" />
 
         <!-- GCM related -->
@@ -65,23 +64,37 @@
         </receiver>
 
         <service
-            android:name=".gcm.ListenerService"
+            android:name="pl.maxmati.tobiasz.flat.bread.gcm.ListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".gcm.IDListenerService"
+            android:name="pl.maxmati.tobiasz.flat.bread.gcm.IDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name=".gcm.RegistrationIntentService"
+            android:name="pl.maxmati.tobiasz.flat.bread.gcm.RegistrationIntentService"
             android:exported="false" />
 
+        <!-- Shopping related -->
+        <activity
+            android:name="pl.maxmati.tobiasz.flat.shopping.PendingOrdersActivity"
+            android:label="@string/title_activity_pending_orders">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="pl.maxmati.tobiasz.flat.shopping.AddPendingOrderActivity"
+            android:label="@string/title_activity_add_pending_order">
+        </activity>
     </application>
 
 </manifest>
