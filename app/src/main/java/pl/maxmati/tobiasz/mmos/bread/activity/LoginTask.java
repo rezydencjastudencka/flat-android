@@ -1,6 +1,7 @@
 package pl.maxmati.tobiasz.mmos.bread.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.util.Log;
 
 import pl.maxmati.tobiasz.mmos.bread.R;
 import pl.maxmati.tobiasz.mmos.bread.api.APIConnector;
+import pl.maxmati.tobiasz.mmos.bread.api.RestException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.AuthenticationException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.InvalidPasswordException;
 import pl.maxmati.tobiasz.mmos.bread.api.session.Session;
@@ -34,7 +36,7 @@ public class LoginTask extends AsyncTask<Void, Void, Boolean> {
     private final String username;
     private final String password;
 
-    protected SessionException sessionException;
+    protected Exception exception;
     protected Session session;
 
     public LoginTask(APIAuthActivity apiAuthActivity, String username, String password) {
@@ -49,8 +51,8 @@ public class LoginTask extends AsyncTask<Void, Void, Boolean> {
             session = SessionManager.create(APIConnector.getAPIUri(apiAuthActivity),
                     username, password);
             SessionManager.storeSession(apiAuthActivity.getApplicationContext(), session);
-        } catch (SessionException e) {
-            sessionException = e;
+        } catch (Exception e) {
+            exception = e;
             return null;
         }
         return true;
@@ -71,19 +73,26 @@ public class LoginTask extends AsyncTask<Void, Void, Boolean> {
                 apiAuthActivity.startService(apiAuthActivity.getIntent().<Intent>getParcelableExtra(
                         APIAuthActivity.EXTRA_AUTH_SERVICE_INTENT));
         } else {
-            if (sessionException instanceof AuthenticationException) {
-                if (sessionException.getCause() instanceof UserNotFoundException) {
+            if (exception instanceof AuthenticationException) {
+                if (exception.getCause() instanceof UserNotFoundException) {
                     apiAuthActivity.mUsernameView.setError(apiAuthActivity.getString(R.string
                             .error_invalid_username));
                     apiAuthActivity.mUsernameView.requestFocus();
-                } else if (sessionException.getCause() instanceof InvalidPasswordException) {
+                } else if (exception.getCause() instanceof InvalidPasswordException) {
                     apiAuthActivity.mPasswordView.setError(apiAuthActivity.getString(R.string
                             .error_incorrect_password));
                     apiAuthActivity.mPasswordView.requestFocus();
                 } else {
-                    Log.e(TAG, "Session creation failed: " + sessionException
-                            .getMessage(), sessionException);
+                    Log.e(TAG, "Session creation failed: " + exception
+                            .getMessage(), exception);
                 }
+            } else if(exception instanceof RestException) {
+                new AlertDialog.Builder(apiAuthActivity)
+                        .setTitle("Network error")
+                        .setMessage(exception.getLocalizedMessage())
+                        .setNeutralButton("OK", null)
+                        .create()
+                        .show();
             }
         }
     }

@@ -39,4 +39,7 @@
 
     <!-- Strings related to charges -->
     <string name="charge_name">Bread «by widget»</string>
+
+    <string name="error_network">Network error</string>
+    <string name="error_update">Update error</string>
 </resources>
