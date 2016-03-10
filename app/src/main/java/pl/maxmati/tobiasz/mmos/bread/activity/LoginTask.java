@@ -53,7 +53,7 @@ public class LoginTask extends AsyncTask<Void, Void, Boolean> {
             SessionManager.storeSession(apiAuthActivity.getApplicationContext(), session);
         } catch (Exception e) {
             exception = e;
-            return null;
+            return false;
         }
         return true;
     }
