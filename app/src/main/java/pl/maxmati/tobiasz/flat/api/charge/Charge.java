@@ -1,5 +1,7 @@
 package pl.maxmati.tobiasz.flat.api.charge;
 
+import org.json.JSONObject;
+
 import java.util.Date;
 
 import pl.maxmati.tobiasz.flat.api.user.User;

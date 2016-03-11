@@ -12,7 +12,8 @@ import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
 
-import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.flat.R;
+
 
 public class RegistrationIntentService extends IntentService {
     public static final String ACTION_SUBSCRIBE_TOPIC = "subscribeTopic";

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.flat.R;
 import pl.maxmati.tobiasz.flat.api.user.User;
 
 /**

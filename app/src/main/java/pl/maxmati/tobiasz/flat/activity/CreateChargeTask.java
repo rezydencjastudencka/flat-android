@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import pl.maxmati.tobiasz.flat.api.APIConnector;
 import pl.maxmati.tobiasz.flat.api.charge.Charge;
 import pl.maxmati.tobiasz.flat.api.charge.ChargeManager;
-import pl.maxmati.tobiasz.flat.api.session.SessionException;
 import pl.maxmati.tobiasz.flat.api.session.SessionManager;
 
 /**
@@ -17,9 +16,15 @@ public class CreateChargeTask extends AsyncTask<Void, Void, Void> {
     private final ProgressBarActivity activity;
     private final Charge charge;
 
+    private Exception exception;
+
     public CreateChargeTask(ProgressBarActivity activity, Charge charge) {
         this.activity = activity;
         this.charge = charge;
+    }
+
+    public Exception getException() {
+        return exception;
     }
 
     @Override
@@ -27,8 +32,8 @@ public class CreateChargeTask extends AsyncTask<Void, Void, Void> {
         try {
             ChargeManager.create(new APIConnector(activity, SessionManager.restoreSession
                     (activity)), charge);
-        } catch (SessionException e) {
-            e.printStackTrace();
+        } catch (Exception e){
+            exception = e;
         }
         return null;
     }

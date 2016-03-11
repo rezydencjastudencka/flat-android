@@ -1,7 +1,12 @@
 package pl.maxmati.tobiasz.flat.api;
 
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResponseErrorHandler;
+
+import java.util.Objects;
 
 /**
  * Created by mmos on 11.02.16.

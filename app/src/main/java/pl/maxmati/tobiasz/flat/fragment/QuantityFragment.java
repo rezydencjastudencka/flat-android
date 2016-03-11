@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
 
-import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.flat.R;
 
 /**
  * Created by mmos on 20.02.16.

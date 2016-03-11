@@ -17,6 +17,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import pl.maxmati.tobiasz.flat.api.APIConnector;
+import pl.maxmati.tobiasz.flat.api.RestException;
 import pl.maxmati.tobiasz.flat.api.user.UserRecord;
 
 /**
@@ -49,7 +50,7 @@ public class SessionManager {
     }
 
     public static Session create(String apiUri, String username, String password)
-            throws SessionException {
+            throws SessionException, RestException {
         try {
             HttpEntity<Object> entity = APIConnector.buildHttpEntity(buildCreateSessionJson(username,
                     password).toString(), null);
@@ -76,8 +77,9 @@ public class SessionManager {
                 Log.d(TAG, "Invalid password");
                 throw new AuthenticationException(new InvalidPasswordException(e));
             }
-
             throw new AuthenticationException("Got unexpected response during session creation", e);
+        } catch (RestClientException e) {
+            throw new RestException(e);
         }
     }
 

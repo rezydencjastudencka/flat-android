@@ -18,7 +18,7 @@ import android.widget.RadioButton;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.flat.R;
 import pl.maxmati.tobiasz.flat.api.user.User;
 import pl.maxmati.tobiasz.flat.api.user.UserManager;
 

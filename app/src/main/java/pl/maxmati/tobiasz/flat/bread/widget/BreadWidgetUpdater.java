@@ -18,7 +18,7 @@ import android.widget.RemoteViews;
 
 import org.springframework.web.client.HttpClientErrorException;
 
-import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.flat.R;
 import pl.maxmati.tobiasz.flat.activity.APIAuthActivity;
 import pl.maxmati.tobiasz.flat.api.APIConnector;
 import pl.maxmati.tobiasz.flat.api.resource.ResourceManager;

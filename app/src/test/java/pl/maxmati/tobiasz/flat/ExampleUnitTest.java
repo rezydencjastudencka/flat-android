@@ -1,4 +1,4 @@
-package pl.maxmati.tobiasz.mmos.bread;
+package pl.maxmati.tobiasz.flat;
 
 import org.junit.Test;
 

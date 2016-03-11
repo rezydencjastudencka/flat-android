@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import pl.maxmati.tobiasz.flat.api.APIConnector;

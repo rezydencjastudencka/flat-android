@@ -8,9 +8,10 @@ android {
         applicationId "pl.maxmati.tobiasz.flat"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 8
-        versionName "1.2.0a"
+        versionCode 9
+        versionName "1.1.5b"
         setProperty("archivesBaseName", "app-$versionName")
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -37,6 +38,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.android.support:cardview-v7:23.2.0'
+
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support:support-annotations:23.2.0'
+    androidTestCompile('org.springframework:spring-test:4.0.9.RELEASE') { exclude module: "spring-core" }
+    androidTestCompile 'commons-io:commons-io:2.4'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

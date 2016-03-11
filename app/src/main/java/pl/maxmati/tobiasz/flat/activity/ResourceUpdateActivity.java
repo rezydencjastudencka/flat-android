@@ -3,6 +3,7 @@ package pl.maxmati.tobiasz.flat.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import android.view.View;
 
 import java.util.Date;
 
-import pl.maxmati.tobiasz.mmos.bread.R;
+import pl.maxmati.tobiasz.flat.R;
 import pl.maxmati.tobiasz.flat.api.charge.Charge;
 import pl.maxmati.tobiasz.flat.api.session.SessionExpiredException;
 import pl.maxmati.tobiasz.flat.api.user.User;
@@ -106,7 +107,7 @@ public class ResourceUpdateActivity extends ProgressBarActivity implements
             protected void onPostExecute(Integer integer) {
                 super.onPostExecute(integer);
                 if(integer == null) {
-                    handleSessionExpire(this);
+                    handleException(getException());
                     return;
                 }
                 // TODO: do async update of counter listeners
@@ -121,35 +122,51 @@ public class ResourceUpdateActivity extends ProgressBarActivity implements
         new UpdateCounterTask(this, resourceName, quantity) {
             @Override
             protected void onPostExecute(Integer integer) {
-                super.onPostExecute(integer);
                 if(integer == null) {
-                    handleSessionExpire(this);
+                    showProgress(false);
+                    handleException(getException());
                     return;
                 }
-                if(users.length != 0)
+                if(users.length != 0) {
                     new CreateChargeTask(ResourceUpdateActivity.this, new Charge(getString(R.string
                             .charge_name)
-                            , new Date(), users, value)).execute();
+                            , new Date(), users, value)) {
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            if (getException() != null) {
+                                showProgress(false);
+                                handleException(getException());
+                                return;
+                            }
+
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    }.execute();
+                } else {
+                    setResult(RESULT_OK);
+                    finish();
+                }
 
                 // TODO: do async update of counter listeners
-                setResult(RESULT_OK);
-                finish();
             }
         }.execute();
     }
 
-    private void handleSessionExpire(UpdateCounterTask updateCounterTask) {
-        if(updateCounterTask.getSessionException() == null)
+    private void handleException(Exception e) {
+        if(e == null)
             return;
 
-        if(updateCounterTask.getSessionException() instanceof SessionExpiredException)
+        if(e instanceof SessionExpiredException) {
             startActivity(new Intent(this, APIAuthActivity.class));
             // TODO: finalize activity automatically after auth success
-        else {
-            // This is really weird
-            Log.e(TAG, "Unhandled session exception: " + updateCounterTask.getSessionException()
-                    .getMessage());
-            // TODO: notify user about error
+        } else {
+            new AlertDialog.Builder(ResourceUpdateActivity.this)
+                    .setTitle(getString(R.string.error_update))
+                    .setMessage(e.getLocalizedMessage())
+                    .setNeutralButton("OK", null)
+                    .create()
+                    .show();
         }
     }
 
