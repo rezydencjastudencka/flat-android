@@ -21,6 +21,8 @@ import pl.maxmati.tobiasz.mmos.bread.api.user.UserManager;
 public class BreadWidgetConfigure extends APIAuthActivity {
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
+    private Intent resultValue;
+
     @Override
     protected AsyncTask<Void, Void, Boolean> getLoginTask(final String username, final String password) {
         /**
@@ -67,28 +69,39 @@ public class BreadWidgetConfigure extends APIAuthActivity {
     }
 
     @Override
+    protected void onAuth() {
+        setResult(RESULT_OK, resultValue);
+        finish();
+    }
+
+    // FIXME: flashing blank activity
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "Widget configuration activity created");
+        super.onCreate(savedInstanceState);
 
         Bundle extras;
 
+        Log.d(TAG, "Widget configuration activity created");
+        setResult(RESULT_CANCELED);
+
         extras = getIntent().getExtras();
         if (extras != null) {
-            mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
+            mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
+            return;
         }
 
-        // FIXME: make this activity blank, start another from here
+        resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        setResult(RESULT_OK, resultValue);
+
         if(SessionManager.hasSessionInStore(this)) {
+            // Finish activity earlier
             Log.d(TAG, "Session already taken, leaving configuration activity");
-            setResult(RESULT_OK);
             finish();
         }
-
-        super.onCreate(savedInstanceState);
     }
 }

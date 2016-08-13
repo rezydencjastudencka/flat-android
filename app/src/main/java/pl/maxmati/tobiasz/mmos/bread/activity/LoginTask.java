@@ -61,9 +61,6 @@ public class LoginTask extends AsyncTask<Void, Void, Boolean> {
         onCancelled();
 
         if(success) {
-            apiAuthActivity.setResult(Activity.RESULT_OK);
-            apiAuthActivity.finish();
-
             if(apiAuthActivity.getIntent().hasExtra(APIAuthActivity.EXTRA_AUTH_NOTIFICATION_ID))
                 removeAuthNotification(apiAuthActivity.getIntent().getIntExtra(APIAuthActivity
                         .EXTRA_AUTH_NOTIFICATION_ID, 0));
