@@ -41,7 +41,14 @@ public class APIAuthActivity extends Activity {
 
     protected AsyncTask<Void, Void, Boolean> getLoginTask(final String username, final String
             password) {
-        return new LoginTask(this, username, password);
+        return new LoginTask(this, username, password) {
+            @Override
+            protected void onPostExecute(Boolean success) {
+                super.onPostExecute(success);
+                if (success)
+                    onAuth();
+            }
+        };
     }
 
     @Override
@@ -76,6 +83,11 @@ public class APIAuthActivity extends Activity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    protected void onAuth() {
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 
     private void attemptLogin() {
