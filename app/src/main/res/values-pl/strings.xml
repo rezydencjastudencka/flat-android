@@ -40,7 +40,4 @@
 
     <!-- Strings related to charges -->
     <string name="charge_name">Chleb «przez widżet»</string>
-
-    <string name="error_network">Błąd sieci</string>
-    <string name="error_update">Błąd aktualizacji</string>
 </resources>
