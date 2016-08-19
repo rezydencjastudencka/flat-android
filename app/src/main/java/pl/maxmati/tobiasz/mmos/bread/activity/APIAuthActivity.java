@@ -45,7 +45,7 @@ public class APIAuthActivity extends Activity {
             @Override
             protected void onPostExecute(Boolean success) {
                 super.onPostExecute(success);
-                if (success)
+                if(success)
                     onAuth();
             }
         };

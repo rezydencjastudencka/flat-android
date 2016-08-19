@@ -19,6 +19,6 @@ public class ChargeManager {
 
     public static void create(APIConnector apiConnector, Charge charge) throws SessionException {
         apiConnector.sendRequest(new APIRequest(HttpMethod.PUT, CHARGE_PATH +
-                CHARGE_CREATE_ACTION, charge, null), String.class);
+                CHARGE_CREATE_ACTION, charge, null), Void.class);
     }
 }

@@ -37,7 +37,6 @@ public class BreadWidgetConfigure extends APIAuthActivity {
                     return false;
 
                 BreadWidget.updateCounter(BreadWidgetConfigure.this);
-                BreadWidget.subscribeCounterUpdates(BreadWidgetConfigure.this);
                 try {
                     UserManager.storeUsers(BreadWidgetConfigure.this, UserManager.get(new
                             APIConnector(BreadWidgetConfigure.this, session)));

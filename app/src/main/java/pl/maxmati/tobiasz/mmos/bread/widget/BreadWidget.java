@@ -9,7 +9,7 @@ import android.util.Log;
 
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 import pl.maxmati.tobiasz.mmos.bread.api.user.UserManager;
-import pl.maxmati.tobiasz.mmos.bread.gcm.RegistrationIntentService;
+import pl.maxmati.tobiasz.mmos.bread.push.PushUpdateService;
 
 public class BreadWidget extends AppWidgetProvider {
     public static final String RESOURCE_NAME = "bread";
@@ -17,6 +17,12 @@ public class BreadWidget extends AppWidgetProvider {
     private static final String TAG = "BreadWidget";
 
     private static final String TOPIC_NAME = "counter_" + RESOURCE_NAME;
+
+    @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+        PushUpdateService.subscribe(TOPIC_NAME);
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -29,33 +35,15 @@ public class BreadWidget extends AppWidgetProvider {
         Log.d(TAG, "Widget disabled");
 
         cancelNotifications(context);
-        cancelCounterUpdates(context);
+        PushUpdateService.unsubscribe(TOPIC_NAME);
 
         SessionManager.clearStore(context);
-        RegistrationIntentService.clearStore(context);
         UserManager.clearStore(context);
     }
 
     static void updateCounter(Context context) {
         Intent updaterIntent = new Intent(context, BreadWidgetUpdater.class);
         context.startService(updaterIntent);
-    }
-
-    static void subscribeCounterUpdates(Context context) {
-        context.startService(BreadWidget.getSubscriptionIntent(context, RegistrationIntentService
-                .ACTION_SUBSCRIBE_TOPIC));
-    }
-
-    static void cancelCounterUpdates(Context context) {
-        context.startService(getSubscriptionIntent(context, RegistrationIntentService
-                .ACTION_CANCEL_SUBSCRIBE_TOPIC));
-    }
-
-    static Intent getSubscriptionIntent(Context context, String action) {
-        Intent intent = new Intent(context, RegistrationIntentService.class);
-        intent.setAction(action);
-        intent.putExtra(RegistrationIntentService.EXTRA_TOPIC, TOPIC_NAME);
-        return intent;
     }
 
     private void cancelNotifications(Context context) {

@@ -25,7 +25,7 @@ import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 public class UserManager {
     public static final String TAG = "UserManager";
 
-    private static final String USER_PATH = "user";
+    private static final String USER_PATH = "user/";
 
     public static final String STORE_NAME = "UsersStore";
     public static final String STORE_FIELD_NAME_USERS = "users";
