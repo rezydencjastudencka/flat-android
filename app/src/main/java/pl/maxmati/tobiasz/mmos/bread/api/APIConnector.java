@@ -4,20 +4,30 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import pl.maxmati.tobiasz.mmos.bread.R;
 import pl.maxmati.tobiasz.mmos.bread.api.session.Session;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionException;
-import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 import pl.maxmati.tobiasz.mmos.bread.api.session.SessionExpiredException;
+import pl.maxmati.tobiasz.mmos.bread.api.session.SessionManager;
 
 /**
  * Created by mmos on 11.02.16.
@@ -40,6 +50,8 @@ public class APIConnector {
         final String fullUri;
         final HttpHeaders requestHeaders;
         final RestTemplate requestRestTemplate;
+        final Gson gson;
+        final GsonHttpMessageConverter gsonHttpMessageConverter;
 
         try {
             if(!SessionManager.check(apiUri, session))
@@ -52,17 +64,38 @@ public class APIConnector {
         requestHeaders = new HttpHeaders();
         SessionManager.addSessionCookieToHeader(requestHeaders, session);
 
+        gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'").create();
+        gsonHttpMessageConverter = new GsonHttpMessageConverter();
+        gsonHttpMessageConverter.setGson(gson);
+
         requestRestTemplate = new RestTemplate();
-        requestRestTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+        requestRestTemplate.setMessageConverters(new ArrayList<>(Arrays.asList(
+                new HttpMessageConverter<?>[]{gsonHttpMessageConverter})));
         if(request.getCustomResponseErrorHandler() != null)
             requestRestTemplate.setErrorHandler(request.getCustomResponseErrorHandler());
 
+        addLoggingInterceptor(requestRestTemplate);
+
         Log.d(TAG, "REST exchange: " + fullUri);
         try {
-            return requestRestTemplate.exchange(fullUri, request.getMethod(), buildHttpEntity(request.getData(), requestHeaders), responseType);
+            return requestRestTemplate.exchange(fullUri, request.getMethod(),
+                    buildHttpEntity(request.getData(), requestHeaders), responseType);
         } catch (RestClientException e) {
             throw new SessionException("REST exchange failed: " + e.getMessage());
         }
+    }
+
+    private void addLoggingInterceptor(RestTemplate restTemplate) {
+        restTemplate.getInterceptors().add(new ClientHttpRequestInterceptor() {
+            @Override
+            public ClientHttpResponse intercept(HttpRequest request, byte[] body,
+                                                ClientHttpRequestExecution execution)
+                    throws IOException {
+                if(body.length > 0)
+                    Log.v(TAG, "Request data: " + new String(body, "UTF-8"));
+                return execution.execute(request, body);
+            }
+        });
     }
 
     public static HttpEntity<Object> buildHttpEntity(Object data, HttpHeaders customHeaders) {

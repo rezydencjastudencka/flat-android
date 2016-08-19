@@ -1,7 +1,5 @@
 package pl.maxmati.tobiasz.mmos.bread.api.charge;
 
-import org.json.JSONObject;
-
 import java.util.Date;
 
 import pl.maxmati.tobiasz.mmos.bread.api.user.User;
@@ -15,7 +13,7 @@ public class Charge {
     private final String name;
     private final Date date;
     private final Integer[] to;
-    private final double rawAmount;
+    private final String rawAmount;
 
     public String getName() {
         return name;
@@ -30,13 +28,13 @@ public class Charge {
     }
 
     public double getRawAmount() {
-        return rawAmount;
+        return Double.parseDouble(rawAmount);
     }
 
     public Charge(String name, Date date, User[] to, double rawAmount) {
         this.name = name;
         this.date = date;
-        this.rawAmount = rawAmount;
+        this.rawAmount = Double.toString(rawAmount);
         this.to = new Integer[to.length];
         for(int i = 0; i < to.length; ++i)
             this.to[i] = to[i].getId();
