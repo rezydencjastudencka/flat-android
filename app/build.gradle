@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "pl.maxmati.tobiasz.mmos.bread"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 12
-        versionName "1.1.8b"
+        versionCode 13
+        versionName "1.1.9b"
         setProperty("archivesBaseName", "app-$versionName")
     }
     compileOptions {
