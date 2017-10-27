@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Flat</string>
+    <string name="action_settings">Settings</string>
+    <string name="signInButtonText">Sign In</string>
+    <string name="usernameTextField">Username</string>
+    <string name="passwordTextField">Password</string>
+
+</resources>
