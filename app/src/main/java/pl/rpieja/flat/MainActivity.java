@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    apiLogIn=new APILogIn();
+                    apiLogIn=new APILogIn(MainActivity.this.getApplicationContext());
                     apiLogIn.execute(apiURL, username, password);
                 }
 

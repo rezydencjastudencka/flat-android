@@ -32,14 +32,18 @@ import okhttp3.Response;
  */
 
 public class APILogIn extends AsyncTask<String, String, String> {
-
-    ClearableCookieJar cookieJar =
-            new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+    private ClearableCookieJar cookieJar;
     URL url;
     InputStream stream=null;
     String result;
     HttpURLConnection session;
-    OkHttpClient client = new OkHttpClient.Builder().cookieJar();
+    private OkHttpClient client;
+
+    public APILogIn(Context context) {
+        cookieJar = new PersistentCookieJar(new SetCookieCache(),
+                new SharedPrefsCookiePersistor(context));
+        client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+    }
 
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
