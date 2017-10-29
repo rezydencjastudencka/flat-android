@@ -22,6 +22,24 @@ public class SplashActivity extends AppCompatActivity {
         ClearableCookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this.getApplicationContext()));
         FlatAPI flatAPI = new FlatAPI(cookieJar);
+        new AsyncValidate().execute(new AsyncValidate.Params(flatAPI, new AsyncValidate.Callable<Boolean>() {
+            @Override
+            public void onCall(Boolean aBoolean) {
+                if(aBoolean){
+                    Intent intent = new Intent(SplashActivity.this, ChargesActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+        }));
+
+
 
 //        try {
 //            if(flatAPI.validateSession()){
