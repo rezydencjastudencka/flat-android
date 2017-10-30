@@ -1,4 +1,4 @@
-package pl.rpieja.flat;
+package pl.rpieja.flat.api;
 
 import android.content.Context;
 import android.os.AsyncTask;

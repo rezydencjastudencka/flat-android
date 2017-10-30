@@ -1,6 +1,5 @@
 package pl.rpieja.flat;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,9 +9,9 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
-import java.io.IOException;
-
-import okhttp3.CookieJar;
+import pl.rpieja.flat.tasks.AsyncLogin;
+import pl.rpieja.flat.api.FlatAPI;
+import pl.rpieja.flat.tasks.AsyncValidate;
 
 public class SplashActivity extends AppCompatActivity {
 

@@ -1,10 +1,10 @@
-package pl.rpieja.flat;
+package pl.rpieja.flat.tasks;
 
 import android.os.AsyncTask;
 
 import java.io.IOException;
-import java.util.function.Consumer;
-import java.util.function.Function;
+
+import pl.rpieja.flat.api.FlatAPI;
 
 /**
  * Created by radix on 29.10.17.
@@ -24,9 +24,9 @@ public class AsyncValidate extends AsyncTask<AsyncValidate.Params, Void, Boolean
     }
 
     @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
-        params.callback.onCall(aBoolean);
+    protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
+        params.callback.onCall(result);
     }
 
     public static class Params {

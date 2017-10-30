@@ -62,7 +62,6 @@
     <Button
         android:id="@+id/signInButton"
         style="@style/loginButton"
-        android:onClick="onSignInButtonClick"
         android:text="@string/signInButtonText"
         />
 
