@@ -9,7 +9,6 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
-import pl.rpieja.flat.tasks.AsyncLogin;
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.tasks.AsyncValidate;
 
@@ -24,12 +23,11 @@ public class SplashActivity extends AppCompatActivity {
         new AsyncValidate().execute(new AsyncValidate.Params(flatAPI, new AsyncValidate.Callable<Boolean>() {
             @Override
             public void onCall(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     Intent intent = new Intent(SplashActivity.this, ChargesActivity.class);
                     startActivity(intent);
                     finish();
-                }
-                else{
+                } else {
                     Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -37,21 +35,5 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         }));
-
-
-
-//        try {
-//            if(flatAPI.validateSession()){
-//                Intent intent = new Intent(this, ChargesActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }else{
-//                Intent intent = new Intent(this, MainActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 }

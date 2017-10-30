@@ -10,12 +10,13 @@ import pl.rpieja.flat.api.FlatAPI;
  * Created by radix on 29.10.17.
  */
 
-public class AsyncValidate extends AsyncTask<AsyncValidate.Params, Void, Boolean>{
+public class AsyncValidate extends AsyncTask<AsyncValidate.Params, Void, Boolean> {
     AsyncValidate.Params params;
+
     @Override
     protected Boolean doInBackground(AsyncValidate.Params... flatAPIS) {
         params = flatAPIS[0];
-        try{
+        try {
             return params.api.validateSession();
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,7 +40,7 @@ public class AsyncValidate extends AsyncTask<AsyncValidate.Params, Void, Boolean
         }
     }
 
-    public interface Callable<Param>{
+    public interface Callable<Param> {
         void onCall(Param param);
     }
 }

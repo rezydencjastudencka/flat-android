@@ -8,10 +8,10 @@ public class APIContainer {
     private FlatAPI flatAPI;
     private String username, password;
 
-    public APIContainer(FlatAPI flatAPI, String username, String password){
-        this.flatAPI=flatAPI;
-        this.username=username;
-        this.password=password;
+    public APIContainer(FlatAPI flatAPI, String username, String password) {
+        this.flatAPI = flatAPI;
+        this.username = username;
+        this.password = password;
     }
 
     public FlatAPI getFlatAPI() {

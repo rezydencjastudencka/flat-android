@@ -14,7 +14,6 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
 import pl.rpieja.flat.api.APIContainer;
-import pl.rpieja.flat.api.APILogIn;
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.tasks.AsyncLogin;
 
@@ -30,14 +29,6 @@ public class MainActivity extends AppCompatActivity {
         signInButton = (Button) findViewById(R.id.signInButton);
         usernameTextEdit = (EditText) findViewById(R.id.usernameTextEdit);
         passwordTextEdit = (EditText) findViewById(R.id.passwordTextEdit);
-
-//        signInButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//                startActivity(i);
-//            }
-//        });
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,28 +59,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }));
-
-
                 }
-
-
-//                APILogIn apiLogIn;
-//
-//                String username = usernameTextEdit.getText().toString();
-//                String password = passwordTextEdit.getText().toString();
-//                String apiURL = "https://api.flat.memleak.pl/session/create";
-//                //String apiURL= "http://j3b.tobiasz.maxmati.pl:8080";
-//
-//                if (username.equals("") || password.equals("")) {
-//                    Toast.makeText(getApplicationContext(), "Username or password empty.", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    apiLogIn = new APILogIn(MainActivity.this.getApplicationContext());
-//                    apiLogIn.execute(apiURL, username, password);
-//                }
-
             }
         });
     }
-
-
 }

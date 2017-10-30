@@ -21,7 +21,6 @@ public class FlatAPI {
     private static final String sessionCheckUrl = apiAdress + "session/check";
     private static final String createSession = apiAdress + "session/create";
 
-
     //    private static final String apiAdress ="http://j3b.tobiasz.maxmati.pl:8080";
 
     public FlatAPI(CookieJar cookieJar) {
@@ -45,10 +44,10 @@ public class FlatAPI {
                 .build();
 
         Response response = client.newCall(request).execute();
-        if(!response.isSuccessful()) return false;
+        if (!response.isSuccessful()) return false;
         Gson gson = new Gson();
         SessionCheckResponse checkResponse = gson.fromJson(response.body().string(), SessionCheckResponse.class);
-        if(checkResponse == null) return false;
+        if (checkResponse == null) return false;
         return "ok".equals(checkResponse.error);
 
     }
