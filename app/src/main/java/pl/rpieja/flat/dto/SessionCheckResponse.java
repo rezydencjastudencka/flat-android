@@ -1,4 +1,4 @@
-package pl.rpieja.flat.api;
+package pl.rpieja.flat.dto;
 
 /**
  * Created by radix on 10/29/17.
