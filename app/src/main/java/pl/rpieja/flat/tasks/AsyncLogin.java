@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
-import pl.rpieja.flat.api.APIContainer;
+import pl.rpieja.flat.containers.APILoginContainer;
 
 /**
  * Created by radix on 29.10.17.
@@ -31,10 +31,10 @@ public class AsyncLogin extends AsyncTask<AsyncLogin.Params, Void, Boolean> {
     }
 
     public static class Params {
-        public APIContainer api;
+        public APILoginContainer api;
         public Callable<Boolean> callback;
 
-        public Params(APIContainer api, Callable<Boolean> callback) {
+        public Params(APILoginContainer api, Callable<Boolean> callback) {
             this.api = api;
             this.callback = callback;
         }

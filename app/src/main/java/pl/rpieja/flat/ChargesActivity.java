@@ -19,6 +19,17 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+
+import pl.rpieja.flat.api.FlatAPI;
+import pl.rpieja.flat.containers.APIChargesContainer;
+import pl.rpieja.flat.containers.APILoginContainer;
+import pl.rpieja.flat.dto.ChargesDTO;
+import pl.rpieja.flat.tasks.AsyncGetCharges;
+
 public class ChargesActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -55,6 +66,20 @@ public class ChargesActivity extends AppCompatActivity {
         });
 
 
+        ClearableCookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(),
+                        new SharedPrefsCookiePersistor(ChargesActivity.this.getApplicationContext()));
+        FlatAPI flatAPI = new FlatAPI(cookieJar);
+        APIChargesContainer apiChargesContainer = new APIChargesContainer(flatAPI,
+                10,
+                2017);
+
+        new AsyncGetCharges().execute(new AsyncGetCharges.Params(apiChargesContainer, new AsyncGetCharges.Callable<ChargesDTO>() {
+            @Override
+            public void onCall(ChargesDTO chargesDTO) {
+                //TODO: Implement passing data to list views in separate tabs
+            }
+        }));
     }
 
     private void animateFab(int position) {

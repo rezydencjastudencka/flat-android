@@ -1,14 +1,16 @@
-package pl.rpieja.flat.api;
+package pl.rpieja.flat.containers;
+
+import pl.rpieja.flat.api.FlatAPI;
 
 /**
  * Created by radix on 10/30/17.
  */
 
-public class APIContainer {
+public class APILoginContainer {
     private FlatAPI flatAPI;
     private String username, password;
 
-    public APIContainer(FlatAPI flatAPI, String username, String password) {
+    public APILoginContainer(FlatAPI flatAPI, String username, String password) {
         this.flatAPI = flatAPI;
         this.username = username;
         this.password = password;

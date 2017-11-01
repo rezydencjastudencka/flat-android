@@ -13,7 +13,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
-import pl.rpieja.flat.api.APIContainer;
+import pl.rpieja.flat.containers.APILoginContainer;
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.tasks.AsyncLogin;
 
@@ -43,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
                             new PersistentCookieJar(new SetCookieCache(),
                                     new SharedPrefsCookiePersistor(MainActivity.this.getApplicationContext()));
                     FlatAPI flatAPI = new FlatAPI(cookieJar);
-                    APIContainer apiContainer = new APIContainer(flatAPI,
+                    APILoginContainer apiLoginContainer = new APILoginContainer(flatAPI,
                             username,
                             password);
 
-                    new AsyncLogin().execute(new AsyncLogin.Params(apiContainer, new AsyncLogin.Callable<Boolean>() {
+                    new AsyncLogin().execute(new AsyncLogin.Params(apiLoginContainer, new AsyncLogin.Callable<Boolean>() {
                         @Override
                         public void onCall(Boolean aBoolean) {
                             if (aBoolean) {
