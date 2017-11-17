@@ -10,10 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.rpieja.flat.dto.Charges;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
 /**
@@ -21,70 +21,59 @@ import pl.rpieja.flat.viewmodels.ChargesViewModel;
  */
 
 public class ChargesTab extends Fragment {
-
-    private List<String> data = new ArrayList<>();
-    private ChargesViewModel chargesViewModel;
-
     public ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.charges_tab, container, false);
-
-        chargesViewModel = ViewModelProviders.of(getActivity()).get(ChargesViewModel.class);
-
         listView = rootView.findViewById(R.id.chargesListView);
-        listView.setAdapter(new ChargesAdapter());
+        ChargesViewModel chargesViewModel = ViewModelProviders.of(getActivity()).get(ChargesViewModel.class);
 
-
-        // listView.setAdapter(new ArrayAdapter<>(this.getContext(), R.layout.charges_item, data));
-        //listView.setAdapter(new ChargesAdapter(this.getContext(), R.layout.charges_item, data));
+        updateListWithCharges(chargesViewModel.getChargesList());
 
         return rootView;
     }
 
+    public void updateListWithCharges(final Charges[] charges) {
+        listView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return charges.length;
+            }
 
-    public class ChargesAdapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            //return 0xcafe;
-            return chargesViewModel.getCharges() != null ?
-                    chargesViewModel.getCharges().getCharges().length :
-                    0;
-        }
+            @Override
+            public Object getItem(int i) {
+                return charges[i];
+            }
 
-        @Override
-        public Object getItem(int i) {
-            return 1;
-        }
+            @Override
+            public long getItemId(int i) {
+                return 0;
+            }
 
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
+            @Override
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                view = getLayoutInflater().inflate(R.layout.charges_item, null);
 
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.charges_item, null);
+                TextView chargeName = view.findViewById(R.id.chargeName);
+                TextView chargeAmount = view.findViewById(R.id.chargeAmount);
+                TextView chargeUsers = view.findViewById(R.id.chargeUsers);
 
-            TextView chargeName = (TextView) view.findViewById(R.id.chargeName);
-            TextView chargeAmount = (TextView) view.findViewById(R.id.chargeAmount);
-            TextView chargeUsers = (TextView) view.findViewById(R.id.chargeUsers);
+                List<String> userList = new ArrayList<>();
 
-            List<String> userList = new ArrayList<>();
+                for (int j = 0; charges[i].to.length < j; j++)
+                    userList.add(charges[i].to[j].name);
 
-            for (int j = 0; chargesViewModel.getCharges().getCharges()[i].to.length < j; j++)
-                userList.add(chargesViewModel.getCharges().getCharges()[i].to[j].name);
-
-            String test = android.text.TextUtils.join(", ", userList);
+                String test = android.text.TextUtils.join(", ", userList);
 
 
-            chargeName.setText(chargesViewModel.getCharges().getCharges()[i].name);
-            chargeAmount.setText(chargesViewModel.getCharges().getCharges()[i].amount.toString());
-            chargeUsers.setText(test);
+                chargeName.setText(charges[i].name);
+                chargeAmount.setText(charges[i].amount.toString());
+                chargeUsers.setText(test);
 
-            return view;
-        }
+                return view;
+            }
+        });
     }
 }

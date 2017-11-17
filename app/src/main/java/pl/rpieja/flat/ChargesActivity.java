@@ -1,7 +1,8 @@
 package pl.rpieja.flat;
 
-import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,13 +14,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.TextView;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -28,9 +25,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.containers.APIChargesContainer;
-import pl.rpieja.flat.containers.APILoginContainer;
 import pl.rpieja.flat.dto.ChargesDTO;
-import pl.rpieja.flat.tasks.AsyncGetCharges;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
 public class ChargesActivity extends AppCompatActivity {
@@ -39,12 +34,14 @@ public class ChargesActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private FloatingActionButton fab;
 
+    ChargesViewModel chargesViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charges);
 
-        ChargesViewModel chargesViewModel= ViewModelProviders.of(this).get(ChargesViewModel.class);
+        chargesViewModel = ViewModelProviders.of(this).get(ChargesViewModel.class);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,10 +75,8 @@ public class ChargesActivity extends AppCompatActivity {
         APIChargesContainer apiChargesContainer = new APIChargesContainer(flatAPI,
                 11,
                 2017);
+
         chargesViewModel.loadCharges(apiChargesContainer);
-
-
-
     }
 
     @Override
@@ -118,15 +113,22 @@ public class ChargesActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            switch (position){
+            switch (position) {
                 case 0:
-                    ChargesTab chargesTab = new ChargesTab();
+                    final ChargesTab chargesTab = new ChargesTab();
+                    chargesViewModel.getCharges().observe(chargesTab, new Observer<ChargesDTO>() {
+                        @Override
+                        public void onChanged(@Nullable ChargesDTO chargesDTO) {
+                            if(chargesDTO == null) return;
+                            chargesTab.updateListWithCharges(chargesDTO.getCharges());
+                        }
+                    });
                     return chargesTab;
                 case 1:
                     ExpensesTab expensesTab = new ExpensesTab();
                     return expensesTab;
                 case 2:
-                    SummaryTab summaryTab=new SummaryTab();
+                    SummaryTab summaryTab = new SummaryTab();
                     return summaryTab;
                 default:
                     return null;
