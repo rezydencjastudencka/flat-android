@@ -1,5 +1,6 @@
 package pl.rpieja.flat.viewmodels;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
 import pl.rpieja.flat.containers.APIChargesContainer;
@@ -13,14 +14,22 @@ import pl.rpieja.flat.tasks.AsyncGetCharges;
 
 public class ChargesViewModel extends ViewModel{
 
-    private ChargesDTO charges;
+    //private ChargesDTO charges;
+
+    private LiveData<ChargesDTO> charges;
+
+    public ChargesDTO getCharges() {
+        return charges;
+    }
 
     public void loadCharges(APIChargesContainer apiChargesContainer){
         new AsyncGetCharges().execute(new AsyncGetCharges.Params(apiChargesContainer, new AsyncGetCharges.Callable<ChargesDTO>() {
             @Override
             public void onCall(ChargesDTO chargesDTO) {
-                charges=chargesDTO;
+                charges.=chargesDTO;
             }
         }));
+
+
     }
 }

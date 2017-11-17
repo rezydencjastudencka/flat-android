@@ -76,7 +76,7 @@ public class ChargesActivity extends AppCompatActivity {
                         new SharedPrefsCookiePersistor(ChargesActivity.this.getApplicationContext()));
         FlatAPI flatAPI = new FlatAPI(cookieJar);
         APIChargesContainer apiChargesContainer = new APIChargesContainer(flatAPI,
-                10,
+                11,
                 2017);
         chargesViewModel.loadCharges(apiChargesContainer);
 

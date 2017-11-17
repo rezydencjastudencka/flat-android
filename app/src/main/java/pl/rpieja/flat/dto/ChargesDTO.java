@@ -5,8 +5,21 @@ package pl.rpieja.flat.dto;
  */
 
 public class ChargesDTO {
-    Charges[] charges;
-    Summary[] summary;
-    Incomes[] incomes;
+
+    Charges[] charges = new Charges[1];
+    Summary[] summary = new Summary[0xdead];
+    Incomes[] incomes = new Incomes[1];
+
+    public Charges[] getCharges() {
+        return charges;
+    }
+
+    public Summary[] getSummary() {
+        return summary;
+    }
+
+    public Incomes[] getIncomes() {
+        return incomes;
+    }
 }
 
