@@ -14,12 +14,22 @@ import pl.rpieja.flat.tasks.AsyncGetCharges;
 
 public class ChargesViewModel extends ViewModel {
     private MutableLiveData<ChargesDTO> charges = new MutableLiveData<>();
+    private APIChargesContainer apiChargesContainer;
 
     public MutableLiveData<ChargesDTO> getCharges() {
         return charges;
     }
 
-    public void loadCharges(APIChargesContainer apiChargesContainer) {
+    public void setApiChargesContainer(APIChargesContainer apiChargesContainer) {
+        // Do not refetch data if month/year are the same
+        if(this.apiChargesContainer != null && !this.apiChargesContainer.otherMonthYear(apiChargesContainer))
+            return;
+
+        this.apiChargesContainer = apiChargesContainer;
+        loadCharges(apiChargesContainer);
+    }
+
+    private void loadCharges(APIChargesContainer apiChargesContainer) {
         new AsyncGetCharges().execute(new AsyncGetCharges.Params(apiChargesContainer, new AsyncGetCharges.Callable<ChargesDTO>() {
             @Override
             public void onCall(ChargesDTO chargesDTO) {

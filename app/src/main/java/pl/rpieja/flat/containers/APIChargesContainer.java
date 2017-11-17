@@ -39,4 +39,8 @@ public class APIChargesContainer {
     public void setYear(int year) {
         this.year = year;
     }
+
+    public boolean otherMonthYear(APIChargesContainer other) {
+        return month != other.month || year != other.year;
+    }
 }
