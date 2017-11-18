@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
+import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.containers.APIChargesContainer;
 import pl.rpieja.flat.api.NoInternetConnectionException;
 import pl.rpieja.flat.dto.ChargesDTO;
@@ -14,6 +15,11 @@ import pl.rpieja.flat.dto.ChargesDTO;
 
 public class AsyncGetCharges extends AsyncTask<AsyncGetCharges.Params, Void, ChargesDTO> {
     AsyncGetCharges.Params params;
+
+    public static void run(FlatAPI api, int month, int year, Callable<ChargesDTO> callback){
+        APIChargesContainer apiChargesContainer = new APIChargesContainer(api, month, year);
+        new AsyncGetCharges().execute(new AsyncGetCharges.Params(apiChargesContainer, callback));
+    }
 
     @Override
     protected ChargesDTO doInBackground(AsyncGetCharges.Params... chargesDTO) {

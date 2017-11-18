@@ -7,10 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -21,9 +23,17 @@ import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker;
+import com.rackspira.kristiawan.rackmonthpicker.listener.DateMonthDialogListener;
+import com.rackspira.kristiawan.rackmonthpicker.listener.OnCancelMonthDialogListener;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.containers.APIChargesContainer;
+import pl.rpieja.flat.dto.Charges;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
@@ -33,6 +43,8 @@ public class ChargesActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private FloatingActionButton fab;
 
+    private int month, year;
+
     ChargesViewModel chargesViewModel;
 
     @Override
@@ -40,7 +52,14 @@ public class ChargesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charges);
 
+        Date date= new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        month = cal.get(Calendar.MONTH) + 1;
+        year = cal.get(Calendar.YEAR);
+
         chargesViewModel = ViewModelProviders.of(this).get(ChargesViewModel.class);
+        chargesViewModel.loadCharges(getApplicationContext(), month, year);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,15 +86,36 @@ public class ChargesActivity extends AppCompatActivity {
         });
 
 
-        ClearableCookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(),
-                        new SharedPrefsCookiePersistor(ChargesActivity.this.getApplicationContext()));
-        FlatAPI flatAPI = new FlatAPI(cookieJar);
-        APIChargesContainer apiChargesContainer = new APIChargesContainer(flatAPI,
-                11,
-                2017);
+//        ClearableCookieJar cookieJar =
+//                new PersistentCookieJar(new SetCookieCache(),
+//                        new SharedPrefsCookiePersistor(ChargesActivity.this.getApplicationContext()));
+//        FlatAPI flatAPI = new FlatAPI(cookieJar);
+//        APIChargesContainer apiChargesContainer = new APIChargesContainer(flatAPI,
+//                month,
+//                year);
+//
+//        chargesViewModel.setApiChargesContainer(apiChargesContainer);
+    }
 
-        chargesViewModel.setApiChargesContainer(apiChargesContainer);
+    public void showDatePickerDialog() {
+        final RackMonthPicker picker = new RackMonthPicker(this);
+        picker.setLocale(Locale.ENGLISH)
+                .setColorTheme(R.color.colorPrimaryDark)
+                .setPositiveButton(new DateMonthDialogListener() {
+                    @Override
+                    public void onDateMonth(int month, int startDate, int endDate, int year, String monthLabel) {
+                        ChargesActivity This = ChargesActivity.this;
+                        This.month = month;
+                        This.year = year;
+                        This.chargesViewModel.loadCharges(This.getApplicationContext(), month, year);
+                    }
+                })
+                .setNegativeButton(new OnCancelMonthDialogListener() {
+                    @Override
+                    public void onCancel(AlertDialog dialog) {
+                        picker.dismiss();
+                    }
+                }).show();
     }
 
     @Override
@@ -87,17 +127,18 @@ public class ChargesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.action_setmonth:
+                showDatePickerDialog();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -118,7 +159,7 @@ public class ChargesActivity extends AppCompatActivity {
                     chargesViewModel.getCharges().observe(chargesTab, new Observer<ChargesDTO>() {
                         @Override
                         public void onChanged(@Nullable ChargesDTO chargesDTO) {
-                            if(chargesDTO == null) return;
+                            if (chargesDTO == null) return;
                             chargesTab.updateListWithCharges(chargesDTO.getCharges());
                         }
                     });
@@ -128,7 +169,7 @@ public class ChargesActivity extends AppCompatActivity {
                     chargesViewModel.getCharges().observe(expensesTab, new Observer<ChargesDTO>() {
                         @Override
                         public void onChanged(@Nullable ChargesDTO chargesDTO) {
-                            if(chargesDTO == null) return;
+                            if (chargesDTO == null) return;
                             expensesTab.updateListWithCharges(chargesDTO.getIncomes());
                         }
                     });

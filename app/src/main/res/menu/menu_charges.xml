@@ -7,4 +7,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_setmonth"
+        android:icon="@drawable/ic_date_range_black_24dp"
+        android:title="@string/action_setmonth"
+        app:showAsAction="ifRoom"/>
 </menu>

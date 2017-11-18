@@ -31,6 +31,8 @@ dependencies {
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.android.support:support-compat:27.0.1'
+    compile 'com.github.lutvie72:RackMonthPicker:1.4'
+
 
     implementation 'android.arch.lifecycle:extensions:1.0.0'
 

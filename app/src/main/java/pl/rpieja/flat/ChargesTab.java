@@ -1,7 +1,9 @@
 package pl.rpieja.flat;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.rpieja.flat.dto.Charges;
+import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
 /**
@@ -32,7 +35,14 @@ public class ChargesTab extends Fragment {
         listView = rootView.findViewById(R.id.chargesListView);
         ChargesViewModel chargesViewModel = ViewModelProviders.of(getActivity()).get(ChargesViewModel.class);
 
-        updateListWithCharges(chargesViewModel.getChargesList());
+        chargesViewModel.getChargesList().observe(this, new Observer<ChargesDTO>() {
+            @Override
+            public void onChanged(@Nullable ChargesDTO chargesDTO) {
+                if (chargesDTO.getCharges() == null)
+                    return;
+                updateListWithCharges(chargesDTO.getCharges());
+            }
+        });
 
         return rootView;
     }
