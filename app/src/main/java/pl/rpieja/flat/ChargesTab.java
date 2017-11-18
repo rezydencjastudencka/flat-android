@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,18 @@ public class ChargesTab extends Fragment {
         updateListWithCharges(chargesViewModel.getChargesList());
 
         return rootView;
+    }
+
+    private static String CapitalizeFirstLetter(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
+    private static Double round(Double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     public void updateListWithCharges(final Charges[] charges) {
@@ -63,18 +77,13 @@ public class ChargesTab extends Fragment {
                 List<String> userList = new ArrayList<>();
 
                 for (int j = 0; j < charges[i].to.length; j++)
-                    userList.add(charges[i].to[j].name);
+                    userList.add(CapitalizeFirstLetter(charges[i].to[j].name));
 
                 String test = android.text.TextUtils.join(", ", userList);
 
-
-
-                chargeName.setText(charges[i].name);
-                chargeAmount.setText(charges[i].amount.toString());
+                chargeName.setText(CapitalizeFirstLetter(charges[i].name));
+                chargeAmount.setText(round(charges[i].amount, 2).toString());
                 chargeUsers.setText(test);
-
-
-
                 return view;
             }
         });

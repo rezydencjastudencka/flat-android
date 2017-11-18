@@ -124,7 +124,14 @@ public class ChargesActivity extends AppCompatActivity {
                     });
                     return chargesTab;
                 case 1:
-                    ExpensesTab expensesTab = new ExpensesTab();
+                    final ExpensesTab expensesTab = new ExpensesTab();
+                    chargesViewModel.getCharges().observe(expensesTab, new Observer<ChargesDTO>() {
+                        @Override
+                        public void onChanged(@Nullable ChargesDTO chargesDTO) {
+                            if(chargesDTO == null) return;
+                            expensesTab.updateListWithCharges(chargesDTO.getIncomes());
+                        }
+                    });
                     return expensesTab;
                 case 2:
                     SummaryTab summaryTab = new SummaryTab();

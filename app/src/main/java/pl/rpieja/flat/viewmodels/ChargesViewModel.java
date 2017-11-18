@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import pl.rpieja.flat.containers.APIChargesContainer;
 import pl.rpieja.flat.dto.Charges;
 import pl.rpieja.flat.dto.ChargesDTO;
+import pl.rpieja.flat.dto.Incomes;
 import pl.rpieja.flat.tasks.AsyncGetCharges;
 
 /**
@@ -41,5 +42,10 @@ public class ChargesViewModel extends ViewModel {
     public Charges[] getChargesList() {
         if(charges.getValue() == null) return new Charges[0];
         return charges.getValue().getCharges();
+    }
+
+    public Incomes[] getIncomesList(){
+        if(charges.getValue()==null) return new Incomes[0];
+        return charges.getValue().getIncomes();
     }
 }
