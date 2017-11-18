@@ -62,15 +62,18 @@ public class ChargesTab extends Fragment {
 
                 List<String> userList = new ArrayList<>();
 
-                for (int j = 0; charges[i].to.length < j; j++)
+                for (int j = 0; j < charges[i].to.length; j++)
                     userList.add(charges[i].to[j].name);
 
                 String test = android.text.TextUtils.join(", ", userList);
 
 
+
                 chargeName.setText(charges[i].name);
                 chargeAmount.setText(charges[i].amount.toString());
                 chargeUsers.setText(test);
+
+
 
                 return view;
             }
