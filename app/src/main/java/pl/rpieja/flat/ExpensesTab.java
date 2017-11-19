@@ -38,7 +38,7 @@ public class ExpensesTab extends Fragment {
         return rootView;
     }
 
-    private static String CapitalizeFirstLetter(String input){
+    private static String CapitalizeFirstLetter(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
@@ -50,16 +50,16 @@ public class ExpensesTab extends Fragment {
         return bd.doubleValue();
     }
 
-    public void updateListWithCharges(final Incomes[] incomes) {
+    public void updateListWithCharges(final List<Incomes> incomes) {
         listView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return incomes.length;
+                return incomes.size();
             }
 
             @Override
             public Object getItem(int i) {
-                return incomes[i];
+                return incomes.get(i);
             }
 
             @Override
@@ -75,13 +75,11 @@ public class ExpensesTab extends Fragment {
                 TextView chargeAmount = view.findViewById(R.id.chargeAmount);
                 TextView chargeUsers = view.findViewById(R.id.chargeUsers);
 
-                String test = incomes[i].from.name;
+                String test = incomes.get(i).from.name;
 
-                chargeName.setText(CapitalizeFirstLetter(incomes[i].name));
-                chargeAmount.setText(round(incomes[i].amount, 2).toString());
+                chargeName.setText(CapitalizeFirstLetter(incomes.get(i).name));
+                chargeAmount.setText(round(incomes.get(i).amount, 2).toString());
                 chargeUsers.setText(test);
-
-
 
                 return view;
             }

@@ -11,7 +11,11 @@ import pl.rpieja.flat.api.FlatAPI;
  */
 
 public class AsyncValidate extends AsyncTask<AsyncValidate.Params, Void, Boolean> {
-    AsyncValidate.Params params;
+    private AsyncValidate.Params params;
+
+    public static void run(FlatAPI api, AsyncValidate.Callable<Boolean> callable) {
+        new AsyncValidate().execute(new AsyncValidate.Params(api, callable));
+    }
 
     @Override
     protected Boolean doInBackground(AsyncValidate.Params... flatAPIS) {
@@ -30,11 +34,11 @@ public class AsyncValidate extends AsyncTask<AsyncValidate.Params, Void, Boolean
         params.callback.onCall(result);
     }
 
-    public static class Params {
-        public FlatAPI api;
-        public Callable<Boolean> callback;
+    static class Params {
+        FlatAPI api;
+        Callable<Boolean> callback;
 
-        public Params(FlatAPI api, Callable<Boolean> callback) {
+        Params(FlatAPI api, Callable<Boolean> callback) {
             this.api = api;
             this.callback = callback;
         }

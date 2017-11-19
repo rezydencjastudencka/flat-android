@@ -1,6 +1,6 @@
 package pl.rpieja.flat.dto;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by radix on 2017-11-01.
@@ -9,7 +9,7 @@ import java.util.Date;
 public class Incomes {
     public String name, rawAmount, date;
     public int id;
-    public User[] to;
+    public List<User> to;
     public User from;
-    public Double amount;
+    public double amount;
 }

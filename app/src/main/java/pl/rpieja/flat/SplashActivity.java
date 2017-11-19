@@ -14,10 +14,10 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FlatAPI flatAPI = new FlatAPI(new FlatCookieJar(this));
-        new AsyncValidate().execute(new AsyncValidate.Params(flatAPI, new AsyncValidate.Callable<Boolean>() {
+        AsyncValidate.run(flatAPI, new AsyncValidate.Callable<Boolean>() {
             @Override
-            public void onCall(Boolean aBoolean) {
-                if (aBoolean) {
+            public void onCall(Boolean result) {
+                if (result) {
                     Intent intent = new Intent(SplashActivity.this, ChargesActivity.class);
                     startActivity(intent);
                     finish();
@@ -28,6 +28,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
 
             }
-        }));
+        });
     }
 }

@@ -1,24 +1,26 @@
 package pl.rpieja.flat.dto;
 
+import java.util.List;
+
 /**
  * Created by radix on 2017-11-01.
  */
 
 public class ChargesDTO {
 
-    Charges[] charges = new Charges[1];
-    Summary[] summary = new Summary[0xdead];
-    Incomes[] incomes = new Incomes[1];
+    List<Charges> charges;
+    List<Summary> summary;
+    List<Incomes> incomes;
 
-    public Charges[] getCharges() {
+    public List<Charges> getCharges() {
         return charges;
     }
 
-    public Summary[] getSummary() {
+    public List<Summary> getSummary() {
         return summary;
     }
 
-    public Incomes[] getIncomes() {
+    public List<Incomes> getIncomes() {
         return incomes;
     }
 }

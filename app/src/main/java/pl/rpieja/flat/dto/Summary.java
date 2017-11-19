@@ -5,7 +5,7 @@ package pl.rpieja.flat.dto;
  */
 
 public class Summary {
-    public Double amount;
+    public double amount;
     public String name;
     public int room, id;
 }
