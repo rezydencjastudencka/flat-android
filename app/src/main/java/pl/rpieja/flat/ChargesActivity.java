@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,10 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.franmontiel.persistentcookiejar.ClearableCookieJar;
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker;
 import com.rackspira.kristiawan.rackmonthpicker.listener.DateMonthDialogListener;
 import com.rackspira.kristiawan.rackmonthpicker.listener.OnCancelMonthDialogListener;
@@ -31,9 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import pl.rpieja.flat.api.FlatAPI;
-import pl.rpieja.flat.containers.APIChargesContainer;
-import pl.rpieja.flat.dto.Charges;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
@@ -61,22 +53,22 @@ public class ChargesActivity extends AppCompatActivity {
         chargesViewModel = ViewModelProviders.of(this).get(ChargesViewModel.class);
         chargesViewModel.loadCharges(getApplicationContext(), month, year);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,17 +76,6 @@ public class ChargesActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-
-//        ClearableCookieJar cookieJar =
-//                new PersistentCookieJar(new SetCookieCache(),
-//                        new SharedPrefsCookiePersistor(ChargesActivity.this.getApplicationContext()));
-//        FlatAPI flatAPI = new FlatAPI(cookieJar);
-//        APIChargesContainer apiChargesContainer = new APIChargesContainer(flatAPI,
-//                month,
-//                year);
-//
-//        chargesViewModel.setApiChargesContainer(apiChargesContainer);
     }
 
     public void showDatePickerDialog() {
