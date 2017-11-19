@@ -11,6 +11,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 
 import pl.rpieja.flat.ChargesActivity;
 import pl.rpieja.flat.api.FlatAPI;
+import pl.rpieja.flat.authentication.FlatCookieJar;
 import pl.rpieja.flat.containers.APIChargesContainer;
 import pl.rpieja.flat.dto.Charges;
 import pl.rpieja.flat.dto.ChargesDTO;
@@ -39,9 +40,7 @@ public class ChargesViewModel extends ViewModel {
     }
 
     public void loadCharges(Context context, int month, int year) {
-        ClearableCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(),
-                new SharedPrefsCookiePersistor(context));
-        FlatAPI flatAPI = new FlatAPI(cookieJar);
+        FlatAPI flatAPI = new FlatAPI(new FlatCookieJar(context));
 
         // Do not refetch data if month/year are the same
         if (this.month != null && this.year != null && month == this.month && year == this.year)
