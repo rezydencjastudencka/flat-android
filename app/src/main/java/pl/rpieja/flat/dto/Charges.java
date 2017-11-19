@@ -1,5 +1,7 @@
 package pl.rpieja.flat.dto;
 
+import java.util.List;
+
 /**
  * Created by radix on 2017-11-01.
  */
@@ -7,7 +9,7 @@ package pl.rpieja.flat.dto;
 public class Charges {
     public String name, date, rawAmount;
     public int from, id;
-    public User[] to;
-    public Double amount;
+    public List<User> to;
+    public double amount;
 
 }

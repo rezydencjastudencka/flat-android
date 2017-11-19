@@ -59,16 +59,16 @@ public class ChargesTab extends Fragment {
         return bd.doubleValue();
     }
 
-    public void updateListWithCharges(final Charges[] charges) {
+    public void updateListWithCharges(final List<Charges> charges) {
         listView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return charges.length;
+                return charges.size();
             }
 
             @Override
             public Object getItem(int i) {
-                return charges[i];
+                return charges.get(i);
             }
 
             @Override
@@ -86,13 +86,13 @@ public class ChargesTab extends Fragment {
 
                 List<String> userList = new ArrayList<>();
 
-                for (int j = 0; j < charges[i].to.length; j++)
-                    userList.add(CapitalizeFirstLetter(charges[i].to[j].name));
+                for (int j = 0; j < charges.get(i).to.size(); j++)
+                    userList.add(CapitalizeFirstLetter(charges.get(i).to.get(j).name));
 
                 String test = android.text.TextUtils.join(", ", userList);
 
-                chargeName.setText(CapitalizeFirstLetter(charges[i].name));
-                chargeAmount.setText(round(charges[i].amount, 2).toString());
+                chargeName.setText(CapitalizeFirstLetter(charges.get(i).name));
+                chargeAmount.setText(round(charges.get(i).amount, 2).toString());
                 chargeUsers.setText(test);
                 return view;
             }

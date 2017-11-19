@@ -4,16 +4,11 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
-import com.franmontiel.persistentcookiejar.ClearableCookieJar;
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import java.util.ArrayList;
+import java.util.List;
 
-import pl.rpieja.flat.ChargesActivity;
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.authentication.FlatCookieJar;
-import pl.rpieja.flat.containers.APIChargesContainer;
-import pl.rpieja.flat.dto.Charges;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.dto.Incomes;
 import pl.rpieja.flat.tasks.AsyncGetCharges;
@@ -34,8 +29,8 @@ public class ChargesViewModel extends ViewModel {
         return charges;
     }
 
-    public Incomes[] getIncomesList() {
-        if (charges.getValue() == null) return new Incomes[0];
+    public List<Incomes> getIncomesList() {
+        if (charges.getValue() == null) return new ArrayList<>();
         return charges.getValue().getIncomes();
     }
 

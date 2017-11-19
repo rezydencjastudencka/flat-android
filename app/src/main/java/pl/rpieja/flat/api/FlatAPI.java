@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 import java.io.IOException;
 
 import okhttp3.CookieJar;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -22,11 +23,11 @@ public class FlatAPI {
 
     private OkHttpClient client;
     private static final String apiAdress = "https://api.flat.memleak.pl/";
+    private static final MediaType JSON_MEDIA_TYPE
+            = MediaType.parse("application/json; charset=utf-8");
     private static final String sessionCheckUrl = apiAdress + "session/check";
     private static final String createSession = apiAdress + "session/create";
     private static final String getCharges = apiAdress + "charge/";
-
-    //    private static final String apiAdress ="http://j3b.tobiasz.maxmati.pl:8080";
 
     public FlatAPI(CookieJar cookieJar) {
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
@@ -37,7 +38,7 @@ public class FlatAPI {
 
         Request request = new Request.Builder()
                 .url(createSession)
-                .post(RequestBody.create(APILogIn.JSON, json))
+                .post(RequestBody.create(JSON_MEDIA_TYPE, json))
                 .build();
         Response response = client.newCall(request).execute();
         return response.isSuccessful();

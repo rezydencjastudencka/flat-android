@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import java.io.IOException;
 
 import pl.rpieja.flat.api.FlatAPI;
-import pl.rpieja.flat.containers.APIChargesContainer;
 import pl.rpieja.flat.api.NoInternetConnectionException;
 import pl.rpieja.flat.dto.ChargesDTO;
 
@@ -14,18 +13,17 @@ import pl.rpieja.flat.dto.ChargesDTO;
  */
 
 public class AsyncGetCharges extends AsyncTask<AsyncGetCharges.Params, Void, ChargesDTO> {
-    AsyncGetCharges.Params params;
+    private AsyncGetCharges.Params params;
 
     public static void run(FlatAPI api, int month, int year, Callable<ChargesDTO> callback){
-        APIChargesContainer apiChargesContainer = new APIChargesContainer(api, month, year);
-        new AsyncGetCharges().execute(new AsyncGetCharges.Params(apiChargesContainer, callback));
+        new AsyncGetCharges().execute(new AsyncGetCharges.Params(api, month, year, callback));
     }
 
     @Override
     protected ChargesDTO doInBackground(AsyncGetCharges.Params... chargesDTO) {
         params = chargesDTO[0];
         try {
-            return params.api.getFlatAPI().getCharges(params.api.getMonth(), params.api.getYear());
+            return params.flatAPI.getCharges(params.month, params.year);
         } catch (NoInternetConnectionException | IOException e) {
             e.printStackTrace();
         }
@@ -38,12 +36,15 @@ public class AsyncGetCharges extends AsyncTask<AsyncGetCharges.Params, Void, Cha
         params.callback.onCall(charges);
     }
 
-    public static class Params {
-        public APIChargesContainer api;
-        public Callable<ChargesDTO> callback;
+    static class Params {
+        final FlatAPI flatAPI;
+        final int month, year;
+        final Callable<ChargesDTO> callback;
 
-        public Params(APIChargesContainer api, Callable<ChargesDTO> callback) {
-            this.api = api;
+        Params(FlatAPI flatAPI, int month, int year, Callable<ChargesDTO> callback) {
+            this.flatAPI = flatAPI;
+            this.month = month;
+            this.year = year;
             this.callback = callback;
         }
     }

@@ -4,20 +4,24 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
-import pl.rpieja.flat.containers.APILoginContainer;
+import pl.rpieja.flat.api.FlatAPI;
 
 /**
  * Created by radix on 29.10.17.
  */
 
 public class AsyncLogin extends AsyncTask<AsyncLogin.Params, Void, Boolean> {
-    AsyncLogin.Params params;
+    private AsyncLogin.Params params;
+
+    public static void run(FlatAPI api, String username, String password, Callable<Boolean> callable) {
+        new AsyncLogin().execute(new AsyncLogin.Params(api, username, password, callable));
+    }
 
     @Override
     protected Boolean doInBackground(AsyncLogin.Params... flatAPIS) {
         params = flatAPIS[0];
         try {
-            return params.api.getFlatAPI().login(params.api.getUsername(), params.api.getPassword());
+            return params.flatAPI.login(params.username, params.password);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -30,12 +34,15 @@ public class AsyncLogin extends AsyncTask<AsyncLogin.Params, Void, Boolean> {
         params.callback.onCall(result);
     }
 
-    public static class Params {
-        public APILoginContainer api;
-        public Callable<Boolean> callback;
+    static class Params {
+        FlatAPI flatAPI;
+        String username, password;
+        Callable<Boolean> callback;
 
-        public Params(APILoginContainer api, Callable<Boolean> callback) {
-            this.api = api;
+        Params(FlatAPI flatAPI, String username, String password, Callable<Boolean> callback) {
+            this.flatAPI = flatAPI;
+            this.username = username;
+            this.password = password;
             this.callback = callback;
         }
     }

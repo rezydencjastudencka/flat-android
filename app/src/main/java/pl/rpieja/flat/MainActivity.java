@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import pl.rpieja.flat.authentication.AccountService;
 import pl.rpieja.flat.authentication.FlatCookieJar;
-import pl.rpieja.flat.containers.APILoginContainer;
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.tasks.AsyncLogin;
 
@@ -40,14 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
                 final FlatCookieJar cookieJar = new FlatCookieJar(MainActivity.this);
                 FlatAPI flatAPI = new FlatAPI(cookieJar);
-                APILoginContainer apiLoginContainer = new APILoginContainer(flatAPI,
-                        username,
-                        password);
 
-                new AsyncLogin().execute(new AsyncLogin.Params(apiLoginContainer, new AsyncLogin.Callable<Boolean>() {
+                AsyncLogin.run(flatAPI, username, password, new AsyncLogin.Callable<Boolean>() {
                     @Override
-                    public void onCall(Boolean aBoolean) {
-                        if (aBoolean) {
+                    public void onCall(Boolean result) {
+                        if (result) {
                             AccountService.addAccount(MainActivity.this,
                                     username, cookieJar.getSessionId());
                             Intent intent = new Intent(MainActivity.this, ChargesActivity.class);
@@ -57,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Wrong username or password.", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }));
+                });
             }
         });
     }
