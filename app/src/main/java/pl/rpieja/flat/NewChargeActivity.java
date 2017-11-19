@@ -20,7 +20,6 @@ public class NewChargeActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar_1);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("New Charge");
     }
 
 

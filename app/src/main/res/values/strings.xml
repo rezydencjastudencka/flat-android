@@ -9,8 +9,12 @@
     <string name="tab_text_1">Charges</string>
     <string name="tab_text_2">Expenses</string>
     <string name="tab_text_3">Summary</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="action_setmonth">Set Date</string>
     <string name="title_activity_new_charge">NewChargeActivity</string>
+    <string name="new_charge_activity_title">New Charge</string>
+    <string name="new_charge_title">Enter charge name</string>
+    <string name="new_charge_amount">Enter amount</string>
+    <string name="new_charge_date">Set date</string>
+
 
 </resources>
