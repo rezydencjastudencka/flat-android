@@ -19,6 +19,12 @@ public class AccountService extends Service {
     private Authenticator authenticator;
     public static final String ACCOUNT_TYPE = "pl.memleak.flat";
 
+    public static void removeCurrentAccount(Context context) {
+        AccountManager am = AccountManager.get(context);
+        Account[] accounts = am.getAccountsByType(ACCOUNT_TYPE);
+        if (accounts.length == 0) return;
+        am.removeAccountExplicitly(accounts[0]);
+    }
     public static void addAccount(Context context, String username, String token) {
         AccountManager am = AccountManager.get(context);
         Account account = AccountService.GetAccount(username);
