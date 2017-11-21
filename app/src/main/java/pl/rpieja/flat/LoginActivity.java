@@ -13,7 +13,7 @@ import pl.rpieja.flat.authentication.FlatCookieJar;
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.tasks.AsyncLogin;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private Button signInButton;
     private EditText passwordTextEdit, usernameTextEdit;
@@ -37,16 +37,16 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                final FlatCookieJar cookieJar = new FlatCookieJar(MainActivity.this);
+                final FlatCookieJar cookieJar = new FlatCookieJar(LoginActivity.this);
                 FlatAPI flatAPI = new FlatAPI(cookieJar);
 
                 AsyncLogin.run(flatAPI, username, password, new AsyncLogin.Callable<Boolean>() {
                     @Override
                     public void onCall(Boolean result) {
                         if (result) {
-                            AccountService.addAccount(MainActivity.this,
+                            AccountService.addAccount(LoginActivity.this,
                                     username, cookieJar.getSessionId());
-                            Intent intent = new Intent(MainActivity.this, ChargesActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, ChargesActivity.class);
                             startActivity(intent);
                             finish();
                         } else {

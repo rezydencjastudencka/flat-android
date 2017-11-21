@@ -20,8 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker;
-import com.rackspira.kristiawan.rackmonthpicker.listener.DateMonthDialogListener;
-import com.rackspira.kristiawan.rackmonthpicker.listener.OnCancelMonthDialogListener;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -31,10 +29,6 @@ import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
 public class ChargesActivity extends AppCompatActivity {
-
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-    private FloatingActionButton fab;
 
     private int month, year;
 
@@ -58,24 +52,21 @@ public class ChargesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        ViewPager viewPager = findViewById(R.id.container);
+        viewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ChargesActivity.this, NewChargeActivity.class);
-                startActivity(intent);
-            }
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(ChargesActivity.this, NewChargeActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -83,21 +74,13 @@ public class ChargesActivity extends AppCompatActivity {
         final RackMonthPicker picker = new RackMonthPicker(this);
         picker.setLocale(Locale.ENGLISH)
                 .setColorTheme(R.color.colorPrimaryDark)
-                .setPositiveButton(new DateMonthDialogListener() {
-                    @Override
-                    public void onDateMonth(int month, int startDate, int endDate, int year, String monthLabel) {
-                        ChargesActivity This = ChargesActivity.this;
-                        This.month = month;
-                        This.year = year;
-                        This.chargesViewModel.loadCharges(This.getApplicationContext(), month, year);
-                    }
+                .setPositiveButton((month, startDate, endDate, year, monthLabel) -> {
+                    ChargesActivity This = ChargesActivity.this;
+                    This.month = month;
+                    This.year = year;
+                    This.chargesViewModel.loadCharges(This.getApplicationContext(), month, year);
                 })
-                .setNegativeButton(new OnCancelMonthDialogListener() {
-                    @Override
-                    public void onCancel(AlertDialog dialog) {
-                        picker.dismiss();
-                    }
-                }).show();
+                .setNegativeButton(dialog -> picker.dismiss()).show();
     }
 
     @Override

@@ -6,26 +6,35 @@ import java.io.IOException;
 
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.api.NoInternetConnectionException;
+import pl.rpieja.flat.api.UnauthorizedException;
 import pl.rpieja.flat.dto.ChargesDTO;
 
 /**
  * Created by radix on 2017-11-01.
  */
 
-public class AsyncGetCharges extends AsyncTask<AsyncGetCharges.Params, Void, ChargesDTO> {
-    private AsyncGetCharges.Params params;
+public class AsyncGetCharges extends AsyncTask<Void, Void, ChargesDTO> {
+    private final FlatAPI flatAPI;
+    private final int month, year;
+    private final Callable<ChargesDTO> onSuccess;
+    private final Runnable onCancel;
 
-    public static void run(FlatAPI api, int month, int year, Callable<ChargesDTO> callback){
-        new AsyncGetCharges().execute(new AsyncGetCharges.Params(api, month, year, callback));
+    public AsyncGetCharges(FlatAPI flatAPI, int month, int year, Callable<ChargesDTO> onSuccess, Runnable onUnauthorized) {
+        this.flatAPI = flatAPI;
+        this.month = month;
+        this.year = year;
+        this.onSuccess = onSuccess;
+        this.onCancel = onUnauthorized;
     }
 
     @Override
-    protected ChargesDTO doInBackground(AsyncGetCharges.Params... chargesDTO) {
-        params = chargesDTO[0];
+    protected ChargesDTO doInBackground(Void... voids) {
         try {
-            return params.flatAPI.getCharges(params.month, params.year);
+            return flatAPI.getCharges(month, year);
         } catch (NoInternetConnectionException | IOException e) {
             e.printStackTrace();
+        } catch (UnauthorizedException e){
+            onCancel.run();
         }
         return new ChargesDTO();
     }
@@ -33,20 +42,7 @@ public class AsyncGetCharges extends AsyncTask<AsyncGetCharges.Params, Void, Cha
     @Override
     protected void onPostExecute(ChargesDTO charges) {
         super.onPostExecute(charges);
-        params.callback.onCall(charges);
-    }
-
-    static class Params {
-        final FlatAPI flatAPI;
-        final int month, year;
-        final Callable<ChargesDTO> callback;
-
-        Params(FlatAPI flatAPI, int month, int year, Callable<ChargesDTO> callback) {
-            this.flatAPI = flatAPI;
-            this.month = month;
-            this.year = year;
-            this.callback = callback;
-        }
+        onSuccess.onCall(charges);
     }
 
     public interface Callable<Param> {

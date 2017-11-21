@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.rpieja.flat.api.FlatAPI;
+import pl.rpieja.flat.authentication.AccountService;
 import pl.rpieja.flat.authentication.FlatCookieJar;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.dto.Incomes;
@@ -44,12 +45,8 @@ public class ChargesViewModel extends ViewModel {
         this.month = month;
         this.year = year;
 
-        AsyncGetCharges.run(flatAPI, month, year, new AsyncGetCharges.Callable<ChargesDTO>() {
-            @Override
-            public void onCall(ChargesDTO chargesDTO) {
-                charges.setValue(chargesDTO);
-            }
-        });
-
+        new AsyncGetCharges(flatAPI, month, year,
+                chargesDTO -> charges.setValue(chargesDTO),
+                () -> AccountService.removeCurrentAccount(context)).execute();
     }
 }

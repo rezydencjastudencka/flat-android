@@ -22,6 +22,7 @@ import pl.rpieja.flat.dto.SessionCheckResponse;
 public class FlatAPI {
 
     private OkHttpClient client;
+
     private static final String apiAdress = "https://api.flat.memleak.pl/";
     private static final MediaType JSON_MEDIA_TYPE
             = MediaType.parse("application/json; charset=utf-8");
@@ -34,6 +35,7 @@ public class FlatAPI {
     }
 
     public Boolean login(String username, String password) throws IOException {
+        //TODO: use Gson
         String json = "{\"name\":\"" + username + "\", \"password\": \"" + password + "\"}";
 
         Request request = new Request.Builder()
@@ -57,7 +59,7 @@ public class FlatAPI {
         return "ok".equals(checkResponse.error);
     }
 
-    public ChargesDTO getCharges(int month, int year) throws IOException, NoInternetConnectionException{
+    public ChargesDTO getCharges(int month, int year) throws IOException, NoInternetConnectionException {
 
         String requestUrl = getCharges + Integer.toString(year) + "/" + Integer.toString(month);
 
@@ -65,11 +67,15 @@ public class FlatAPI {
                 .url(requestUrl)
                 .build();
 
-        Response response=client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
+
+        if (response.code() == 403) throw new UnauthorizedException();
+
+        //TODO: it does not mean no internet connection
         if (!response.isSuccessful()) throw new NoInternetConnectionException();
-        Gson gson=new Gson();
-        ChargesDTO charges=gson.fromJson(response.body().string(), ChargesDTO.class);
-        if (charges==null) throw new JsonIOException("JSON parsing exception");
+        Gson gson = new Gson();
+        ChargesDTO charges = gson.fromJson(response.body().string(), ChargesDTO.class);
+        if (charges == null) throw new JsonIOException("JSON parsing exception");
         return charges;
     }
 }
