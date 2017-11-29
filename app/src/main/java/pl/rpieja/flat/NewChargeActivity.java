@@ -1,13 +1,12 @@
 package pl.rpieja.flat;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 
 public class NewChargeActivity extends AppCompatActivity {
 
@@ -17,9 +16,24 @@ public class NewChargeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_charge);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar_1);
+        toolbar = findViewById(R.id.toolbar_1);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        EditText newChargeDate= findViewById(R.id.newChargeDate);
+        newChargeDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    DatePickerDialog dialog = new DatePickerDialog();
+                    dialog.setEditText(view);
+                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+                    dialog.show(ft, "Set Date");
+                }
+            }
+        });
+
+
     }
 
 
