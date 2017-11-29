@@ -11,6 +11,7 @@ import android.widget.EditText;
 public class NewChargeActivity extends AppCompatActivity {
 
     Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,14 +21,14 @@ public class NewChargeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        EditText newChargeDate= findViewById(R.id.newChargeDate);
+        EditText newChargeDate = findViewById(R.id.newChargeDate);
         newChargeDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(b){
-                    DatePickerDialog dialog = new DatePickerDialog();
+                if (b) {
+                    DateDialog dialog = new DateDialog();
                     dialog.setEditText(view);
-                    FragmentTransaction ft=getFragmentManager().beginTransaction();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
                     dialog.show(ft, "Set Date");
                 }
             }
@@ -35,7 +36,6 @@ public class NewChargeActivity extends AppCompatActivity {
 
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

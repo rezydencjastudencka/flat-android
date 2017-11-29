@@ -14,7 +14,7 @@ import java.util.Calendar;
  * Created by radix on 29.11.17.
  */
 
-public class DatePickerDialog extends DialogFragment implements android.app.DatePickerDialog.OnDateSetListener {
+public class DateDialog extends DialogFragment implements android.app.DatePickerDialog.OnDateSetListener {
 
     EditText txtDate;
 
