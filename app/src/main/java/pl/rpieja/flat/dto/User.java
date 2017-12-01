@@ -6,5 +6,5 @@ package pl.rpieja.flat.dto;
 
 public class User {
     public String name;
-    public int room, id;
+    public int id;
 }
