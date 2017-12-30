@@ -8,7 +8,7 @@ Android client for flat app.
 - [x] Charges/Expenses tabs
 - [x] Google Account Service
 - [ ] Adding Charges
-- [ ] Invalid token handling
+- [x] Invalid token handling
 - [ ] UI Refactoring (messed up ListView component and colors naming)
 - [ ] Navigation Drawer
 - [ ] Transfers tab
