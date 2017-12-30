@@ -6,7 +6,7 @@ import java.util.List;
  * Created by radix on 2017-11-01.
  */
 
-public class Incomes {
+public class Income {
     public String name, rawAmount, date;
     public int id;
     public List<User> to;

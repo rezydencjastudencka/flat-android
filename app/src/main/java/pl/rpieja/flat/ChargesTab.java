@@ -17,7 +17,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.rpieja.flat.dto.Charges;
+import pl.rpieja.flat.dto.Charge;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
@@ -59,7 +59,7 @@ public class ChargesTab extends Fragment {
         return bd.doubleValue();
     }
 
-    public void updateListWithCharges(final List<Charges> charges) {
+    public void updateListWithCharges(final List<Charge> charges) {
         listView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {

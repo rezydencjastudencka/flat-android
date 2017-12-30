@@ -76,7 +76,7 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/newChargeTitle"
+                android:id="@+id/new_charge_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
@@ -101,7 +101,7 @@
                 android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/newChargeTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/new_charge_name" />
 
             <EditText
                 android:id="@+id/newChargeDate"
@@ -134,7 +134,7 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/accept_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"

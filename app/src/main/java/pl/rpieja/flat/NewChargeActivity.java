@@ -1,20 +1,17 @@
 package pl.rpieja.flat;
 
+import android.app.FragmentTransaction;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-
-import pl.rpieja.flat.dto.User;
-import pl.rpieja.flat.viewmodels.NewChargeViewModel;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -25,6 +22,13 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import pl.rpieja.flat.api.FlatAPI;
+import pl.rpieja.flat.authentication.FlatCookieJar;
+import pl.rpieja.flat.dto.CreateCharge;
+import pl.rpieja.flat.dto.User;
+import pl.rpieja.flat.tasks.AsyncCreateCharge;
+import pl.rpieja.flat.viewmodels.NewChargeViewModel;
 
 public class NewChargeActivity extends AppCompatActivity {
 
@@ -54,9 +58,27 @@ public class NewChargeActivity extends AppCompatActivity {
             }
         });
 
+        EditText newChargeName = findViewById(R.id.new_charge_name);
+
+        EditText newChargeAmount = findViewById(R.id.newChargeAmount);
+
         ListView users = findViewById(R.id.newChargeUsersList);
         users.setAdapter(new UsersListAdapter(getApplicationContext(),
                 newChargeViewModel.getUsers(), newChargeViewModel.getSelectedUsers(), this));
+
+        FloatingActionButton accept = findViewById(R.id.accept_button);
+        accept.setOnClickListener(view -> {
+            CreateCharge charge = new CreateCharge();
+            charge.date = newChargeDate.getText().toString() + "T00:00:00.000Z";
+            charge.name = newChargeName.getText().toString();
+            charge.rawAmount = newChargeAmount.getText().toString();
+            for(User user : newChargeViewModel.getSelectedUsers().getValue()){
+                charge.to.add(user.id);
+            }
+
+            FlatAPI flatAPI = new FlatAPI(new FlatCookieJar(NewChargeActivity.this));
+            new AsyncCreateCharge(flatAPI, NewChargeActivity.this::finish, () -> {}).execute(charge);
+        });
     }
 
 
