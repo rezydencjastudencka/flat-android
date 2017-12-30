@@ -14,6 +14,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import pl.rpieja.flat.dto.ChargesDTO;
+import pl.rpieja.flat.dto.CreateCharge;
 import pl.rpieja.flat.dto.SessionCheckResponse;
 import pl.rpieja.flat.dto.User;
 
@@ -24,14 +25,16 @@ import pl.rpieja.flat.dto.User;
 public class FlatAPI {
 
     private OkHttpClient client;
+    private Gson gson = new Gson();
 
-    private static final String apiAdress = "https://api.flat.memleak.pl/";
+    private static final String API_ADDRESS = "https://api.flat.memleak.pl/";
     private static final MediaType JSON_MEDIA_TYPE
             = MediaType.parse("application/json; charset=utf-8");
-    private static final String sessionCheckUrl = apiAdress + "session/check";
-    private static final String createSession = apiAdress + "session/create";
-    private static final String getCharges = apiAdress + "charge/";
-    private static final String getUsers = apiAdress + "user/";
+    private static final String SESSION_CHECK_URL = API_ADDRESS + "session/check";
+    private static final String CREATE_SESSION_URL = API_ADDRESS + "session/create";
+    private static final String GET_CHARGES_URL = API_ADDRESS + "charge/";
+    private static final String CREATE_CHARGE_URL = API_ADDRESS + "charge/create";
+    private static final String GET_USERS_URL = API_ADDRESS + "user/";
 
     public FlatAPI(CookieJar cookieJar) {
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
@@ -42,7 +45,7 @@ public class FlatAPI {
         String json = "{\"name\":\"" + username + "\", \"password\": \"" + password + "\"}";
 
         Request request = new Request.Builder()
-                .url(createSession)
+                .url(CREATE_SESSION_URL)
                 .post(RequestBody.create(JSON_MEDIA_TYPE, json))
                 .build();
         Response response = client.newCall(request).execute();
@@ -51,7 +54,7 @@ public class FlatAPI {
 
     public Boolean validateSession() throws IOException {
         Request request = new Request.Builder()
-                .url(sessionCheckUrl)
+                .url(SESSION_CHECK_URL)
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -63,14 +66,34 @@ public class FlatAPI {
     }
 
     public ChargesDTO getCharges(int month, int year) throws IOException, NoInternetConnectionException {
-        String requestUrl = getCharges + Integer.toString(year) + "/" + Integer.toString(month);
+        String requestUrl = GET_CHARGES_URL + Integer.toString(year) + "/" + Integer.toString(month);
         return fetch(requestUrl, ChargesDTO.class);
     }
 
     public List<User> getUsers() throws IOException, NoInternetConnectionException {
-        return Arrays.asList(fetch(getUsers, User[].class));
+        return Arrays.asList(fetch(GET_USERS_URL, User[].class));
     }
 
+    public void createCharge(CreateCharge charge) throws IOException, NoInternetConnectionException {
+        put(CREATE_CHARGE_URL, charge);
+    }
+
+    private <T> void post(String url, T data) throws IOException, NoInternetConnectionException {
+        method("POST", url, data);
+    }
+    private <T> void put(String url, T data) throws IOException, NoInternetConnectionException {
+        method("PUT", url, data);
+    }
+    private <T> void method(String methodName, String url, T data) throws IOException, NoInternetConnectionException {
+        Request request = new Request.Builder()
+                .url(CREATE_CHARGE_URL)
+                .method(methodName, RequestBody.create(JSON_MEDIA_TYPE, gson.toJson(data)))
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if (response.code() == 403) throw new UnauthorizedException();
+        if (!response.isSuccessful()) throw new NoInternetConnectionException();
+    }
 
     private <T> T fetch(String requestUrl, Class<T> tClass) throws IOException, NoInternetConnectionException {
         Request request = new Request.Builder()
@@ -78,14 +101,12 @@ public class FlatAPI {
                 .build();
 
         Response response = client.newCall(request).execute();
-
         if (response.code() == 403) throw new UnauthorizedException();
         if (!response.isSuccessful()) throw new NoInternetConnectionException();
 
-
-        Gson gson = new Gson();
         T users = gson.fromJson(response.body().string(), tClass);
         if (users == null) throw new JsonIOException("JSON parsing exception");
         return users;
     }
+
 }

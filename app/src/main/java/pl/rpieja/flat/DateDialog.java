@@ -31,7 +31,7 @@ public class DateDialog extends DialogFragment implements android.app.DatePicker
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day){
-        String date = day+"-"+(month+1)+"-"+year;
+        String date = year+"-"+(month+1)+"-"+day;
         txtDate.setText(date);
     }
 }

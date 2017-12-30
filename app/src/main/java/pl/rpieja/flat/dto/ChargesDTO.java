@@ -8,11 +8,11 @@ import java.util.List;
 
 public class ChargesDTO {
 
-    List<Charges> charges;
+    List<Charge> charges;
     List<Summary> summary;
-    List<Incomes> incomes;
+    List<Income> incomes;
 
-    public List<Charges> getCharges() {
+    public List<Charge> getCharges() {
         return charges;
     }
 
@@ -20,7 +20,7 @@ public class ChargesDTO {
         return summary;
     }
 
-    public List<Incomes> getIncomes() {
+    public List<Income> getIncomes() {
         return incomes;
     }
 }

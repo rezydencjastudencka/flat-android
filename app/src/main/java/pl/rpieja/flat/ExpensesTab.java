@@ -12,11 +12,9 @@ import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 
-import pl.rpieja.flat.dto.Charges;
-import pl.rpieja.flat.dto.Incomes;
+import pl.rpieja.flat.dto.Income;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
 /**
@@ -50,7 +48,7 @@ public class ExpensesTab extends Fragment {
         return bd.doubleValue();
     }
 
-    public void updateListWithCharges(final List<Incomes> incomes) {
+    public void updateListWithCharges(final List<Income> incomes) {
         listView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
