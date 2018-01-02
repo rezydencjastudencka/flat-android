@@ -24,6 +24,8 @@ public class NewChargeViewModel extends ViewModel {
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
     private MutableLiveData<Set<User>> selectedUsers = new MutableLiveData<>();
     public final MutableLiveData<Calendar> chargeDate = new MutableLiveData<>();
+    public final MutableLiveData<String> chargeName = new MutableLiveData<>();
+    public final MutableLiveData<String> chargeAmount = new MutableLiveData<>();
 
     public NewChargeViewModel() {
         selectedUsers.setValue(new HashSet<>());
