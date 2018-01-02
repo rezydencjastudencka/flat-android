@@ -7,5 +7,6 @@
     <color name="iconColorGrey">#d8d8d8</color>
     <color name="iconColorGreyDark">#CBCBCB</color>
     <color name="textColorGreyDark">#626C78</color>
-    <color name="textColorDark">#2E2E2E</color>
+    <color name="textColorDark">#2e2e2e</color>
+    <color name="colorBackgroundLight">#EFEBEF</color>
 </resources>

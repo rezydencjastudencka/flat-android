@@ -4,7 +4,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/colorBackgroundLight"
     tools:context="pl.rpieja.flat.ChargesTab">
 
     <ListView
@@ -12,10 +12,10 @@
         android:layout_height="match_parent"
         android:id="@+id/chargesListView"
         android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:dividerHeight="18dp"
-        android:divider="@color/colorPrimaryDark"
+        android:divider="@color/colorBackgroundLight"
         />
 
 </android.support.constraint.ConstraintLayout>

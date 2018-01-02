@@ -7,23 +7,6 @@
     style="@style/chargesItem"
     android:id="@+id/relativeLayout">
 
-
-    <!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:id="@android:id/text1"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:text="text"></TextView>-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/textView2"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:text="TextView" />-->
-
     <TextView
         android:id="@+id/chargeName"
         android:layout_width="wrap_content"
