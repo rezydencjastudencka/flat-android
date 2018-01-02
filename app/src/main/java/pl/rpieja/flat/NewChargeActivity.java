@@ -3,25 +3,21 @@ package pl.rpieja.flat;
 import android.app.FragmentTransaction;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -67,9 +63,10 @@ public class NewChargeActivity extends AppCompatActivity {
             newChargeAmount.setText(chargeAmount);
         }
 
-        ListView users = findViewById(R.id.newChargeUsersList);
-        users.setAdapter(new UsersListAdapter(getApplicationContext(),
-                newChargeViewModel.getUsers(), newChargeViewModel.getSelectedUsers(), this));
+        RecyclerView users = findViewById(R.id.newChargeUsersList);
+        users.setLayoutManager(new LinearLayoutManager(this));
+        users.setAdapter(new UsersListAdapter(newChargeViewModel.getUsers(),
+                newChargeViewModel.getSelectedUsers(), this));
 
         FloatingActionButton accept = findViewById(R.id.accept_button);
         accept.setOnClickListener(view -> {
@@ -129,74 +126,59 @@ public class NewChargeActivity extends AppCompatActivity {
         return true;
     }
 
-    private static class UsersListAdapter extends BaseAdapter {
-        private final Context context;
-        private List<User> users;
-        private Set<User> selectedUsers;
 
-        public UsersListAdapter(Context context, LiveData<List<User>> users,
-                                MutableLiveData<Set<User>> selectedUsers,
+    public static class UsersListAdapter extends RecyclerView.Adapter<NewChargeActivity.UsersListAdapter.ViewHolder> {
+        private final Set<User> selectedUsers;
+        private List<User> users;
+
+
+        public static class ViewHolder extends RecyclerView.ViewHolder {
+            public CheckBox mCheckBox;
+
+            public ViewHolder(CheckBox v) {
+                super(v);
+                mCheckBox = v;
+            }
+        }
+
+        public UsersListAdapter(LiveData<List<User>> users, LiveData<Set<User>> selectedUsers,
                                 LifecycleOwner lifecycleOwner) {
-            this.context = context;
-            setUsers(users.getValue());
             users.observe(lifecycleOwner, this::setUsers);
-            setSelectedUsers(selectedUsers.getValue());
-            selectedUsers.observe(lifecycleOwner, this::setSelectedUsers);
+            setUsers(users.getValue());
+            this.selectedUsers = selectedUsers.getValue();
         }
 
         private void setUsers(List<User> users) {
             this.users = users;
-            if (this.users == null) {
-                this.users = new ArrayList<>();
-            }
-            this.notifyDataSetChanged();
-        }
-
-        private void setSelectedUsers(Set<User> selectedUsers) {
-            this.selectedUsers = selectedUsers;
             this.notifyDataSetChanged();
         }
 
         @Override
-        public int getCount() {
-            return users.size();
+        public NewChargeActivity.UsersListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                                int viewType) {
+            CheckBox v = (CheckBox) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.user_list_item, parent, false);
+
+            return new ViewHolder(v);
         }
 
         @Override
-        public Object getItem(int i) {
-            return users.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return users.get(i).id;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view;
+        public void onBindViewHolder(ViewHolder holder, int position) {
             final User user = users.get(position);
-
-            if (convertView == null) {
-                view = ((LayoutInflater) context.getSystemService(Context
-                        .LAYOUT_INFLATER_SERVICE)).inflate(R.layout.user_list_item, parent, false);
-            } else {
-                view = convertView;
-            }
-
-            CheckBox checkBox = (CheckBox) view;
-            checkBox.setText(user.name);
-            checkBox.setChecked(selectedUsers.contains(user));
-            checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
-                if (b) {
-                    selectedUsers.add(user);
-                } else {
+            holder.mCheckBox.setText(user.name);
+            holder.mCheckBox.setChecked(selectedUsers.contains(user));
+            holder.mCheckBox.setOnClickListener(view -> {
+                if (selectedUsers.contains(user)) {
                     selectedUsers.remove(user);
+                } else {
+                    selectedUsers.add(user);
                 }
             });
+        }
 
-            return view;
+        @Override
+        public int getItemCount() {
+            return users != null ? users.size() : 0;
         }
     }
-
 }
