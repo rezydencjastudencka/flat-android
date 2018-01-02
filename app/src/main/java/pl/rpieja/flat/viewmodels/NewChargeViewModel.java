@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,9 +23,11 @@ public class NewChargeViewModel extends ViewModel {
 
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
     private MutableLiveData<Set<User>> selectedUsers = new MutableLiveData<>();
+    public final MutableLiveData<Calendar> chargeDate = new MutableLiveData<>();
 
     public NewChargeViewModel() {
         selectedUsers.setValue(new HashSet<>());
+        chargeDate.setValue(Calendar.getInstance());
     }
 
     public MutableLiveData<List<User>> getUsers() {

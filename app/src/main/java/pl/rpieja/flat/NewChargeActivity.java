@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +30,12 @@ import pl.rpieja.flat.authentication.FlatCookieJar;
 import pl.rpieja.flat.dto.CreateCharge;
 import pl.rpieja.flat.dto.User;
 import pl.rpieja.flat.tasks.AsyncCreateCharge;
+import pl.rpieja.flat.util.IsoTimeFormatter;
 import pl.rpieja.flat.viewmodels.NewChargeViewModel;
 
 public class NewChargeActivity extends AppCompatActivity {
 
+    private static final String SET_DATE_TAG = "pl.rpieja.flat.newCharge.setDate";
     private Toolbar toolbar;
 
     @Override
@@ -48,18 +52,9 @@ public class NewChargeActivity extends AppCompatActivity {
         newChargeViewModel.loadUsers(getApplicationContext());
 
 
-        EditText newChargeDate = findViewById(R.id.newChargeDate);
-        newChargeDate.setOnFocusChangeListener((view, b) -> {
-            if (b) {
-                DateDialog dialog = new DateDialog();
-                dialog.setEditText(view);
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                dialog.show(ft, "Set Date");
-            }
-        });
+        prepareDateSelectionField(newChargeViewModel);
 
         EditText newChargeName = findViewById(R.id.new_charge_name);
-
         EditText newChargeAmount = findViewById(R.id.newChargeAmount);
 
         ListView users = findViewById(R.id.newChargeUsersList);
@@ -69,7 +64,7 @@ public class NewChargeActivity extends AppCompatActivity {
         FloatingActionButton accept = findViewById(R.id.accept_button);
         accept.setOnClickListener(view -> {
             CreateCharge charge = new CreateCharge();
-            charge.date = newChargeDate.getText().toString() + "T00:00:00.000Z";
+            charge.date = IsoTimeFormatter.toIso8601(newChargeViewModel.chargeDate.getValue().getTime());
             charge.name = newChargeName.getText().toString();
             charge.rawAmount = newChargeAmount.getText().toString();
             for(User user : newChargeViewModel.getSelectedUsers().getValue()){
@@ -78,6 +73,29 @@ public class NewChargeActivity extends AppCompatActivity {
 
             FlatAPI flatAPI = new FlatAPI(new FlatCookieJar(NewChargeActivity.this));
             new AsyncCreateCharge(flatAPI, NewChargeActivity.this::finish, () -> {}).execute(charge);
+        });
+    }
+
+    private void prepareDateSelectionField(NewChargeViewModel newChargeViewModel) {
+        DateDialog currentSetDate =
+                (DateDialog) getFragmentManager().findFragmentByTag(SET_DATE_TAG);
+        if (currentSetDate != null) {
+            currentSetDate.setDateSetListener(newChargeViewModel.chargeDate::setValue);
+        }
+
+
+        TextView newChargeDate = findViewById(R.id.newChargeDate);
+        newChargeDate.setOnClickListener(view -> {
+            DateDialog dialog = new DateDialog();
+            dialog.setDateSetListener(newChargeViewModel.chargeDate::setValue);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            dialog.show(ft, SET_DATE_TAG);
+        });
+
+
+        newChargeViewModel.chargeDate.observe(this, calendar -> {
+            assert calendar != null;
+            newChargeDate.setText(DateFormat.getLongDateFormat(this).format(calendar.getTime()));
         });
     }
 

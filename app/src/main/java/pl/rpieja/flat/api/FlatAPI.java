@@ -1,5 +1,7 @@
 package pl.rpieja.flat.api;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
@@ -35,6 +37,8 @@ public class FlatAPI {
     private static final String GET_CHARGES_URL = API_ADDRESS + "charge/";
     private static final String CREATE_CHARGE_URL = API_ADDRESS + "charge/create";
     private static final String GET_USERS_URL = API_ADDRESS + "user/";
+
+    private static final String TAG = FlatAPI.class.getSimpleName();
 
     public FlatAPI(CookieJar cookieJar) {
         client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
@@ -85,11 +89,13 @@ public class FlatAPI {
         method("PUT", url, data);
     }
     private <T> void method(String methodName, String url, T data) throws IOException, NoInternetConnectionException {
+        String json = gson.toJson(data);
         Request request = new Request.Builder()
-                .url(CREATE_CHARGE_URL)
-                .method(methodName, RequestBody.create(JSON_MEDIA_TYPE, gson.toJson(data)))
+                .url(url)
+                .method(methodName, RequestBody.create(JSON_MEDIA_TYPE, json))
                 .build();
 
+        Log.d(TAG, String.format("Sending %s %s with data %s", methodName, url, json));
         Response response = client.newCall(request).execute();
         if (response.code() == 403) throw new UnauthorizedException();
         if (!response.isSuccessful()) throw new NoInternetConnectionException();

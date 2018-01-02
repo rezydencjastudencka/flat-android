@@ -103,16 +103,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/new_charge_name" />
 
-            <EditText
+            <TextView
                 android:id="@+id/newChargeDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:ems="10"
-                android:hint="@string/new_charge_date"
-                android:inputType="date"
+                android:textSize="18sp"
+                android:focusable="true"
+                android:clickable="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/newChargeAmount" />
