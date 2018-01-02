@@ -37,6 +37,9 @@ public class NewChargeActivity extends AppCompatActivity {
 
     private static final String SET_DATE_TAG = "pl.rpieja.flat.newCharge.setDate";
     private Toolbar toolbar;
+    private NewChargeViewModel newChargeViewModel;
+    private EditText newChargeName;
+    private EditText newChargeAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +50,22 @@ public class NewChargeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        NewChargeViewModel newChargeViewModel =
-                ViewModelProviders.of(this).get(NewChargeViewModel.class);
+        newChargeViewModel = ViewModelProviders.of(this).get(NewChargeViewModel.class);
         newChargeViewModel.loadUsers(getApplicationContext());
-
 
         prepareDateSelectionField(newChargeViewModel);
 
-        EditText newChargeName = findViewById(R.id.new_charge_name);
-        EditText newChargeAmount = findViewById(R.id.newChargeAmount);
+        newChargeName = findViewById(R.id.new_charge_name);
+        final String chargeName = newChargeViewModel.chargeName.getValue();
+        if (chargeName != null) {
+            newChargeName.setText(chargeName);
+        }
+
+        newChargeAmount = findViewById(R.id.newChargeAmount);
+        final String chargeAmount = newChargeViewModel.chargeAmount.getValue();
+        if (chargeAmount != null) {
+            newChargeAmount.setText(chargeAmount);
+        }
 
         ListView users = findViewById(R.id.newChargeUsersList);
         users.setAdapter(new UsersListAdapter(getApplicationContext(),
@@ -63,10 +73,11 @@ public class NewChargeActivity extends AppCompatActivity {
 
         FloatingActionButton accept = findViewById(R.id.accept_button);
         accept.setOnClickListener(view -> {
+            updateViewModel();
             CreateCharge charge = new CreateCharge();
             charge.date = IsoTimeFormatter.toIso8601(newChargeViewModel.chargeDate.getValue().getTime());
-            charge.name = newChargeName.getText().toString();
-            charge.rawAmount = newChargeAmount.getText().toString();
+            charge.name = newChargeViewModel.chargeName.getValue();
+            charge.rawAmount = newChargeViewModel.chargeAmount.getValue();
             for(User user : newChargeViewModel.getSelectedUsers().getValue()){
                 charge.to.add(user.id);
             }
@@ -74,6 +85,17 @@ public class NewChargeActivity extends AppCompatActivity {
             FlatAPI flatAPI = new FlatAPI(new FlatCookieJar(NewChargeActivity.this));
             new AsyncCreateCharge(flatAPI, NewChargeActivity.this::finish, () -> {}).execute(charge);
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        updateViewModel();
+    }
+
+    private void updateViewModel() {
+        newChargeViewModel.chargeName.setValue(newChargeName.getText().toString());
+        newChargeViewModel.chargeAmount.setValue(newChargeAmount.getText().toString());
     }
 
     private void prepareDateSelectionField(NewChargeViewModel newChargeViewModel) {
