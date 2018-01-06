@@ -1,4 +1,4 @@
-package pl.rpieja.flat.viewmodels;
+package pl.rpieja.flat.viewmodels
 
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
@@ -12,18 +12,12 @@ import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.tasks.AsyncCreateCharge
 import pl.rpieja.flat.tasks.AsyncFetchUsers
 import pl.rpieja.flat.util.IsoTimeFormatter
-import java.util.*
-
-/**
- * Created by maxmati on 11/28/17.
- */
-
-fun r(f: () -> Unit): Runnable = object : Runnable {override fun run() {f()}}
+import java.util.Calendar
 
 class NewChargeViewModel : ViewModel() {
 
     val users = MutableLiveData<List<User>>()
-    val selectedUsers = MutableLiveData<HashSet<User>>()
+    val selectedUsers = MutableLiveData<Set<User>>()
     val chargeDate = MutableLiveData<Calendar>()
     val chargeName = MutableLiveData<String>()
     val chargeAmount = MutableLiveData<String>()
@@ -36,9 +30,9 @@ class NewChargeViewModel : ViewModel() {
         chargeDate.value = Calendar.getInstance()
 
         validate()
-        isValid.addSource(selectedUsers, {_ -> this.validate()})
-        isValid.addSource(chargeName, {_ -> this.validate()})
-        isValid.addSource(chargeAmount, {_ -> this.validate()})
+        isValid.addSource(selectedUsers) { this.validate() }
+        isValid.addSource(chargeName) { this.validate() }
+        isValid.addSource(chargeAmount) { this.validate() }
 
     }
 
@@ -67,11 +61,11 @@ class NewChargeViewModel : ViewModel() {
         createFlatApiIfNeeded(context)
 
         AsyncFetchUsers(flatAPI, { usersList -> users.value = usersList},
-                {AccountService.removeCurrentAccount(context)}).execute()
+                { AccountService.removeCurrentAccount(context) }).execute()
     }
 
     fun createCharge(context: Context, onSuccess: Runnable) {
-        createFlatApiIfNeeded(context);
+        createFlatApiIfNeeded(context)
 
         val charge = CreateChargeDTO()
         charge.date = IsoTimeFormatter.toIso8601(chargeDate.value?.time ?: Calendar.getInstance().time)
@@ -80,7 +74,7 @@ class NewChargeViewModel : ViewModel() {
         charge.to.addAll(selectedUsers.value?.map { user -> user.id } ?: emptyList())
 
         AsyncCreateCharge(flatAPI, onSuccess,
-                r {AccountService.removeCurrentAccount(context)}).execute(charge)
+                Runnable {AccountService.removeCurrentAccount(context)}).execute(charge)
     }
 
     private fun createFlatApiIfNeeded(context: Context){
