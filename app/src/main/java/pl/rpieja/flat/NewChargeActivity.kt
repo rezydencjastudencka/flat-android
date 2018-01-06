@@ -67,7 +67,7 @@ class NewChargeActivity : AppCompatActivity() {
         })
         accept.setOnClickListener({
             newChargeViewModel.createCharge(
-                    this@NewChargeActivity, Runnable (this@NewChargeActivity::finish))
+                    this@NewChargeActivity, this@NewChargeActivity::finish)
         })
     }
 

@@ -22,7 +22,7 @@ class NewChargeViewModel : ViewModel() {
     val chargeName = MutableLiveData<String>()
     val chargeAmount = MutableLiveData<String>()
     val isValid = MediatorLiveData<Boolean>()
-    private var flatAPI : FlatAPI? = null
+    private var flatApi: FlatAPI? = null
 
 
     init {
@@ -58,14 +58,12 @@ class NewChargeViewModel : ViewModel() {
     fun loadUsers(context: Context) {
         if (users.value != null) return
 
-        createFlatApiIfNeeded(context)
-
-        AsyncFetchUsers(flatAPI, { usersList -> users.value = usersList},
+        AsyncFetchUsers(getFlatApi(context), { usersList -> users.value = usersList },
                 { AccountService.removeCurrentAccount(context) }).execute()
     }
 
-    fun createCharge(context: Context, onSuccess: Runnable) {
-        createFlatApiIfNeeded(context)
+    fun createCharge(context: Context, onSuccess: () -> Unit) {
+        getFlatApi(context)
 
         val charge = CreateChargeDTO()
         charge.date = IsoTimeFormatter.toIso8601(chargeDate.value?.time ?: Calendar.getInstance().time)
@@ -73,13 +71,14 @@ class NewChargeViewModel : ViewModel() {
         charge.rawAmount = chargeAmount.value
         charge.to.addAll(selectedUsers.value?.map { user -> user.id } ?: emptyList())
 
-        AsyncCreateCharge(flatAPI, onSuccess,
-                Runnable {AccountService.removeCurrentAccount(context)}).execute(charge)
+        AsyncCreateCharge(getFlatApi(context), onSuccess,
+                { AccountService.removeCurrentAccount(context) }, charge).execute()
     }
 
-    private fun createFlatApiIfNeeded(context: Context){
-        if (flatAPI == null) {
-            flatAPI = FlatAPI(FlatCookieJar(context))
+    private fun getFlatApi(context: Context): FlatAPI {
+        if (flatApi == null) {
+            flatApi = FlatAPI(FlatCookieJar(context))
         }
+        return flatApi!!
     }
 }
