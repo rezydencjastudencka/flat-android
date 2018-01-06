@@ -22,15 +22,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import pl.rpieja.flat.api.FlatAPI;
-import pl.rpieja.flat.authentication.FlatCookieJar;
-import pl.rpieja.flat.dto.CreateChargeDTO;
 import pl.rpieja.flat.dto.User;
-import pl.rpieja.flat.tasks.AsyncCreateCharge;
-import pl.rpieja.flat.util.IsoTimeFormatter;
 import pl.rpieja.flat.viewmodels.NewChargeViewModel;
 
 public class NewChargeActivity extends AppCompatActivity {
@@ -53,9 +48,9 @@ public class NewChargeActivity extends AppCompatActivity {
 
         prepareDateSelectionField(newChargeViewModel);
 
-        bindEditTextWithLiveData(findViewById(R.id.new_charge_name), newChargeViewModel.chargeName);
+        bindEditTextWithLiveData(findViewById(R.id.new_charge_name), newChargeViewModel.getChargeName());
 
-        bindEditTextWithLiveData(findViewById(R.id.newChargeAmount), newChargeViewModel.chargeAmount);
+        bindEditTextWithLiveData(findViewById(R.id.newChargeAmount), newChargeViewModel.getChargeAmount());
 
         RecyclerView users = findViewById(R.id.newChargeUsersList);
         users.setLayoutManager(new LinearLayoutManager(this));
@@ -63,8 +58,8 @@ public class NewChargeActivity extends AppCompatActivity {
                 newChargeViewModel.getSelectedUsers(), this));
 
         FloatingActionButton accept = findViewById(R.id.accept_button);
-        accept.setEnabled(newChargeViewModel.isValid.getValue());
-        newChargeViewModel.isValid.observe(this, isValid -> {
+        accept.setEnabled(newChargeViewModel.isValid().getValue());
+        newChargeViewModel.isValid().observe(this, isValid -> {
             accept.setEnabled(isValid);
             if (isValid){
                 accept.setBackgroundTintList(ColorStateList.valueOf(
@@ -106,20 +101,20 @@ public class NewChargeActivity extends AppCompatActivity {
         DateDialog currentSetDate =
                 (DateDialog) getFragmentManager().findFragmentByTag(SET_DATE_TAG);
         if (currentSetDate != null) {
-            currentSetDate.setDateSetListener(newChargeViewModel.chargeDate::setValue);
+            currentSetDate.setDateSetListener(newChargeViewModel.getChargeDate()::setValue);
         }
 
 
         TextView newChargeDate = findViewById(R.id.newChargeDate);
         newChargeDate.setOnClickListener(view -> {
             DateDialog dialog = new DateDialog();
-            dialog.setDateSetListener(newChargeViewModel.chargeDate::setValue);
+            dialog.setDateSetListener(newChargeViewModel.getChargeDate()::setValue);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             dialog.show(ft, SET_DATE_TAG);
         });
 
 
-        newChargeViewModel.chargeDate.observe(this, calendar -> {
+        newChargeViewModel.getChargeDate().observe(this, calendar -> {
             assert calendar != null;
             newChargeDate.setText(DateFormat.getLongDateFormat(this).format(calendar.getTime()));
         });
@@ -135,7 +130,7 @@ public class NewChargeActivity extends AppCompatActivity {
 
 
     public static class UsersListAdapter extends RecyclerView.Adapter<NewChargeActivity.UsersListAdapter.ViewHolder> {
-        private final MutableLiveData<Set<User>> selectedUsers;
+        private final MutableLiveData<HashSet<User>> selectedUsers;
         private List<User> users;
 
 
@@ -148,7 +143,7 @@ public class NewChargeActivity extends AppCompatActivity {
             }
         }
 
-        public UsersListAdapter(LiveData<List<User>> users, MutableLiveData<Set<User>> selectedUsers,
+        public UsersListAdapter(LiveData<List<User>> users, MutableLiveData<HashSet<User>> selectedUsers,
                                 LifecycleOwner lifecycleOwner) {
             users.observe(lifecycleOwner, this::setUsers);
             setUsers(users.getValue());
