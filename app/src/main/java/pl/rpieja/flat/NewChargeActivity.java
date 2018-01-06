@@ -27,7 +27,7 @@ import java.util.Set;
 
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.authentication.FlatCookieJar;
-import pl.rpieja.flat.dto.CreateCharge;
+import pl.rpieja.flat.dto.CreateChargeDTO;
 import pl.rpieja.flat.dto.User;
 import pl.rpieja.flat.tasks.AsyncCreateCharge;
 import pl.rpieja.flat.util.IsoTimeFormatter;
@@ -74,18 +74,8 @@ public class NewChargeActivity extends AppCompatActivity {
                         getResources().getColor(R.color.iconColorGreyDark, getTheme())));
             }
         });
-        accept.setOnClickListener(view -> {
-            CreateCharge charge = new CreateCharge();
-            charge.date = IsoTimeFormatter.toIso8601(newChargeViewModel.chargeDate.getValue().getTime());
-            charge.name = newChargeViewModel.chargeName.getValue();
-            charge.rawAmount = newChargeViewModel.chargeAmount.getValue();
-            for(User user : newChargeViewModel.getSelectedUsers().getValue()){
-                charge.to.add(user.id);
-            }
-
-            FlatAPI flatAPI = new FlatAPI(new FlatCookieJar(NewChargeActivity.this));
-            new AsyncCreateCharge(flatAPI, NewChargeActivity.this::finish, () -> {}).execute(charge);
-        });
+        accept.setOnClickListener(view -> newChargeViewModel.createCharge(
+                NewChargeActivity.this, NewChargeActivity.this::finish));
     }
 
     private void bindEditTextWithLiveData(EditText field, MutableLiveData<String> liveData) {

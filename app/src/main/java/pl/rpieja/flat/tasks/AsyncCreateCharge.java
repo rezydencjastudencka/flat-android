@@ -7,13 +7,13 @@ import java.io.IOException;
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.api.NoInternetConnectionException;
 import pl.rpieja.flat.api.UnauthorizedException;
-import pl.rpieja.flat.dto.CreateCharge;
+import pl.rpieja.flat.dto.CreateChargeDTO;
 
 /**
  * Created by maxmati on 11/28/17.
  */
 
-public class AsyncCreateCharge extends AsyncTask<CreateCharge, Void, Void> {
+public class AsyncCreateCharge extends AsyncTask<CreateChargeDTO, Void, Void> {
     private final FlatAPI flatAPI;
     private final Runnable onSuccess;
     private final Runnable unauthorizedHandler;
@@ -26,7 +26,7 @@ public class AsyncCreateCharge extends AsyncTask<CreateCharge, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(CreateCharge... charges) {
+    protected Void doInBackground(CreateChargeDTO... charges) {
         try {
             flatAPI.createCharge(charges[0]);
         } catch (NoInternetConnectionException | IOException e) {

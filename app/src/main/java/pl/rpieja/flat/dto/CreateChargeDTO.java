@@ -7,7 +7,7 @@ import java.util.List;
  * Created by maxmati on 12/29/17.
  */
 
-public class CreateCharge {
+public class CreateChargeDTO {
     public String name, date, rawAmount;
     public List<Integer> to = new ArrayList<>();
 }
