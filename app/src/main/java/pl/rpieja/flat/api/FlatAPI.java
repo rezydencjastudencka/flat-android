@@ -20,10 +20,6 @@ import pl.rpieja.flat.dto.CreateChargeDTO;
 import pl.rpieja.flat.dto.SessionCheckResponse;
 import pl.rpieja.flat.dto.User;
 
-/**
- * Created by radix on 10/29/17.
- */
-
 public class FlatAPI {
 
     private OkHttpClient client;
@@ -74,7 +70,7 @@ public class FlatAPI {
         return fetch(requestUrl, ChargesDTO.class);
     }
 
-    public List<User> getUsers() throws IOException, NoInternetConnectionException {
+    public List<User> fetchUsers() throws IOException, NoInternetConnectionException {
         return Arrays.asList(fetch(GET_USERS_URL, User[].class));
     }
 
