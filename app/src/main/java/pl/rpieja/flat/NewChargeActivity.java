@@ -3,13 +3,17 @@ package pl.rpieja.flat;
 import android.app.FragmentTransaction;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,8 +38,6 @@ public class NewChargeActivity extends AppCompatActivity {
     private static final String SET_DATE_TAG = "pl.rpieja.flat.newCharge.setDate";
     private Toolbar toolbar;
     private NewChargeViewModel newChargeViewModel;
-    private EditText newChargeName;
-    private EditText newChargeAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +53,9 @@ public class NewChargeActivity extends AppCompatActivity {
 
         prepareDateSelectionField(newChargeViewModel);
 
-        newChargeName = findViewById(R.id.new_charge_name);
-        final String chargeName = newChargeViewModel.chargeName.getValue();
-        if (chargeName != null) {
-            newChargeName.setText(chargeName);
-        }
+        bindEditTextWithLiveData(findViewById(R.id.new_charge_name), newChargeViewModel.chargeName);
 
-        newChargeAmount = findViewById(R.id.newChargeAmount);
-        final String chargeAmount = newChargeViewModel.chargeAmount.getValue();
-        if (chargeAmount != null) {
-            newChargeAmount.setText(chargeAmount);
-        }
+        bindEditTextWithLiveData(findViewById(R.id.newChargeAmount), newChargeViewModel.chargeAmount);
 
         RecyclerView users = findViewById(R.id.newChargeUsersList);
         users.setLayoutManager(new LinearLayoutManager(this));
@@ -69,8 +63,18 @@ public class NewChargeActivity extends AppCompatActivity {
                 newChargeViewModel.getSelectedUsers(), this));
 
         FloatingActionButton accept = findViewById(R.id.accept_button);
+        accept.setEnabled(newChargeViewModel.isValid.getValue());
+        newChargeViewModel.isValid.observe(this, isValid -> {
+            accept.setEnabled(isValid);
+            if (isValid){
+                accept.setBackgroundTintList(ColorStateList.valueOf(
+                        getResources().getColor(R.color.colorAccent, getTheme())));
+            } else {
+                accept.setBackgroundTintList(ColorStateList.valueOf(
+                        getResources().getColor(R.color.iconColorGreyDark, getTheme())));
+            }
+        });
         accept.setOnClickListener(view -> {
-            updateViewModel();
             CreateCharge charge = new CreateCharge();
             charge.date = IsoTimeFormatter.toIso8601(newChargeViewModel.chargeDate.getValue().getTime());
             charge.name = newChargeViewModel.chargeName.getValue();
@@ -84,15 +88,28 @@ public class NewChargeActivity extends AppCompatActivity {
         });
     }
 
+    private void bindEditTextWithLiveData(EditText field, MutableLiveData<String> liveData) {
+        final String value = liveData.getValue();
+        if (value != null) {
+            field.setText(value);
+        }
+        field.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                liveData.setValue(editable.toString());
+            }
+        });
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        updateViewModel();
-    }
-
-    private void updateViewModel() {
-        newChargeViewModel.chargeName.setValue(newChargeName.getText().toString());
-        newChargeViewModel.chargeAmount.setValue(newChargeAmount.getText().toString());
     }
 
     private void prepareDateSelectionField(NewChargeViewModel newChargeViewModel) {
@@ -128,7 +145,7 @@ public class NewChargeActivity extends AppCompatActivity {
 
 
     public static class UsersListAdapter extends RecyclerView.Adapter<NewChargeActivity.UsersListAdapter.ViewHolder> {
-        private final Set<User> selectedUsers;
+        private final MutableLiveData<Set<User>> selectedUsers;
         private List<User> users;
 
 
@@ -141,11 +158,11 @@ public class NewChargeActivity extends AppCompatActivity {
             }
         }
 
-        public UsersListAdapter(LiveData<List<User>> users, LiveData<Set<User>> selectedUsers,
+        public UsersListAdapter(LiveData<List<User>> users, MutableLiveData<Set<User>> selectedUsers,
                                 LifecycleOwner lifecycleOwner) {
             users.observe(lifecycleOwner, this::setUsers);
             setUsers(users.getValue());
-            this.selectedUsers = selectedUsers.getValue();
+            this.selectedUsers = selectedUsers;
         }
 
         private void setUsers(List<User> users) {
@@ -166,13 +183,14 @@ public class NewChargeActivity extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             final User user = users.get(position);
             holder.mCheckBox.setText(user.name);
-            holder.mCheckBox.setChecked(selectedUsers.contains(user));
+            holder.mCheckBox.setChecked(selectedUsers.getValue().contains(user));
             holder.mCheckBox.setOnClickListener(view -> {
-                if (selectedUsers.contains(user)) {
-                    selectedUsers.remove(user);
+                if (selectedUsers.getValue().contains(user)) {
+                    selectedUsers.getValue().remove(user);
                 } else {
-                    selectedUsers.add(user);
+                    selectedUsers.getValue().add(user);
                 }
+                selectedUsers.setValue(selectedUsers.getValue());
             });
         }
 
