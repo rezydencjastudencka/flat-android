@@ -16,7 +16,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import pl.rpieja.flat.dto.ChargesDTO;
-import pl.rpieja.flat.dto.CreateCharge;
+import pl.rpieja.flat.dto.CreateChargeDTO;
 import pl.rpieja.flat.dto.SessionCheckResponse;
 import pl.rpieja.flat.dto.User;
 
@@ -78,7 +78,7 @@ public class FlatAPI {
         return Arrays.asList(fetch(GET_USERS_URL, User[].class));
     }
 
-    public void createCharge(CreateCharge charge) throws IOException, NoInternetConnectionException {
+    public void createCharge(CreateChargeDTO charge) throws IOException, NoInternetConnectionException {
         put(CREATE_CHARGE_URL, charge);
     }
 
