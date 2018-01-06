@@ -8,6 +8,7 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import pl.rpieja.flat.util.Callable;
 
@@ -33,6 +34,8 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
         assert listener != null;
-        listener.onCall(new GregorianCalendar(year, month, day));
+        GregorianCalendar calendar = new GregorianCalendar(year, month, day);
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        listener.onCall(calendar);
     }
 }
