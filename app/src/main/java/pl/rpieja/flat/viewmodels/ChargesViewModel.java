@@ -5,13 +5,17 @@ import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import pl.rpieja.flat.api.FlatAPI;
 import pl.rpieja.flat.authentication.AccountService;
 import pl.rpieja.flat.authentication.FlatCookieJar;
+import pl.rpieja.flat.dto.Charge;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.dto.Income;
+import pl.rpieja.flat.dto.Summary;
 import pl.rpieja.flat.tasks.AsyncGetCharges;
 
 /**
@@ -33,6 +37,21 @@ public class ChargesViewModel extends ViewModel {
     public List<Income> getIncomesList() {
         if (charges.getValue() == null) return new ArrayList<>();
         return charges.getValue().getIncomes();
+    }
+
+    public void sortCharges(Comparator<Charge> comparator) {
+        Collections.sort(charges.getValue().getCharges(), comparator);
+        charges.setValue(charges.getValue());
+    }
+
+    public void sortIncomes(Comparator<Income> comparator) {
+        Collections.sort(charges.getValue().getIncomes(), comparator);
+        charges.setValue(charges.getValue());
+    }
+
+    public void sortSummary(Comparator<Summary> comparator) {
+        Collections.sort(charges.getValue().getSummary(), comparator);
+        charges.setValue(charges.getValue());
     }
 
     public void loadCharges(Context context, int month, int year) {

@@ -6,18 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker;
 
@@ -33,13 +30,14 @@ public class ChargesActivity extends AppCompatActivity {
     private int month, year;
 
     ChargesViewModel chargesViewModel;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charges);
 
-        Date date= new Date();
+        Date date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         month = cal.get(Calendar.MONTH) + 1;
@@ -55,7 +53,7 @@ public class ChargesActivity extends AppCompatActivity {
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        ViewPager viewPager = findViewById(R.id.container);
+        viewPager = findViewById(R.id.container);
         viewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
@@ -63,11 +61,21 @@ public class ChargesActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
+        if(savedInstanceState != null) {
+            viewPager.setCurrentItem(savedInstanceState.getInt("currentItem"));
+        }
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(ChargesActivity.this, NewChargeActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentItem", viewPager.getCurrentItem());
     }
 
     public void showDatePickerDialog() {
@@ -93,7 +101,8 @@ public class ChargesActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_sort_by:
+                new ChargesSortDialogFragment().show(getFragmentManager(), "chargesSortDialog");
                 return true;
 
             case R.id.action_setmonth:
@@ -111,7 +120,6 @@ public class ChargesActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }

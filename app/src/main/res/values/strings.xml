@@ -15,6 +15,9 @@
     <string name="new_charge_title">Enter charge name</string>
     <string name="new_charge_amount">Enter amount</string>
     <string name="new_charge_date">Set date</string>
-
-
+    <string name="name">Name</string>
+    <string name="amount">Amount</string>
+    <string name="user">User</string>
+    <string name="sort_order_title">Select sort order</string>
+    <string name="action_sort_by">Sort by</string>
 </resources>
