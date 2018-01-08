@@ -1,5 +1,6 @@
 package pl.rpieja.flat.dto;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -7,9 +8,9 @@ import java.util.List;
  */
 
 public class Charge {
-    public String name, date, rawAmount;
+    public String name, rawAmount;
+    public Date date;
     public int from, id;
     public List<User> to;
     public double amount;
-
 }

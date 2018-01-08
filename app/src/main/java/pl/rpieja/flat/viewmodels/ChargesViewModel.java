@@ -40,16 +40,22 @@ public class ChargesViewModel extends ViewModel {
     }
 
     public void sortCharges(Comparator<Charge> comparator) {
+        if(charges.getValue() == null || charges.getValue().getCharges() == null) return;
+
         Collections.sort(charges.getValue().getCharges(), comparator);
         charges.setValue(charges.getValue());
     }
 
     public void sortIncomes(Comparator<Income> comparator) {
+        if(charges.getValue() == null || charges.getValue().getIncomes() == null) return;
+
         Collections.sort(charges.getValue().getIncomes(), comparator);
         charges.setValue(charges.getValue());
     }
 
     public void sortSummary(Comparator<Summary> comparator) {
+        if(charges.getValue() == null || charges.getValue().getSummary() == null) return;
+
         Collections.sort(charges.getValue().getSummary(), comparator);
         charges.setValue(charges.getValue());
     }

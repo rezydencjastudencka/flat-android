@@ -13,7 +13,8 @@ data class SortOption<T>(val description: String, val comparator: Comparator<T>)
 
 class ChargesSortDialog(private val context: Context, private val viewModel: ChargesViewModel) {
     private val chargesSortOptions: List<SortOption<Charge>> = listOf(
-//            SortOption("Date", Comparator { _, _ -> 0 }), // TODO
+            SortOption(context.getString(R.string.date),
+                    Comparator { o1, o2 -> o1.date.compareTo(o2.date) }),
             SortOption(context.getString(R.string.name),
                     Comparator { o1, o2 -> o1.name.compareTo(o2.name) }),
             SortOption(context.getString(R.string.amount),
@@ -21,7 +22,8 @@ class ChargesSortDialog(private val context: Context, private val viewModel: Cha
     )
 
     private val incomesSortOptions: List<SortOption<Income>> = listOf(
-//            SortOption("Date", Comparator { _, _ -> 0 }), // TODO
+            SortOption(context.getString(R.string.date),
+                    Comparator { o1, o2 -> o1.date.compareTo(o2.date) }),
             SortOption(context.getString(R.string.name),
                     Comparator { o1, o2 -> o1.name.compareTo(o2.name) }),
             SortOption(context.getString(R.string.user),
