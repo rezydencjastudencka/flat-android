@@ -9,4 +9,7 @@
     <color name="textColorGreyDark">#626C78</color>
     <color name="textColorDark">#2e2e2e</color>
     <color name="colorBackgroundLight">#EFEBEF</color>
+    <color name="amountPositive">#FF71DA98</color>
+    <color name="amountNegative">#FF0000</color>
+    <color name="amountNeutral">#A4A4A4</color>
 </resources>
