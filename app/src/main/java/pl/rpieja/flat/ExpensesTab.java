@@ -31,6 +31,12 @@ public class ExpensesTab extends Fragment {
         listView = rootView.findViewById(R.id.expensesListView);
         ChargesViewModel chargesViewModel = ViewModelProviders.of(getActivity()).get(ChargesViewModel.class);
 
+        chargesViewModel.getChargesList().observe(this, chargesDTO -> {
+            if (chargesDTO.getCharges() == null)
+                return;
+            updateListWithCharges(chargesDTO.getIncomes());
+        });
+
         updateListWithCharges(chargesViewModel.getIncomesList());
 
         return rootView;

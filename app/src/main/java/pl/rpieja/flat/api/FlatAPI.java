@@ -3,6 +3,7 @@ package pl.rpieja.flat.api;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class FlatAPI {
 
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) return false;
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD").create();
         SessionCheckResponse checkResponse = gson.fromJson(response.body().string(), SessionCheckResponse.class);
         if (checkResponse == null) return false;
         return "ok".equals(checkResponse.error);
