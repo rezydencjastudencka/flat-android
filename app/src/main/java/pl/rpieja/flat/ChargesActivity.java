@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import pl.rpieja.flat.authentication.AccountService;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
@@ -145,8 +146,11 @@ public class ChargesActivity extends AppCompatActivity
 
         if (id == R.id.charges_nav) {
             // Handle the camera action
-        } else if (id == R.id.transfers_nav) {
-
+        } else if (id == R.id.logout_nav) {
+            AccountService.removeCurrentAccount(this);
+            Intent intent = new Intent(ChargesActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
