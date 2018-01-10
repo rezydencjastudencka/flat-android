@@ -1,5 +1,6 @@
 package pl.rpieja.flat
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
@@ -62,6 +63,10 @@ class SummaryTab : Fragment() {
 
         recyclerView.adapter = ItemAdapter(context!!, chargesViewModel.charges.value!!.summary)
         recyclerView.layoutManager = LinearLayoutManager(activity)
+
+        chargesViewModel.chargesList.observe(this, Observer { chargesDTO ->
+            recyclerView.adapter = ItemAdapter(context!!, chargesDTO!!.summary)
+        })
 
         return rootView
     }
