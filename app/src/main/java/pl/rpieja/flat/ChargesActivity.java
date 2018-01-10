@@ -7,10 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,7 +29,8 @@ import java.util.Locale;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.viewmodels.ChargesViewModel;
 
-public class ChargesActivity extends AppCompatActivity {
+public class ChargesActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private int month, year;
 
@@ -70,6 +75,25 @@ public class ChargesActivity extends AppCompatActivity {
             Intent intent = new Intent(ChargesActivity.this, NewChargeActivity.class);
             startActivity(intent);
         });
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -115,6 +139,22 @@ public class ChargesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.chargesActiv) {
+            // Handle the camera action
+        } else if (id == R.id.transfersActiv) {
+
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -148,8 +188,7 @@ public class ChargesActivity extends AppCompatActivity {
                     });
                     return expensesTab;
                 case 2:
-                    SummaryTab summaryTab = new SummaryTab();
-                    return summaryTab;
+                    return new SummaryTab();
                 default:
                     return null;
             }

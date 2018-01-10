@@ -21,4 +21,6 @@
     <string name="date">Date</string>
     <string name="sort_order_title">Select sort order</string>
     <string name="action_sort_by">Sort by</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
