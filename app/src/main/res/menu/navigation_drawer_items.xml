@@ -9,7 +9,7 @@
         <item
             android:id="@+id/charges_nav"
             android:checked="true"
-            android:icon="@drawable/ic_fiber_manual_record_black_24dp"
+            android:icon="@drawable/ic_attach_money_black_24dp"
             android:title="@string/nav_charges_title" />
         <item
             android:id="@+id/statistics_nav"
@@ -19,7 +19,7 @@
         <item
             android:id="@+id/transfers_nav"
             android:checked="true"
-            android:icon="@drawable/ic_fiber_manual_record_black_24dp"
+            android:icon="@drawable/ic_swap_horiz_black_24dp"
             android:title="@string/nav_transfers_title" />
 
     </group>

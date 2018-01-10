@@ -10,9 +10,9 @@ Android client for flat app.
 - [ ] Adding Charges
 - [x] Invalid token handling
 - [ ] UI Refactoring (messed up ListView component and colors naming)
-- [ ] Navigation Drawer
+- [x] Navigation Drawer
 - [ ] Transfers tab
-- [ ] Logout function
+- [x] Logout function
 - [ ] Adding transfers
 - [ ] Notification service (to be implemented on server side @maxmati )
 - [ ] Move from ListView to RecyclerView

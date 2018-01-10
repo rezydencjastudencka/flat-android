@@ -144,8 +144,8 @@ public class ChargesActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.charges_nav) {
-            // Handle the camera action
+        if (id == R.id.transfers_nav) {
+            //Open Transfers Activity
         } else if (id == R.id.logout_nav) {
             AccountService.removeCurrentAccount(this);
             Intent intent = new Intent(ChargesActivity.this, LoginActivity.class);
