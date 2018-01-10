@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/chargesActiv"
-            android:checked="true"
-            android:icon="@drawable/ic_date_range_black_24dp"
-            android:title="Charges"/>
-        <item
-            android:id="@+id/transfersActiv"
-            android:checked="true"
-            android:icon="@drawable/ic_date_range_black_24dp"
-            android:title="Transfers"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
+    <group
+        android:id="@+id/drawer_top"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/charges_nav"
+            android:checked="true"
+            android:icon="@drawable/ic_fiber_manual_record_black_24dp"
+            android:title="@string/nav_charges_title" />
+        <item
+            android:id="@+id/statistics_nav"
+            android:checked="true"
+            android:icon="@drawable/ic_timeline_black_24dp"
+            android:title="@string/nav_statistics_title" />
+        <item
+            android:id="@+id/transfers_nav"
+            android:checked="true"
+            android:icon="@drawable/ic_fiber_manual_record_black_24dp"
+            android:title="@string/nav_transfers_title" />
+
+    </group>
+    <group
+        android:id="@+id/drawer_bottom"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/nav_settings_title" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_directions_run_black_24dp"
+            android:title="@string/nav_logout_title" />
     </group>
 </menu>

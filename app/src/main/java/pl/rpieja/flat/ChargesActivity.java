@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -135,7 +135,6 @@ public class ChargesActivity extends AppCompatActivity
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -144,9 +143,9 @@ public class ChargesActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.chargesActiv) {
+        if (id == R.id.charges_nav) {
             // Handle the camera action
-        } else if (id == R.id.transfersActiv) {
+        } else if (id == R.id.transfers_nav) {
 
         }
 

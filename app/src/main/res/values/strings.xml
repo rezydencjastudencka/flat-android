@@ -1,26 +1,41 @@
 <resources>
     <string name="app_name">Flat</string>
-    <string name="action_settings">Settings</string>
-    <string name="signInButtonText">Sign In</string>
+
+    <!--Login activity-->
     <string name="usernameTextField">Username</string>
     <string name="passwordTextField">Password</string>
+    <string name="signInButtonText">Sign In</string>
+
+    <!--Charges activity-->
     <string name="title_activity_charges">ChargesActivity</string>
+    <string name="action_settings">Settings</string>
     <string name="charges_name">Charges</string>
     <string name="tab_text_1">Charges</string>
     <string name="tab_text_2">Expenses</string>
     <string name="tab_text_3">Summary</string>
     <string name="action_setmonth">Set Date</string>
+
+    <!--New charge activity-->
     <string name="title_activity_new_charge">NewChargeActivity</string>
     <string name="new_charge_activity_title">New Charge</string>
     <string name="new_charge_title">Enter charge name</string>
     <string name="new_charge_amount">Enter amount</string>
     <string name="new_charge_date">Set date</string>
+
+    <!--Sorting-->
     <string name="name">Name</string>
     <string name="amount">Amount</string>
     <string name="user">User</string>
     <string name="date">Date</string>
     <string name="sort_order_title">Select sort order</string>
     <string name="action_sort_by">Sort by</string>
+
+    <!--Navigation drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_charges_title">Charges</string>
+    <string name="nav_statistics_title">Statistics</string>
+    <string name="nav_transfers_title">Transfers</string>
+    <string name="nav_settings_title">Settings</string>
+    <string name="nav_logout_title">Logout</string>
 </resources>
