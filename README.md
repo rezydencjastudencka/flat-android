@@ -16,5 +16,5 @@ Android client for flat app.
 - [ ] Adding transfers
 - [ ] Notification service (to be implemented on server side @maxmati )
 - [ ] Move from ListView to RecyclerView
-- [ ] Summary tab
+- [x] Summary tab
 - [ ] "Force touch" like menu on launcher icon -> AppShortcuts
