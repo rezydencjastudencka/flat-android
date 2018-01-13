@@ -145,7 +145,9 @@ public class ChargesActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.transfers_nav) {
-            //Open Transfers Activity
+            Intent intent = new Intent(ChargesActivity.this, TransfersActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.logout_nav) {
             AccountService.removeCurrentAccount(this);
             Intent intent = new Intent(ChargesActivity.this, LoginActivity.class);
