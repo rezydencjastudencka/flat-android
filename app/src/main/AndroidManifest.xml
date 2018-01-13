@@ -59,6 +59,10 @@
             android:name=".NewChargeActivity"
             android:label="@string/title_activity_new_charge"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TransfersActivity"
+            android:label="@string/title_activity_transfers"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
