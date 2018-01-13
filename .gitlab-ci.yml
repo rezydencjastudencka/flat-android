@@ -20,7 +20,7 @@ before_script:
   - echo y | tools/bin/sdkmanager "extras;google;google_play_services"
   - echo y | tools/bin/sdkmanager "extras;google;m2repository"
   - echo y | tools/bin/sdkmanager --licenses
-  - export ANDROID_HOME=$PWD/android-sdk-linux
+  - export ANDROID_HOME=$PWD
   - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/
   - chmod +x ./gradlew
 
