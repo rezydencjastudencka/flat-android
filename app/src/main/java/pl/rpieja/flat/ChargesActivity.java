@@ -182,13 +182,13 @@ public class ChargesActivity extends AppCompatActivity
                     return chargesTab;
                 case 1:
                     final ExpensesTab expensesTab = new ExpensesTab();
-                    chargesViewModel.getCharges().observe(expensesTab, new Observer<ChargesDTO>() {
-                        @Override
-                        public void onChanged(@Nullable ChargesDTO chargesDTO) {
-                            if (chargesDTO == null) return;
-                            expensesTab.updateListWithCharges(chargesDTO.getIncomes());
-                        }
-                    });
+//                    chargesViewModel.getCharges().observe(expensesTab, new Observer<ChargesDTO>() {
+//                        @Override
+//                        public void onChanged(@Nullable ChargesDTO chargesDTO) {
+//                            if (chargesDTO == null) return;
+//                            expensesTab.updateListWithCharges(chargesDTO.getIncomes());
+//                        }
+//                    });
                     return expensesTab;
                 case 2:
                     return new SummaryTab();

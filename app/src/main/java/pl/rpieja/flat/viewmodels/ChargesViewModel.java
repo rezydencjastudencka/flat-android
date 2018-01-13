@@ -14,7 +14,7 @@ import pl.rpieja.flat.authentication.AccountService;
 import pl.rpieja.flat.authentication.FlatCookieJar;
 import pl.rpieja.flat.dto.Charge;
 import pl.rpieja.flat.dto.ChargesDTO;
-import pl.rpieja.flat.dto.Income;
+import pl.rpieja.flat.dto.Expense;
 import pl.rpieja.flat.dto.Summary;
 import pl.rpieja.flat.tasks.AsyncGetCharges;
 
@@ -34,7 +34,7 @@ public class ChargesViewModel extends ViewModel {
         return charges;
     }
 
-    public List<Income> getIncomesList() {
+    public List<Expense> getIncomesList() {
         if (charges.getValue() == null) return new ArrayList<>();
         return charges.getValue().getIncomes();
     }
@@ -46,7 +46,7 @@ public class ChargesViewModel extends ViewModel {
         charges.setValue(charges.getValue());
     }
 
-    public void sortIncomes(Comparator<Income> comparator) {
+    public void sortIncomes(Comparator<Expense> comparator) {
         if(charges.getValue() == null || charges.getValue().getIncomes() == null) return;
 
         Collections.sort(charges.getValue().getIncomes(), comparator);

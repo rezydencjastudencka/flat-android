@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import pl.rpieja.flat.dto.Charge
-import pl.rpieja.flat.dto.Income
+import pl.rpieja.flat.dto.Expense
 import pl.rpieja.flat.dto.Summary
 import pl.rpieja.flat.viewmodels.ChargesViewModel
 
@@ -21,7 +21,7 @@ class ChargesSortDialog(private val context: Context, private val viewModel: Cha
                     Comparator { o1, o2 -> o1.amount.compareTo(o2.amount) })
     )
 
-    private val incomesSortOptions: List<SortOption<Income>> = listOf(
+    private val incomesSortOptions: List<SortOption<Expense>> = listOf(
             SortOption(context.getString(R.string.date),
                     Comparator { o1, o2 -> o1.date.compareTo(o2.date) }),
             SortOption(context.getString(R.string.name),
