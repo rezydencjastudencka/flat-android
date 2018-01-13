@@ -170,14 +170,10 @@ public class ChargesActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
-                    return new ChargesTab();
-                case 1:
-                    return new ExpensesTab();
-                case 2:
-                    return new SummaryTab();
-                default:
-                    return null;
+                case 0: return new ChargesTab();
+                case 1: return new ExpensesTab();
+                case 2: return new SummaryTab();
+                default: return null;
             }
         }
 
