@@ -12,12 +12,12 @@ before_script:
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
   - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
   - unzip android-sdk.zip
-  - yes | tools/android update sdk --no-ui --all --filter android-${ANDROID_COMPILE_SDK}
-  - yes | tools/android update sdk --no-ui --all --filter platform-tools
-  - yes | tools/android update sdk --no-ui --all --filter build-tools-${ANDROID_BUILD_TOOLS}
-  - yes | tools/android update sdk --no-ui --all --filter extra-android-m2repository
-  - yes | tools/android update sdk --no-ui --all --filter extra-google-google_play_services
-  - yes | tools/android update sdk --no-ui --all --filter extra-google-m2repository
+  - yes | tools/bin/sdkmanager android-${ANDROID_COMPILE_SDK}
+  - yes | tools/bin/sdkmanager platform-tools
+  - yes | tools/bin/sdkmanager build-tools-${ANDROID_BUILD_TOOLS}
+  - yes | tools/bin/sdkmanager extra-android-m2repository
+  - yes | tools/bin/sdkmanager extra-google-google_play_services
+  - yes | tools/bin/sdkmanager extra-google-m2repository
   - yes | tools/bin/sdkmanager --licenses
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/
