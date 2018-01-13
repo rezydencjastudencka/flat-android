@@ -13,12 +13,12 @@ before_script:
   - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
   - unzip android-sdk.zip
   - mkdir -p ~/.android && touch ~/.android/repositories.cfg
-  - yes | tools/bin/sdkmanager platforms;android-${ANDROID_COMPILE_SDK}
-  - yes | tools/bin/sdkmanager platform-tools
-  - yes | tools/bin/sdkmanager build-tools;${ANDROID_BUILD_TOOLS}
-  - yes | tools/bin/sdkmanager extras;android;m2repository
-  - yes | tools/bin/sdkmanager extras;google;google_play_services
-  - yes | tools/bin/sdkmanager extras;google;m2repository
+  - yes | tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}"
+  - yes | tools/bin/sdkmanager "platform-tools"
+  - yes | tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}"
+  - yes | tools/bin/sdkmanager "extras;android;m2repository"
+  - yes | tools/bin/sdkmanager "extras;google;google_play_services"
+  - yes | tools/bin/sdkmanager "extras;google;m2repository"
   - yes | tools/bin/sdkmanager --licenses
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/
