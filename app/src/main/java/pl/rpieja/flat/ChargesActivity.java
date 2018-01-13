@@ -171,25 +171,9 @@ public class ChargesActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    final ChargesTab chargesTab = new ChargesTab();
-                    chargesViewModel.getCharges().observe(chargesTab, new Observer<ChargesDTO>() {
-                        @Override
-                        public void onChanged(@Nullable ChargesDTO chargesDTO) {
-                            if (chargesDTO == null) return;
-                            chargesTab.updateListWithCharges(chargesDTO.getCharges());
-                        }
-                    });
-                    return chargesTab;
+                    return new ChargesTab();
                 case 1:
-                    final ExpensesTab expensesTab = new ExpensesTab();
-//                    chargesViewModel.getCharges().observe(expensesTab, new Observer<ChargesDTO>() {
-//                        @Override
-//                        public void onChanged(@Nullable ChargesDTO chargesDTO) {
-//                            if (chargesDTO == null) return;
-//                            expensesTab.updateListWithCharges(chargesDTO.getIncomes());
-//                        }
-//                    });
-                    return expensesTab;
+                    return new ExpensesTab();
                 case 2:
                     return new SummaryTab();
                 default:
