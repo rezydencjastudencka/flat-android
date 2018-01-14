@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
@@ -25,8 +25,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
 
             <!--
             <intent-filter>
@@ -38,8 +37,7 @@
         </activity>
         <activity
             android:name=".ChargesActivity"
-            android:label="@string/title_activity_charges"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_charges"/>
 
         <meta-data
             android:name="preloaded_fonts"
@@ -57,12 +55,11 @@
 
         <activity
             android:name=".NewChargeActivity"
-            android:label="@string/title_activity_new_charge"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_new_charge" />
         <activity
             android:name=".TransfersActivity"
-            android:label="@string/title_activity_transfers"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_transfers" />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

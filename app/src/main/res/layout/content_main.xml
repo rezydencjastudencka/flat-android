@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="pl.rpieja.flat.LoginActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/login_activity">
 
 </android.support.constraint.ConstraintLayout>

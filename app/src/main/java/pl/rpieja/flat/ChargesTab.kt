@@ -30,7 +30,8 @@ class ChargesTab: ChargeLikeTab<Charge, ChargeViewHolder>() {
     override fun createViewHolder(view: View): ChargeViewHolder = ChargeViewHolder(view)
 
     override fun observe() {
-        ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java).charges
+        val chargesViewModel = ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java)
+        chargesViewModel.charges
                 .observe(this, Observer { x: ChargesDTO? -> setData(x!!.charges) })
     }
 }

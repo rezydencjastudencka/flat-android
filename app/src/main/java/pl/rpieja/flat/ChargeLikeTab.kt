@@ -1,7 +1,5 @@
 package pl.rpieja.flat
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -52,6 +50,7 @@ abstract class ChargeLikeTab<T, VH: RecyclerView.ViewHolder>: Fragment() {
         recyclerView = rootView.findViewById(recyclerViewId)
 
         recyclerView?.layoutManager = LinearLayoutManager(activity)
+        recyclerView?.adapter = ItemAdapter(emptyList())
         observe()
 
         return rootView
