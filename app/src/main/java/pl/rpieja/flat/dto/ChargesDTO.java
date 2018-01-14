@@ -10,7 +10,7 @@ public class ChargesDTO {
 
     List<Charge> charges;
     List<Summary> summary;
-    List<Income> incomes;
+    List<Expense> incomes;
 
     public List<Charge> getCharges() {
         return charges;
@@ -20,7 +20,7 @@ public class ChargesDTO {
         return summary;
     }
 
-    public List<Income> getIncomes() {
+    public List<Expense> getIncomes() {
         return incomes;
     }
 }

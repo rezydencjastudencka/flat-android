@@ -7,7 +7,7 @@ import java.util.List;
  * Created by radix on 2017-11-01.
  */
 
-public class Income {
+public class Expense {
     public String name, rawAmount;
     public Date date;
     public int id;

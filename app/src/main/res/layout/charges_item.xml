@@ -1,54 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/chargesItem"
-    android:id="@+id/relativeLayout">
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="4dp">
 
-    <TextView
-        android:id="@+id/chargeName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="TextView"
-        android:textSize="20dp"
-        android:paddingLeft="8dp"
-        android:textColor="@color/textColorDark"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.constraint.ConstraintLayout
+        style="@style/chargesItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="6dp">
 
-    <TextView
-        android:id="@+id/chargeAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_attach_money_black_24dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="TextView"
-        android:textSize="15dp"
-        android:paddingRight="10dp"
-        android:textAlignment="viewStart"
-        android:textColor="@color/textColorGreyDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/chargeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:textSize="20sp"
+            android:paddingStart="8dp"
+            android:textColor="@color/textColorDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/chargeUsers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_person_black_24dp"
-        android:text="TextView"
-        android:textSize="15dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/chargeName"
-        tools:layout_editor_absoluteX="8dp" />
+        <TextView
+            android:id="@+id/chargeAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:textSize="15sp"
+            android:paddingEnd="10dp"
+            android:textAlignment="viewStart"
+            android:textColor="@color/textColorGreyDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/chargeUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="10dp"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chargeName" />
 
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>
