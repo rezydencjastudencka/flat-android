@@ -1,11 +1,11 @@
 package pl.rpieja.flat.viewmodels;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -61,6 +61,11 @@ public class ChargesViewModel extends ViewModel {
         charges.setValue(charges.getValue());
     }
 
+    public void loadCharges(Context context) {
+        Calendar calendar = Calendar.getInstance();
+        loadCharges(context, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+    }
+
     public void loadCharges(Context context, int month, int year) {
         FlatAPI flatAPI = new FlatAPI(new FlatCookieJar(context));
 
@@ -74,5 +79,9 @@ public class ChargesViewModel extends ViewModel {
         new AsyncGetCharges(flatAPI, month, year,
                 chargesDTO -> charges.setValue(chargesDTO),
                 () -> AccountService.removeCurrentAccount(context)).execute();
+    }
+
+    public int getMonth() {
+        return month;
     }
 }

@@ -21,9 +21,9 @@ class ExpensesTab: ChargeLikeTab<Expense, ExpenseViewHolder>() {
                 .observe(this, Observer { x: ChargesDTO? -> setData(x!!.incomes) })
     }
 
-    override val layoutId: Int = R.layout.expenses_tab
+    override val layoutId: Int = R.layout.charges_tab
     override val itemLayoutId: Int = R.layout.charges_item
-    override val recyclerViewId: Int = R.id.expensesListView
+    override val recyclerViewId: Int = R.id.chargesListView
 
     override fun updateItemView(viewHolder: ExpenseViewHolder, item: Expense) {
         viewHolder.chargeName.text = item.name

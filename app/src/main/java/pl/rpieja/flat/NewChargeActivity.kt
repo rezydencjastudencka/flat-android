@@ -107,11 +107,6 @@ class NewChargeActivity : AppCompatActivity() {
             newChargeDate.text = DateFormat.getLongDateFormat(this).format(calendar!!.time)
         })
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_new_charge, menu)
-        return true
-    }
 }
 
 private class ViewHolder(val mCheckBox: CheckBox) : RecyclerView.ViewHolder(mCheckBox)
