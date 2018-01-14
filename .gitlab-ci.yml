@@ -48,7 +48,7 @@ functionalTests:
     - chmod +x android-wait-for-emulator
     - echo y | tools/bin/sdkmanager "system-images;android-${ANDROID_COMPILE_SDK};google_apis;x86"
     - echo no | tools/bin/avdmanager create avd -n test -k "system-images;android-${ANDROID_COMPILE_SDK};google_apis;x86" --tag "google_apis"
-    - tools/emulator64-x86 -avd test -no-window -no-audio &
+    - tools/emulator -avd test -no-window -no-audio &
     - ./android-wait-for-emulator
     - adb shell input keyevent 82
     - ./gradlew cAT
