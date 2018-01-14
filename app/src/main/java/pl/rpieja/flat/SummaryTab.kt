@@ -16,9 +16,9 @@ class SummaryViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
 class SummaryTab: ChargeLikeTab<Summary, SummaryViewHolder>() {
 
-    override val layoutId: Int = R.layout.summary_tab
+    override val layoutId: Int = R.layout.charges_tab
     override val itemLayoutId: Int = R.layout.summary_item
-    override val recyclerViewId: Int = R.id.summary_list
+    override val recyclerViewId: Int = R.id.chargesListView
 
     override fun updateItemView(viewHolder: SummaryViewHolder, item: Summary) {
         val colorNegative = context!!.getColor(R.color.amountNegative)

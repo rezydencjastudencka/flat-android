@@ -2,8 +2,13 @@ package pl.rpieja.flat
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
+import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import pl.rpieja.flat.dto.Charge
 import pl.rpieja.flat.dto.ChargesDTO
@@ -30,7 +35,19 @@ class ChargesTab: ChargeLikeTab<Charge, ChargeViewHolder>() {
     override fun createViewHolder(view: View): ChargeViewHolder = ChargeViewHolder(view)
 
     override fun observe() {
-        ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java).charges
+        val chargesViewModel = ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java)
+        chargesViewModel.charges
                 .observe(this, Observer { x: ChargesDTO? -> setData(x!!.charges) })
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+
+        val fab = activity!!.findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener({ _ ->
+            startActivity(Intent(context, NewChargeActivity::class.java));
+        })
+
+        return view
     }
 }
