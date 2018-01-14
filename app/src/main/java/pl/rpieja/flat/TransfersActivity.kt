@@ -122,7 +122,12 @@ class TransfersActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1)
+            return when (position){
+                0 -> PlaceholderFragment.newInstance(position + 1)
+                1 -> PlaceholderFragment.newInstance(position + 1)
+                2 -> PlaceholderFragment.newInstance(position + 1)
+                else -> TODO()
+            }
         }
 
         override fun getCount(): Int {
