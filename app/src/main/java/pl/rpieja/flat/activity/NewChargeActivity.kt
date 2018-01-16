@@ -1,4 +1,4 @@
-package pl.rpieja.flat
+package pl.rpieja.flat.activity
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import pl.rpieja.flat.R
 import pl.rpieja.flat.dialog.DateDialog
 
 import pl.rpieja.flat.dto.User

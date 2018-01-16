@@ -1,4 +1,4 @@
-package pl.rpieja.flat;
+package pl.rpieja.flat.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

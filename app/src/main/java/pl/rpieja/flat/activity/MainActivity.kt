@@ -1,7 +1,9 @@
-package pl.rpieja.flat
+package pl.rpieja.flat.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import pl.rpieja.flat.fragment.ChargesFragment
+import pl.rpieja.flat.R
 
 class MainActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

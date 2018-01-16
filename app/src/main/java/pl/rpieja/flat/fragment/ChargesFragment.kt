@@ -1,4 +1,4 @@
-package pl.rpieja.flat
+package pl.rpieja.flat.fragment
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.*
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
+import pl.rpieja.flat.R
 import pl.rpieja.flat.dialog.ChargesSortDialogFragment
 import pl.rpieja.flat.viewmodels.ChargesViewModel
 import java.util.*
@@ -27,7 +28,7 @@ class SectionsPagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm) {
 
 class ChargesFragment: Fragment() {
     companion object {
-        val tag = "pl.rpieja.flat.ChargesFragment"
+        val tag = "pl.rpieja.flat.fragment.ChargesFragment"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

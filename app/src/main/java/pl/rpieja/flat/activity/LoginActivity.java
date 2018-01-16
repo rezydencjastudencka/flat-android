@@ -1,4 +1,4 @@
-package pl.rpieja.flat;
+package pl.rpieja.flat.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import pl.rpieja.flat.R;
 import pl.rpieja.flat.authentication.AccountService;
 import pl.rpieja.flat.authentication.FlatCookieJar;
 import pl.rpieja.flat.api.FlatAPI;

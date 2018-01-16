@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="pl.rpieja.flat.NewChargeActivity"
+    tools:context="pl.rpieja.flat.activity.NewChargeActivity"
     tools:showIn="@layout/activity_new_charge">
 
 

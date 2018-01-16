@@ -1,4 +1,4 @@
-package pl.rpieja.flat
+package pl.rpieja.flat.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

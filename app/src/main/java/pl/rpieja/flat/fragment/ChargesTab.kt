@@ -1,4 +1,4 @@
-package pl.rpieja.flat
+package pl.rpieja.flat.fragment
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import pl.rpieja.flat.R
+import pl.rpieja.flat.activity.NewChargeActivity
 import pl.rpieja.flat.dto.Charge
 import pl.rpieja.flat.dto.ChargesDTO
 import pl.rpieja.flat.viewmodels.ChargesViewModel
