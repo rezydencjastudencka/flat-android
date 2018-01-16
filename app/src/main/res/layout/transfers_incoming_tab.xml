@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundLight"
-    tools:context="pl.rpieja.flat.fragment.SummaryTab">
+    tools:context="pl.rpieja.flat.fragment.TransfersSummaryTab">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/transfers_incoming_list"

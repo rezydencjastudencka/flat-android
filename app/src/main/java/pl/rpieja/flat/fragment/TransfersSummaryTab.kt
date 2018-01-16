@@ -8,14 +8,10 @@ import android.widget.TextView
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.ChargesDTO
 import pl.rpieja.flat.dto.Summary
-import pl.rpieja.flat.viewmodels.ChargesViewModel
+import pl.rpieja.flat.dto.TransfersDTO
+import pl.rpieja.flat.viewmodels.TransfersViewModel
 
-class SummaryViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    val amountTextView: TextView = itemView.findViewById(R.id.summaryAmount)
-    val userTextView: TextView = itemView.findViewById(R.id.summaryUser)
-}
-
-class SummaryTab: ChargeLikeTab<Summary, SummaryViewHolder>() {
+class TransfersSummaryTab: ChargeLikeTab<Summary, SummaryViewHolder>() {
     override val layoutId: Int = R.layout.charges_tab
     override val itemLayoutId: Int = R.layout.summary_item
     override val recyclerViewId: Int = R.id.chargesListView
@@ -40,7 +36,7 @@ class SummaryTab: ChargeLikeTab<Summary, SummaryViewHolder>() {
     override fun createViewHolder(view: View): SummaryViewHolder = SummaryViewHolder(view)
 
     override fun observe() {
-        ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java).charges
-                .observe(this, Observer { x: ChargesDTO? -> setData(x!!.summary) })
+        ViewModelProviders.of(activity!!).get(TransfersViewModel::class.java).getTransfers()
+                .observe(this, Observer { x: TransfersDTO? -> setData(x!!.summary!!) })
     }
 }

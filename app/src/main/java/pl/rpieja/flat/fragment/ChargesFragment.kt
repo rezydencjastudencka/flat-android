@@ -19,7 +19,7 @@ class SectionsPagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm) {
             when (position) {
                 0 -> ChargesTab()
                 1 -> ExpensesTab()
-                2 -> SummaryTab()
+                2 -> TransfersSummaryTab()
                 else -> TODO()
             }
 
@@ -55,7 +55,7 @@ class ChargesFragment: Fragment() {
         chargesViewModel = ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java)
         chargesViewModel!!.loadCharges(context)
 
-        val mSectionsPagerAdapter = SectionsPagerAdapter(fragmentManager!!)
+        val mSectionsPagerAdapter = SectionsPagerAdapter(childFragmentManager)
 
         val viewPager: ViewPager = view.findViewById(R.id.container)
         val tabLayout: TabLayout = view.findViewById(R.id.tabs)

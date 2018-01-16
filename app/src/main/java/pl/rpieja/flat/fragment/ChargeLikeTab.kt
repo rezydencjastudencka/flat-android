@@ -22,6 +22,7 @@ abstract class ChargeLikeTab<T, VH: RecyclerView.ViewHolder>: Fragment() {
     abstract fun observe()
 
     val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance()
+    private var elements: List<T>? = null
 
     init {
         currencyFormat.currency = Currency.getInstance("USD") // TODO fetch
@@ -29,11 +30,12 @@ abstract class ChargeLikeTab<T, VH: RecyclerView.ViewHolder>: Fragment() {
 
     fun setData(data: List<T>) {
         recyclerView?.adapter = ItemAdapter(data)
+        elements = data
     }
 
     inner class ItemAdapter(val list: List<T>): RecyclerView.Adapter<VH>() {
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH {
-            val view = LayoutInflater.from(parent!!.context)
+            val view = LayoutInflater.from(context)
                     .inflate(this@ChargeLikeTab.itemLayoutId, parent, false)
             return this@ChargeLikeTab.createViewHolder(view)
         }
@@ -44,14 +46,18 @@ abstract class ChargeLikeTab<T, VH: RecyclerView.ViewHolder>: Fragment() {
                 this@ChargeLikeTab.updateItemView(holder!!, list[position])
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        observe()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(layoutId, container, false)
         recyclerView = rootView.findViewById(recyclerViewId)
 
         recyclerView?.layoutManager = LinearLayoutManager(activity)
-        recyclerView?.adapter = ItemAdapter(emptyList())
-        observe()
+        recyclerView?.adapter = ItemAdapter(elements ?: emptyList())
 
         return rootView
     }

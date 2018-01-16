@@ -39,17 +39,20 @@ class ChargesTab: ChargeLikeTab<Charge, ChargeViewHolder>() {
     override fun observe() {
         val chargesViewModel = ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java)
         chargesViewModel.charges
-                .observe(this, Observer { x: ChargesDTO? -> setData(x!!.charges) })
+                .observe(parentFragment!!, Observer { x: ChargesDTO? -> setData(x!!.charges) })
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    /*
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
         val fab = activity!!.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener({ _ ->
-            startActivity(Intent(context, NewChargeActivity::class.java));
+            startActivity(Intent(activity!!, NewChargeActivity::class.java))
         })
 
         return view
     }
+    */
 }
