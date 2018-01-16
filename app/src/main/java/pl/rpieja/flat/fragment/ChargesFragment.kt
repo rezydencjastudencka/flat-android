@@ -1,5 +1,6 @@
 package pl.rpieja.flat.fragment
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -11,15 +12,38 @@ import android.view.*
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dialog.ChargesSortDialogFragment
+import pl.rpieja.flat.dto.*
 import pl.rpieja.flat.viewmodels.ChargesViewModel
 import java.util.*
+
+abstract class ChargeTab<T: ChargeLike> : ChargeLayoutFragment<T, ChargesViewModel, ChargesDTO>() {
+    override val modelClass: Class<ChargesViewModel> = ChargesViewModel::class.java
+    override fun extractLiveData(vm: ChargesViewModel): LiveData<ChargesDTO> = vm.charges
+    override fun createViewHolder(view: View): ChargeViewHolder = ChargeViewHolder(view)
+}
+
+class ChargeIncomeTab : ChargeTab<Charge>() {
+    override fun getUsers(item: Charge): List<User> = item.toUsers!! // FIXME remove !!
+    override fun extractEntityFromDTO(dto: ChargesDTO): List<Charge> = dto.charges
+}
+
+class ChargeExpenseTab : ChargeTab<Expense>() {
+    override fun getUsers(item: Expense): List<User> = item.fromUsers!! // FIXME remove !!
+    override fun extractEntityFromDTO(dto: ChargesDTO): List<Expense> = dto.incomes
+}
+
+class ChargeSummaryTab : SummaryLayoutFragment<ChargesViewModel, ChargesDTO>() {
+    override val modelClass: Class<ChargesViewModel> = ChargesViewModel::class.java
+    override fun extractLiveData(vm: ChargesViewModel): LiveData<ChargesDTO> = vm.charges
+    override fun extractEntityFromDTO(dto: ChargesDTO): List<Summary> = dto.summary
+}
 
 class SectionsPagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment =
             when (position) {
-                0 -> ChargesTab()
-                1 -> ExpensesTab()
-                2 -> TransfersSummaryTab()
+                0 -> ChargeIncomeTab()
+                1 -> ChargeExpenseTab()
+                2 -> ChargeSummaryTab()
                 else -> TODO()
             }
 

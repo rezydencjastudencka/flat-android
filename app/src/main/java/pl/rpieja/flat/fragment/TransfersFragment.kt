@@ -1,5 +1,6 @@
 package pl.rpieja.flat.fragment
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -10,9 +11,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import pl.rpieja.flat.R
+import pl.rpieja.flat.dto.*
 import pl.rpieja.flat.viewmodels.TransfersViewModel
 
-class TransfersFragment: Fragment() {
+abstract class TransferTab : ChargeLayoutFragment<Transfer, TransfersViewModel, TransfersDTO>() {
+    override val modelClass: Class<TransfersViewModel> = TransfersViewModel::class.java
+    override fun extractLiveData(vm: TransfersViewModel): LiveData<TransfersDTO> = vm.getTransfers()
+}
+
+class TransferOutgoingTab : TransferTab() {
+    override fun getUsers(item: Transfer): List<User> = item.toUsers!!
+    override fun extractEntityFromDTO(dto: TransfersDTO): List<Transfer> = dto.outgoing!!
+}
+
+class TransferIncomingTab : TransferTab() {
+    override fun getUsers(item: Transfer): List<User> = item.fromUsers!!
+    override fun extractEntityFromDTO(dto: TransfersDTO): List<Transfer> = dto.incoming!!
+}
+
+class TransferSummaryTab : SummaryLayoutFragment<TransfersViewModel, TransfersDTO>() {
+    override val modelClass: Class<TransfersViewModel> = TransfersViewModel::class.java
+    override fun extractLiveData(vm: TransfersViewModel): LiveData<TransfersDTO> = vm.getTransfers()
+    override fun extractEntityFromDTO(dto: TransfersDTO): List<Summary> = dto.summary!!
+}
+
+class TransfersFragment : Fragment() {
     companion object {
         val tag = "pl.rpieja.flat.TransfersFragment"
     }
@@ -28,9 +51,9 @@ class TransfersFragment: Fragment() {
 
         val mSectionsPagerAdapter = object: FragmentPagerAdapter(childFragmentManager) {
             override fun getItem(position: Int): Fragment = when (position) {
-                0 -> TransfersOutgoingTab()
-                1 -> TransfersIncomingTab()
-                2 -> TransfersSummaryTab()
+                0 -> TransferOutgoingTab()
+                1 -> TransferIncomingTab()
+                2 -> TransferSummaryTab()
                 else -> TODO()
             }
 
