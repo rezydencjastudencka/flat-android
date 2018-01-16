@@ -9,7 +9,7 @@ class Transfer {
     var name: String? = null
     var date: Date? = null
     var id: Int = 0
-    var to: List<User>? = null
+    var to: User? = null
     var from: User? = null
     var amount: Double = 0.toDouble()
 }
