@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.*
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
+import pl.rpieja.flat.dialog.ChargesSortDialogFragment
 import pl.rpieja.flat.viewmodels.ChargesViewModel
 import java.util.*
 

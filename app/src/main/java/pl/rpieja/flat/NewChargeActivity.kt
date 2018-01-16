@@ -15,11 +15,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import pl.rpieja.flat.dialog.DateDialog
 
 import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.viewmodels.NewChargeViewModel
