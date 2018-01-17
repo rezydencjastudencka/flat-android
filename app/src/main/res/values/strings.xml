@@ -7,8 +7,6 @@
     <string name="signInButtonText">Sign In</string>
 
     <!--Charges activity-->
-    <string name="title_activity_charges">ChargesActivity</string>
-    <string name="action_settings">Settings</string>
     <string name="charges_name">Charges</string>
     <string name="tab_text_1">Charges</string>
     <string name="tab_text_2">Expenses</string>
@@ -16,9 +14,7 @@
     <string name="action_setmonth">Set Date</string>
 
     <!--Transfers activity-->
-    <string name="title_activity_transfers">TransfersActivity</string>
     <string name="transfers_name">Transfers</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="transfers_tab_1">Outgoing</string>
     <string name="transfers_tab_2">Incoming</string>
     <string name="transfers_tab_3">Summary</string>
