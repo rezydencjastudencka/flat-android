@@ -1,4 +1,4 @@
-package pl.rpieja.flat;
+package pl.rpieja.flat.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import pl.rpieja.flat.R;
 import pl.rpieja.flat.authentication.AccountService;
 import pl.rpieja.flat.authentication.FlatCookieJar;
 import pl.rpieja.flat.api.FlatAPI;
@@ -21,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.login_activity);
         signInButton = findViewById(R.id.signInButton);
         usernameTextEdit = findViewById(R.id.usernameTextEdit);
         passwordTextEdit = findViewById(R.id.passwordTextEdit);
@@ -46,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (result) {
                             AccountService.addAccount(LoginActivity.this,
                                     username, cookieJar.getSessionId());
-                            Intent intent = new Intent(LoginActivity.this, ChargesActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
                         } else {

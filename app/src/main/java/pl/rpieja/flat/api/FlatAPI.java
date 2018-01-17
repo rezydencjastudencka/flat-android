@@ -19,6 +19,7 @@ import okhttp3.Response;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.dto.CreateChargeDTO;
 import pl.rpieja.flat.dto.SessionCheckResponse;
+import pl.rpieja.flat.dto.TransfersDTO;
 import pl.rpieja.flat.dto.User;
 
 public class FlatAPI {
@@ -32,6 +33,7 @@ public class FlatAPI {
     private static final String SESSION_CHECK_URL = API_ADDRESS + "session/check";
     private static final String CREATE_SESSION_URL = API_ADDRESS + "session/create";
     private static final String GET_CHARGES_URL = API_ADDRESS + "charge/";
+    private static final String GET_TRANSFERS_URL = API_ADDRESS + "transfer/";
     private static final String CREATE_CHARGE_URL = API_ADDRESS + "charge/create";
     private static final String GET_USERS_URL = API_ADDRESS + "user/";
 
@@ -66,9 +68,14 @@ public class FlatAPI {
         return "ok".equals(checkResponse.error);
     }
 
-    public ChargesDTO getCharges(int month, int year) throws IOException, NoInternetConnectionException {
+    public ChargesDTO fetchCharges(int month, int year) throws IOException, NoInternetConnectionException {
         String requestUrl = GET_CHARGES_URL + Integer.toString(year) + "/" + Integer.toString(month);
         return fetch(requestUrl, ChargesDTO.class);
+    }
+
+    public TransfersDTO fetchTransfers(int month, int year) throws IOException, NoInternetConnectionException {
+        String requestUrl = GET_TRANSFERS_URL + Integer.toString(year) + "/" + Integer.toString(month);
+        return fetch(requestUrl, TransfersDTO.class);
     }
 
     public List<User> fetchUsers() throws IOException, NoInternetConnectionException {
@@ -82,9 +89,11 @@ public class FlatAPI {
     private <T> void post(String url, T data) throws IOException, NoInternetConnectionException {
         method("POST", url, data);
     }
+
     private <T> void put(String url, T data) throws IOException, NoInternetConnectionException {
         method("PUT", url, data);
     }
+
     private <T> void method(String methodName, String url, T data) throws IOException, NoInternetConnectionException {
         String json = gson.toJson(data);
         Request request = new Request.Builder()

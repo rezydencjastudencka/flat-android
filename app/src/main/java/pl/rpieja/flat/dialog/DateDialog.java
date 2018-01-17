@@ -1,4 +1,4 @@
-package pl.rpieja.flat;
+package pl.rpieja.flat.dialog;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

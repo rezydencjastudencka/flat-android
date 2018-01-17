@@ -1,4 +1,4 @@
-package pl.rpieja.flat
+package pl.rpieja.flat.activity
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
@@ -15,11 +15,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import pl.rpieja.flat.R
+import pl.rpieja.flat.dialog.DateDialog
 
 import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.viewmodels.NewChargeViewModel
@@ -106,11 +107,6 @@ class NewChargeActivity : AppCompatActivity() {
         newChargeViewModel.chargeDate.observe(this, Observer { calendar ->
             newChargeDate.text = DateFormat.getLongDateFormat(this).format(calendar!!.time)
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_new_charge, menu)
-        return true
     }
 }
 

@@ -1,9 +1,10 @@
-package pl.rpieja.flat
+package pl.rpieja.flat.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.Charge
 import pl.rpieja.flat.dto.Expense
 import pl.rpieja.flat.dto.Summary
