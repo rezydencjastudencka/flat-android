@@ -3,6 +3,7 @@ package pl.rpieja.flat.fragment
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -10,12 +11,17 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.*
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dialog.ChargesSortDialogFragment
 import pl.rpieja.flat.dto.*
 import pl.rpieja.flat.viewmodels.ChargesViewModel
 import java.util.*
+import pl.rpieja.flat.activity.NewChargeActivity
+import android.content.Intent
+
 
 abstract class ChargeTab<T: ChargeLike> : ChargeLayoutFragment<T, ChargesViewModel, ChargesDTO>() {
     override val modelClass: Class<ChargesViewModel> = ChargesViewModel::class.java
@@ -73,6 +79,28 @@ class ChargesFragment: Fragment() {
 
     private var chargesViewModel: ChargesViewModel? = null
 
+    private fun setupFab(tabLayout: TabLayout) {
+        val fab: FloatingActionButton = activity!!.findViewById(R.id.fab)
+        val updateVisibility = { position: Int ->
+            fab.visibility = if (position == 0) VISIBLE else GONE
+        }
+
+        updateVisibility(tabLayout.selectedTabPosition)
+        fab.setOnClickListener { _ ->
+            startActivity(Intent(activity, NewChargeActivity::class.java))
+        }
+
+        tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) { }
+            override fun onTabUnselected(tab: TabLayout.Tab?) { }
+            override fun onTabSelected(tab: TabLayout.Tab?) = updateVisibility(tab!!.position)
+        })
+    }
+
+    private fun hideFab() {
+        activity!!.findViewById<FloatingActionButton>(R.id.fab).visibility = GONE
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.content_charges, container, false)
@@ -91,6 +119,8 @@ class ChargesFragment: Fragment() {
         viewPager.adapter = mSectionsPagerAdapter
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
         tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
+
+        setupFab(tabLayout)
 
         return view
     }
@@ -113,5 +143,10 @@ class ChargesFragment: Fragment() {
                 super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    override fun onDestroyView() {
+        hideFab()
+        super.onDestroyView()
     }
 }
