@@ -1,31 +1,26 @@
 package pl.rpieja.flat.fragment
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
+import android.view.ViewGroup
 import pl.rpieja.flat.R
+import pl.rpieja.flat.activity.NewChargeActivity
 import pl.rpieja.flat.dialog.ChargesSortDialogFragment
 import pl.rpieja.flat.dto.*
 import pl.rpieja.flat.viewmodels.ChargesViewModel
-import java.util.*
-import pl.rpieja.flat.activity.NewChargeActivity
-import android.content.Intent
-
 
 abstract class ChargeTab<T: ChargeLike> : ChargeLayoutFragment<T, ChargesViewModel, ChargesDTO>() {
     override val modelClass: Class<ChargesViewModel> = ChargesViewModel::class.java
-    override fun extractLiveData(vm: ChargesViewModel): LiveData<ChargesDTO> = vm.charges
+    override fun extractLiveData(vm: ChargesViewModel): LiveData<ChargesDTO> = vm.data
     override fun createViewHolder(view: View): ChargeViewHolder = ChargeViewHolder(view)
 }
 
@@ -41,43 +36,51 @@ class ChargeExpenseTab : ChargeTab<Expense>() {
 
 class ChargeSummaryTab : SummaryLayoutFragment<ChargesViewModel, ChargesDTO>() {
     override val modelClass: Class<ChargesViewModel> = ChargesViewModel::class.java
-    override fun extractLiveData(vm: ChargesViewModel): LiveData<ChargesDTO> = vm.charges
+    override fun extractLiveData(vm: ChargesViewModel): LiveData<ChargesDTO> = vm.data
     override fun extractEntityFromDTO(dto: ChargesDTO): List<Summary> = dto.summary
 }
 
-class SectionsPagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm) {
-    override fun getItem(position: Int): Fragment =
-            when (position) {
-                0 -> ChargeIncomeTab()
-                1 -> ChargeExpenseTab()
-                2 -> ChargeSummaryTab()
-                else -> TODO()
-            }
+class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
+    override val viewModelClass: Class<ChargesViewModel> = ChargesViewModel::class.java
+    override val layoutId: Int = R.layout.content_charges
+    override val titleId: Int = R.string.charges_name
+    override val menuId: Int = R.menu.menu_charges
 
-    override fun getCount(): Int = 3
-}
-
-class ChargesFragment: Fragment() {
-    companion object {
-        val tag = "pl.rpieja.flat.fragment.ChargesFragment"
+    override fun getTabFragment(position: Int): Fragment = when (position) {
+        0 -> ChargeIncomeTab()
+        1 -> ChargeExpenseTab()
+        2 -> ChargeSummaryTab()
+        else -> TODO()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+    override fun getItemCount(): Int = 3
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        setupFab(view!!.findViewById(R.id.tabs))
+        return view
     }
 
-    private fun showDatePickerDialog() =
-            RackMonthPicker(context)
-                    .setLocale(Locale.ENGLISH)
-                    .setColorTheme(R.color.colorPrimaryDark)
-                    .setSelectedMonth(chargesViewModel!!.month - 1)
-                    .setPositiveButton({ month, _, _, year, _ ->
-                        chargesViewModel!!.loadCharges(context, month, year) })
-                    .setNegativeButton({ picker -> picker.dismiss() })
-                    .show()
+    override fun onDestroyView() {
+        hideFab()
+        super.onDestroyView()
+    }
 
-    private var chargesViewModel: ChargesViewModel? = null
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        super.onOptionsItemSelected(item)
+        when (item!!.itemId) {
+            R.id.action_sort_by ->
+                ChargesSortDialogFragment().show(fragmentManager, ChargesSortDialogFragment.tag)
+
+            R.id.action_setmonth ->
+                showDatePickerDialog()
+
+            else ->
+                super.onOptionsItemSelected(item)
+        }
+        return true
+    }
 
     private fun setupFab(tabLayout: TabLayout) {
         val fab: FloatingActionButton = activity!!.findViewById(R.id.fab)
@@ -99,54 +102,5 @@ class ChargesFragment: Fragment() {
 
     private fun hideFab() {
         activity!!.findViewById<FloatingActionButton>(R.id.fab).visibility = GONE
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.content_charges, container, false)
-
-        (activity!! as AppCompatActivity).supportActionBar!!.title =
-                getString(R.string.charges_name)
-
-        chargesViewModel = ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java)
-        chargesViewModel!!.loadCharges(context)
-
-        val mSectionsPagerAdapter = SectionsPagerAdapter(childFragmentManager)
-
-        val viewPager: ViewPager = view.findViewById(R.id.container)
-        val tabLayout: TabLayout = view.findViewById(R.id.tabs)
-
-        viewPager.adapter = mSectionsPagerAdapter
-        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-        tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
-
-        setupFab(tabLayout)
-
-        return view
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater!!.inflate(R.menu.menu_charges, menu!!)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        super.onOptionsItemSelected(item)
-        when (item!!.itemId) {
-            R.id.action_sort_by ->
-                ChargesSortDialogFragment().show(fragmentManager, ChargesSortDialogFragment.tag)
-
-            R.id.action_setmonth ->
-                showDatePickerDialog()
-
-            else ->
-                super.onOptionsItemSelected(item)
-        }
-        return true
-    }
-
-    override fun onDestroyView() {
-        hideFab()
-        super.onDestroyView()
     }
 }

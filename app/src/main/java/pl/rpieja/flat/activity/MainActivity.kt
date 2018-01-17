@@ -1,6 +1,5 @@
 package pl.rpieja.flat.activity
 import android.content.Intent
-import android.drm.DrmStore
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -52,15 +51,16 @@ class MainActivityNavigation(val activity: MainActivity):
         when (item.itemId) {
             R.id.charges_nav -> {
                 val fragment = activity.supportFragmentManager
-                        .findFragmentByTag(ChargesFragment.tag) ?: ChargesFragment()
+                        .findFragmentByTag(MainActivity.chargesTab) ?: ChargesFragment()
                 activity.supportFragmentManager.beginTransaction().replace(R.id.content_frame,
-                        fragment, ChargesFragment.tag).commit()
+                        fragment, MainActivity.chargesTab).commit()
             }
             R.id.transfers_nav -> {
                 val fragment = activity.supportFragmentManager
-                        .findFragmentByTag(TransfersFragment.tag) ?: TransfersFragment()
+                        .findFragmentByTag(MainActivity.transfersTag) ?:
+                TransfersFragment()
                 activity.supportFragmentManager.beginTransaction().replace(R.id.content_frame,
-                        fragment, TransfersFragment.tag).commit()
+                        fragment, MainActivity.transfersTag).commit()
             }
             R.id.logout_nav -> {
                 AccountService.removeCurrentAccount(activity)
@@ -76,6 +76,11 @@ class MainActivityNavigation(val activity: MainActivity):
 }
 
 class MainActivity: AppCompatActivity() {
+    companion object {
+        const val chargesTab = "ChargesFragment"
+        const val transfersTag = "TransfersFragment"
+    }
+
     private var navigation: MainActivityNavigation? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,11 +92,11 @@ class MainActivity: AppCompatActivity() {
         navigation = MainActivityNavigation(this)
 
         // FIXME does not scale well with more perspectives
-        if (supportFragmentManager.findFragmentByTag(ChargesFragment.tag) == null &&
-                supportFragmentManager.findFragmentByTag(TransfersFragment.tag) == null) {
+        if (supportFragmentManager.findFragmentByTag(chargesTab) == null &&
+                supportFragmentManager.findFragmentByTag(transfersTag) == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.content_frame, ChargesFragment(), ChargesFragment.tag)
+                    .add(R.id.content_frame, ChargesFragment(), chargesTab)
                     .commit()
         }
     }
