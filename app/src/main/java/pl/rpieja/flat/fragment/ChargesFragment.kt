@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import android.view.*
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
 import pl.rpieja.flat.R
@@ -75,6 +76,9 @@ class ChargesFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.content_charges, container, false)
+
+        (activity!! as AppCompatActivity).supportActionBar!!.title =
+                getString(R.string.charges_name)
 
         chargesViewModel = ViewModelProviders.of(activity!!).get(ChargesViewModel::class.java)
         chargesViewModel!!.loadCharges(context)

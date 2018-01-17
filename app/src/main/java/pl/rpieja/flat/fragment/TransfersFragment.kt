@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import android.view.*
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
 import pl.rpieja.flat.R
@@ -61,6 +62,9 @@ class TransfersFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.content_transfers, container, false)
+
+        (activity!! as AppCompatActivity).supportActionBar!!.title =
+                getString(R.string.transfers_name)
 
         transfersViewModel = ViewModelProviders.of(activity!!).get(TransfersViewModel::class.java)
         transfersViewModel!!.loadTransfers(context!!)
