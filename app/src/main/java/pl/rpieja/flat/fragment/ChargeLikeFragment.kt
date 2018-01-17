@@ -40,7 +40,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
     private var recyclerView: RecyclerView? = null
     private var elements: List<T>? = null
 
-    fun setData(data: List<T>) {
+    private fun setData(data: List<T>) {
         recyclerView?.adapter = ItemAdapter(data)
         elements = data
     }

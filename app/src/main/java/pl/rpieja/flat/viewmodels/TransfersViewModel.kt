@@ -14,21 +14,13 @@ import java.util.*
  * Created by radix on 14.01.18.
  */
 
-class TransfersViewModel : ViewModel() {
+class TransfersViewModel : ViewModel() { // FIXME logic copied from ChargesViewModel
     private val transfers = MutableLiveData<TransfersDTO>()
-    private var month: Int? = null
+    internal var month: Int? = null
     private var year: Int? = null
 
     fun getTransfers(): MutableLiveData<TransfersDTO> {
         return transfers
-    }
-
-    fun getChargesList(): MutableLiveData<TransfersDTO> {
-        return transfers
-    }
-
-    fun getIncomesList(): List<Transfer> {
-        return if (transfers.value == null) ArrayList() else transfers.value!!.incoming!!
     }
 
     fun loadTransfers(context: Context, month: Int, year: Int) {
@@ -44,5 +36,10 @@ class TransfersViewModel : ViewModel() {
         AsyncGetTransfers(flatAPI, month, year,
                 { transfersDTO -> transfers.setValue(transfersDTO) }
         ) { AccountService.removeCurrentAccount(context) }.execute()
+    }
+
+    fun loadTransfers(context: Context) {
+        val calendar = Calendar.getInstance();
+        loadTransfers(context, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))
     }
 }
