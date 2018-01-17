@@ -68,12 +68,12 @@ public class FlatAPI {
         return "ok".equals(checkResponse.error);
     }
 
-    public ChargesDTO getCharges(int month, int year) throws IOException, NoInternetConnectionException {
+    public ChargesDTO fetchCharges(int month, int year) throws IOException, NoInternetConnectionException {
         String requestUrl = GET_CHARGES_URL + Integer.toString(year) + "/" + Integer.toString(month);
         return fetch(requestUrl, ChargesDTO.class);
     }
 
-    public TransfersDTO getTransfers(int month, int year) throws IOException, NoInternetConnectionException {
+    public TransfersDTO fetchTransfers(int month, int year) throws IOException, NoInternetConnectionException {
         String requestUrl = GET_TRANSFERS_URL + Integer.toString(year) + "/" + Integer.toString(month);
         return fetch(requestUrl, TransfersDTO.class);
     }

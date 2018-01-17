@@ -5,20 +5,20 @@ import java.util.*
 /**
  * Created by radix on 13.01.18.
  */
-class Transfer: ChargeLike {
-    var name: String? = null
-    var date: Date? = null
-    var id: Int = 0
-    var to: User? = null
-    var from: User? = null
-    var amount: Double? = null
-
-    override val chargeAmount: Double?
+data class Transfer(
+        var name: String,
+        var date: Date,
+        var id: Int,
+        var to: User,
+        var from: User,
+        var amount: Double
+) : ChargeLike {
+    override val chargeAmount: Double
         get() = amount
-    override val chargeName: String?
+    override val chargeName: String
         get() = name
-    override val fromUsers: List<User>?
-        get() = listOf(from!!)
-    override val toUsers: List<User>?
-        get() = listOf(to!!)
+    override val fromUsers: List<User>
+        get() = listOf(from)
+    override val toUsers: List<User>
+        get() = listOf(to)
 }

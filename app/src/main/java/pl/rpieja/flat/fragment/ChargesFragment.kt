@@ -41,15 +41,21 @@ class ChargeSummaryTab : SummaryLayoutFragment<ChargesViewModel, ChargesDTO>() {
 }
 
 class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
+    companion object {
+        const val INCOME_TAB_INDEX = 0
+        const val EXPENSE_TAB_INDEX = 1
+        const val SUMMARY_TAB_INDEX = 2
+    }
+
     override val viewModelClass: Class<ChargesViewModel> = ChargesViewModel::class.java
     override val layoutId: Int = R.layout.content_charges
     override val titleId: Int = R.string.charges_name
     override val menuId: Int = R.menu.menu_charges
 
     override fun getTabFragment(position: Int): Fragment = when (position) {
-        0 -> ChargeIncomeTab()
-        1 -> ChargeExpenseTab()
-        2 -> ChargeSummaryTab()
+        INCOME_TAB_INDEX -> ChargeIncomeTab()
+        EXPENSE_TAB_INDEX -> ChargeExpenseTab()
+        SUMMARY_TAB_INDEX -> ChargeSummaryTab()
         else -> TODO()
     }
 
@@ -85,7 +91,7 @@ class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
     private fun setupFab(tabLayout: TabLayout) {
         val fab: FloatingActionButton = activity!!.findViewById(R.id.fab)
         val updateVisibility = { position: Int ->
-            fab.visibility = if (position == 0) VISIBLE else GONE
+            fab.visibility = if (position == INCOME_TAB_INDEX) VISIBLE else GONE
         }
 
         updateVisibility(tabLayout.selectedTabPosition)

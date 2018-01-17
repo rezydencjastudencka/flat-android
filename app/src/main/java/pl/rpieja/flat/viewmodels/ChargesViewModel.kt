@@ -12,21 +12,21 @@ import pl.rpieja.flat.tasks.AsyncRequest
 
 class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
     fun sortCharges(comparator: Comparator<Charge>) {
-        if (data.value == null || data.value!!.charges == null) return
+        if (data.value?.charges == null) return
 
         Collections.sort(data.value!!.charges, comparator)
         data.value = data.value
     }
 
     fun sortIncomes(comparator: Comparator<Expense>) {
-        if (data.value == null || data.value!!.incomes == null) return
+        if (data.value?.incomes == null) return
 
         Collections.sort(data.value!!.incomes, comparator)
         data.value = data.value
     }
 
     fun sortSummary(comparator: Comparator<Summary>) {
-        if (data.value == null || data.value!!.summary == null) return
+        if (data.value?.summary == null) return
 
         Collections.sort(data.value!!.summary, comparator)
         data.value = data.value

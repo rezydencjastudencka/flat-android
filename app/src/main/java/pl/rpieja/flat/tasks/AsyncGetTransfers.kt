@@ -7,4 +7,5 @@ import pl.rpieja.flat.dto.TransfersDTO
 class AsyncGetTransfers (
         flatAPI: FlatAPI, month: Int, year: Int, onSuccess: (TransfersDTO) -> Unit, unauthorized: () -> Unit)
     : AsyncRequest <TransfersDTO>(
-        onSuccess, unauthorized, { flatAPI.getTransfers(month, year)}, TransfersDTO())
+        onSuccess, unauthorized, { flatAPI.fetchTransfers(month, year)},
+        TransfersDTO(emptyList(), emptyList(), emptyList()))
