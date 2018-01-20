@@ -1,10 +1,11 @@
 package pl.rpieja.flat.tasks
 
 import pl.rpieja.flat.api.FlatAPI
+import pl.rpieja.flat.dto.Charge
 import pl.rpieja.flat.dto.CreateChargeDTO
 
 class AsyncCreateCharge(
-        flatAPI: FlatAPI, onSuccess: () -> Unit,
+        flatAPI: FlatAPI, onSuccess: (Charge) -> Unit,
         unauthorized: () -> Unit, charge: CreateChargeDTO)
-    : AsyncRequest<Unit>(
-        { onSuccess() }, unauthorized, { flatAPI.createCharge(charge) }, Unit)
+    : AsyncRequest<Charge>(
+        { result -> onSuccess(result) }, unauthorized, { flatAPI.createCharge(charge) }, null)

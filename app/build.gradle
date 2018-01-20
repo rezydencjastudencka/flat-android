@@ -46,3 +46,7 @@ repositories {
 }
 
 apply plugin: 'kotlin-android-extensions'
+
+androidExtensions {
+    experimental = true // @Parcelize support
+}

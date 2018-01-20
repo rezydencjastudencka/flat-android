@@ -10,10 +10,10 @@ open class AsyncRequest<Result>(
         private val onSuccess: (Result) -> Unit,
         private val unauthorized: () -> Unit,
         private val process: () -> Result,
-        private val neutral: Result)
+        private val neutral: Result?)
     : AsyncTask<Void, Void, Result>() {
 
-    override fun doInBackground(vararg p0: Void?): Result {
+    override fun doInBackground(vararg p0: Void?): Result? {
         try {
             return process()
         } catch (e: NoInternetConnectionException) {

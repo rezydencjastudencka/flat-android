@@ -32,6 +32,12 @@ class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
         data.value = data.value
     }
 
+    fun addCharge(charge: Charge) {
+        if (data.value?.charges == null) return
+        data.value!!.charges.add(charge)
+        data.value = data.value
+    }
+
     override fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int,
                               onSuccess: (ChargesDTO) -> Unit,
                               unauthorized: () -> Unit): AsyncRequest<ChargesDTO> =

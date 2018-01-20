@@ -1,6 +1,8 @@
 package pl.rpieja.flat.fragment
 
+import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -14,6 +16,8 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import pl.rpieja.flat.R
 import pl.rpieja.flat.activity.NewChargeActivity
+import pl.rpieja.flat.activity.NewChargeActivity.Constants.REQUEST_CREATE
+import pl.rpieja.flat.activity.NewChargeActivity.Constants.RESULT_CREATE
 import pl.rpieja.flat.dialog.ChargesSortDialogFragment
 import pl.rpieja.flat.dto.*
 import pl.rpieja.flat.viewmodels.ChargesViewModel
@@ -88,6 +92,16 @@ class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
         return true
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) =
+            when {
+                requestCode == REQUEST_CREATE && resultCode == RESULT_OK ->
+                    ViewModelProviders.of(activity!!).get(viewModelClass)
+                            .addCharge(data!!.getParcelableExtra(RESULT_CREATE))
+
+                else ->
+                    super.onActivityResult(requestCode, resultCode, data)
+            }
+
     private fun setupFab(tabLayout: TabLayout) {
         val fab: FloatingActionButton = activity!!.findViewById(R.id.fab)
         val updateVisibility = { position: Int ->
@@ -95,8 +109,8 @@ class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
         }
 
         updateVisibility(tabLayout.selectedTabPosition)
-        fab.setOnClickListener { _ ->
-            startActivity(Intent(activity, NewChargeActivity::class.java))
+        fab.setOnClickListener {
+            startActivityForResult(Intent(activity, NewChargeActivity::class.java), REQUEST_CREATE)
         }
 
         tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {

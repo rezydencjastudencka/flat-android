@@ -7,6 +7,7 @@ import android.content.Context
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.authentication.AccountService
 import pl.rpieja.flat.authentication.FlatCookieJar
+import pl.rpieja.flat.dto.Charge
 import pl.rpieja.flat.dto.CreateChargeDTO
 import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.tasks.AsyncCreateCharge
@@ -62,7 +63,7 @@ class NewChargeViewModel : ViewModel() {
                 { AccountService.removeCurrentAccount(context) }).execute()
     }
 
-    fun createCharge(context: Context, onSuccess: () -> Unit) {
+    fun createCharge(context: Context, onSuccess: (Charge) -> Unit) {
         getFlatApi(context)
 
         val charge = CreateChargeDTO()
