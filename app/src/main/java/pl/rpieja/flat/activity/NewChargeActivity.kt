@@ -1,5 +1,6 @@
 package pl.rpieja.flat.activity
 
+import android.app.Activity
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
@@ -21,13 +22,15 @@ import android.widget.EditText
 import android.widget.TextView
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dialog.DateDialog
-
 import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.viewmodels.NewChargeViewModel
 
 class NewChargeActivity : AppCompatActivity() {
     object Constants {
         const val SET_DATE_TAG = "pl.rpieja.flat.newCharge.setDate"
+
+        const val REQUEST_CREATE = 0
+        const val RESULT_CREATE = "pl.rpieja.flat.newCharge.resultCreate"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,8 +70,11 @@ class NewChargeActivity : AppCompatActivity() {
             }
         })
         accept.setOnClickListener({
-            newChargeViewModel.createCharge(
-                    this@NewChargeActivity, this@NewChargeActivity::finish)
+            newChargeViewModel.createCharge(this, {
+                intent.putExtra(Constants.RESULT_CREATE, it)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            })
         })
     }
 
