@@ -2,11 +2,12 @@ package pl.rpieja.flat.dto
 
 import java.util.*
 
-data class Transfer(
+data class Expense(
         var name: String,
+        var rawAmount: String,
         var date: Date,
         var id: Int,
-        var to: User,
+        var to: List<User>,
         var from: User,
         var amount: Double
 ) : ChargeLike {
@@ -17,5 +18,5 @@ data class Transfer(
     override val fromUsers: List<User>
         get() = listOf(from)
     override val toUsers: List<User>
-        get() = listOf(to)
+        get() = to
 }

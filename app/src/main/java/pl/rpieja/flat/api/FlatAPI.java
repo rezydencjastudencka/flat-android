@@ -16,8 +16,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import pl.rpieja.flat.dto.Charge;
 import pl.rpieja.flat.dto.ChargesDTO;
 import pl.rpieja.flat.dto.CreateChargeDTO;
+import pl.rpieja.flat.dto.CreateDTO;
 import pl.rpieja.flat.dto.SessionCheckResponse;
 import pl.rpieja.flat.dto.TransfersDTO;
 import pl.rpieja.flat.dto.User;
@@ -65,7 +67,7 @@ public class FlatAPI {
         Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD").create();
         SessionCheckResponse checkResponse = gson.fromJson(response.body().string(), SessionCheckResponse.class);
         if (checkResponse == null) return false;
-        return "ok".equals(checkResponse.error);
+        return "ok".equals(checkResponse.getError());
     }
 
     public ChargesDTO fetchCharges(int month, int year) throws IOException, NoInternetConnectionException {
@@ -82,19 +84,24 @@ public class FlatAPI {
         return Arrays.asList(fetch(GET_USERS_URL, User[].class));
     }
 
-    public void createCharge(CreateChargeDTO charge) throws IOException, NoInternetConnectionException {
-        put(CREATE_CHARGE_URL, charge);
+    private <T> T createEntity(CreateDTO<T> entity, String entityUrl) throws IOException, NoInternetConnectionException {
+        Response response = post(entityUrl, entity);
+        return gson.fromJson(response.body().charStream(), entity.getEntityClass());
     }
 
-    private <T> void post(String url, T data) throws IOException, NoInternetConnectionException {
-        method("POST", url, data);
+    public Charge createCharge(CreateChargeDTO charge) throws IOException, NoInternetConnectionException {
+        return createEntity(charge, CREATE_CHARGE_URL);
+    }
+
+    private <T> Response post(String url, T data) throws IOException, NoInternetConnectionException {
+        return method("POST", url, data);
     }
 
     private <T> void put(String url, T data) throws IOException, NoInternetConnectionException {
         method("PUT", url, data);
     }
 
-    private <T> void method(String methodName, String url, T data) throws IOException, NoInternetConnectionException {
+    private <T> Response method(String methodName, String url, T data) throws IOException, NoInternetConnectionException {
         String json = gson.toJson(data);
         Request request = new Request.Builder()
                 .url(url)
@@ -105,6 +112,7 @@ public class FlatAPI {
         Response response = client.newCall(request).execute();
         if (response.code() == 403) throw new UnauthorizedException();
         if (!response.isSuccessful()) throw new NoInternetConnectionException();
+        return response;
     }
 
     private <T> T fetch(String requestUrl, Class<T> tClass) throws IOException, NoInternetConnectionException {
@@ -116,9 +124,9 @@ public class FlatAPI {
         if (response.code() == 403) throw new UnauthorizedException();
         if (!response.isSuccessful()) throw new NoInternetConnectionException();
 
-        T users = gson.fromJson(response.body().string(), tClass);
-        if (users == null) throw new JsonIOException("JSON parsing exception");
-        return users;
+        T entity = gson.fromJson(response.body().string(), tClass);
+        if (entity == null) throw new JsonIOException("JSON parsing exception");
+        return entity;
     }
 
 }

@@ -17,7 +17,7 @@ abstract class SummaryLayoutFragment<VM: ViewModel, DTO>:
         ChargeLikeFragment<Summary, SummaryViewHolder, VM, DTO>() {
     override val itemLayoutId: Int = R.layout.summary_item
 
-    override fun getUsers(item: Summary): List<User> = item.fromUsers!!
+    override fun getUsers(item: Summary): List<User> = item.fromUsers
 
     override fun updateItemView(viewHolder: SummaryViewHolder, item: Summary) {
         val colorNegative = context!!.getColor(R.color.amountNegative)
@@ -25,15 +25,15 @@ abstract class SummaryLayoutFragment<VM: ViewModel, DTO>:
         val colorNeutral = context!!.getColor(R.color.amountNeutral)
 
         val amountColor = when {
-            item.chargeAmount!! > 0 -> colorNegative
-            item.chargeAmount!! < 0 -> colorPositive
+            item.chargeAmount > 0 -> colorNegative
+            item.chargeAmount < 0 -> colorPositive
             else -> colorNeutral
         }
 
         viewHolder.amountTextView.setTextColor(amountColor)
-        viewHolder.amountTextView.text = currencyFormat.format(item.amount)
+        viewHolder.amountTextView.text = currencyFormat.format(item.chargeAmount)
 
-        viewHolder.userTextView.text = item.name
+        viewHolder.userTextView.text = item.chargeName
     }
 
     override fun createViewHolder(view: View): SummaryViewHolder = SummaryViewHolder(view)
