@@ -66,11 +66,9 @@ class NewChargeViewModel : ViewModel() {
     fun createCharge(context: Context, onSuccess: (Charge) -> Unit) {
         getFlatApi(context)
 
-        val charge = CreateChargeDTO()
-        charge.date = IsoTimeFormatter.toIso8601(chargeDate.value?.time ?: Calendar.getInstance().time)
-        charge.name = chargeName.value
-        charge.rawAmount = chargeAmount.value
-        charge.to.addAll(selectedUsers.value?.map { user -> user.id } ?: emptyList())
+        val date = IsoTimeFormatter.toIso8601(chargeDate.value?.time ?: Calendar.getInstance().time)
+        val to = selectedUsers.value?.map { user -> user.id } ?: emptyList()
+        val charge = CreateChargeDTO(chargeName.value!!, date, chargeAmount.value!!, to)
 
         AsyncCreateCharge(getFlatApi(context), onSuccess,
                 { AccountService.removeCurrentAccount(context) }, charge).execute()

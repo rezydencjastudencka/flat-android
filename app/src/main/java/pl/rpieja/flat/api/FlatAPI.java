@@ -67,7 +67,7 @@ public class FlatAPI {
         Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-DD").create();
         SessionCheckResponse checkResponse = gson.fromJson(response.body().string(), SessionCheckResponse.class);
         if (checkResponse == null) return false;
-        return "ok".equals(checkResponse.error);
+        return "ok".equals(checkResponse.getError());
     }
 
     public ChargesDTO fetchCharges(int month, int year) throws IOException, NoInternetConnectionException {

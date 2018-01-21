@@ -29,12 +29,12 @@ abstract class ChargeTab<T: ChargeLike> : ChargeLayoutFragment<T, ChargesViewMod
 }
 
 class ChargeIncomeTab : ChargeTab<Charge>() {
-    override fun getUsers(item: Charge): List<User> = item.toUsers!! // FIXME remove !!
+    override fun getUsers(item: Charge): List<User> = item.toUsers
     override fun extractEntityFromDTO(dto: ChargesDTO): List<Charge> = dto.charges
 }
 
 class ChargeExpenseTab : ChargeTab<Expense>() {
-    override fun getUsers(item: Expense): List<User> = item.fromUsers!! // FIXME remove !!
+    override fun getUsers(item: Expense): List<User> = item.fromUsers
     override fun extractEntityFromDTO(dto: ChargesDTO): List<Expense> = dto.incomes
 }
 

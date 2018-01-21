@@ -34,7 +34,7 @@ class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
 
     fun addCharge(charge: Charge) {
         if (data.value?.charges == null) return
-        data.value!!.charges.add(charge)
+        data.value!!.charges = data.value!!.charges + charge
         data.value = data.value
     }
 
