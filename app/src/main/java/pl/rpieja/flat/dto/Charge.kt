@@ -5,7 +5,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
-@SuppressLint("ParcelCreator")
+@SuppressLint("ParcelCreator") // FIXME maybe caused by Kotlin Android ticket KT-19300
 @Parcelize
 data class Charge(
         var name: String,
