@@ -11,7 +11,9 @@ import java.util.*
 
 abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
     var month: Int
+      private set
     var year: Int
+      private set
 
     override val data: MutableLiveData<T> = MutableLiveData()
 

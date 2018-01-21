@@ -14,6 +14,11 @@ import pl.rpieja.flat.viewmodels.MonthlyEntityViewModel
 import java.util.*
 
 abstract class EntityMonthlyFragment<T, VM: MonthlyEntityViewModel<T>>: Fragment() {
+    companion object {
+        private const val YEAR_BUNDLE_KEY = "pl.rpieja.flat.fragment.EntityMonthlyFragment.year"
+        private const val MONTH_BUNDLE_KEY = "pl.rpieja.flat.fragment.EntityMonthlyFragment.month"
+    }
+
     abstract val viewModelClass: Class<VM>
     abstract val layoutId: Int
     abstract val titleId: Int
@@ -44,7 +49,14 @@ abstract class EntityMonthlyFragment<T, VM: MonthlyEntityViewModel<T>>: Fragment
         (activity!! as AppCompatActivity).supportActionBar!!.title = getString(titleId)
 
         viewModel = ViewModelProviders.of(activity!!).get(viewModelClass)
-        viewModel!!.load(context!!)
+
+        val month = savedInstanceState?.getInt(MONTH_BUNDLE_KEY)
+        val year = savedInstanceState?.getInt(YEAR_BUNDLE_KEY)
+        if (month == null || year == null) {
+            viewModel!!.load(context!!)
+        } else {
+            viewModel!!.load(context!!, month, year)
+        }
 
         val mSectionsPagerAdapter = object: FragmentPagerAdapter(childFragmentManager) {
             override fun getItem(position: Int): Fragment = getTabFragment(position)
@@ -61,6 +73,10 @@ abstract class EntityMonthlyFragment<T, VM: MonthlyEntityViewModel<T>>: Fragment
         return view
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(MONTH_BUNDLE_KEY, viewModel!!.month)
+        outState.putInt(YEAR_BUNDLE_KEY, viewModel!!.year)
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
