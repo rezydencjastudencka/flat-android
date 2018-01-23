@@ -36,6 +36,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
     abstract fun extractEntityFromDTO(dto: DTO): List<T>
     abstract fun updateItemView(viewHolder: VH, item: T)
     abstract fun createViewHolder(view: View): VH
+    abstract fun formatAmount(amountTextView: TextView, amount: Double)
 
     private var recyclerView: RecyclerView? = null
     private var elements: List<T>? = null
@@ -94,8 +95,12 @@ abstract class ChargeLayoutFragment<T: ChargeLike, VM: ViewModel, DTO>:
 
     override fun updateItemView(viewHolder: ChargeViewHolder, item: T) {
         viewHolder.chargeName.text = item.chargeName
-        viewHolder.chargeAmount.text = currencyFormat.format(item.chargeAmount).toString()
+        formatAmount(viewHolder.chargeAmount, item.chargeAmount)
         viewHolder.chargeUsers.text = android.text.TextUtils.join(", ",
                 getUsers(item).map { user -> user.name })
+    }
+
+    override fun formatAmount(amountTextView: TextView, amount: Double) {
+        amountTextView.text = currencyFormat.format(amount).toString()
     }
 }
