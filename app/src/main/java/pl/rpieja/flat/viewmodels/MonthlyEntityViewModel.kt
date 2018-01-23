@@ -37,9 +37,11 @@ abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
         this.month = month
         this.year = year
 
-        asyncRequest(flatAPI, month, year, { x -> data.value = x },
+        asyncRequest(flatAPI, month, year, { data.value = it; defaultSort() },
                 { AccountService.removeCurrentAccount(context) }).execute()
     }
+
+    protected abstract fun defaultSort()
 
     abstract fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int, onSuccess: (T) -> Unit,
                               unauthorized: () -> Unit): AsyncRequest<T>

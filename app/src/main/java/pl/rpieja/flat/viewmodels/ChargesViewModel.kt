@@ -38,6 +38,10 @@ class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
         data.value = data.value
     }
 
+    override fun defaultSort(){
+        sortCharges(Comparator { o1, o2 -> o2.date.compareTo(o1.date) })
+    }
+
     override fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int,
                               onSuccess: (ChargesDTO) -> Unit,
                               unauthorized: () -> Unit): AsyncRequest<ChargesDTO> =
