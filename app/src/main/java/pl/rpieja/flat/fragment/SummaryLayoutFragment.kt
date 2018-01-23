@@ -1,12 +1,14 @@
 package pl.rpieja.flat.fragment
 
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.Summary
 import pl.rpieja.flat.dto.User
+import kotlin.math.absoluteValue
 
 class SummaryViewHolder(view: View): RecyclerView.ViewHolder(view) {
     val amountTextView: TextView = itemView.findViewById(R.id.summaryAmount)
@@ -20,21 +22,33 @@ abstract class SummaryLayoutFragment<VM: ViewModel, DTO>:
     override fun getUsers(item: Summary): List<User> = item.fromUsers
 
     override fun updateItemView(viewHolder: SummaryViewHolder, item: Summary) {
-        val colorNegative = context!!.getColor(R.color.amountNegative)
-        val colorPositive = context!!.getColor(R.color.amountPositive)
-        val colorNeutral = context!!.getColor(R.color.amountNeutral)
-
-        val amountColor = when {
-            item.chargeAmount > 0 -> colorNegative
-            item.chargeAmount < 0 -> colorPositive
-            else -> colorNeutral
-        }
-
-        viewHolder.amountTextView.setTextColor(amountColor)
-        viewHolder.amountTextView.text = currencyFormat.format(item.chargeAmount)
-
+        formatAmount(viewHolder.amountTextView, item.amount)
         viewHolder.userTextView.text = item.chargeName
     }
 
     override fun createViewHolder(view: View): SummaryViewHolder = SummaryViewHolder(view)
+
+    // getColor() requires context, available after onAttach
+    private var colorNegative: Int? = null
+    private var colorPositive: Int? = null
+    private var colorNeutral: Int? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        colorNegative = context!!.getColor(R.color.amountNegative)
+        colorPositive = context.getColor(R.color.amountPositive)
+        colorNeutral = context.getColor(R.color.amountNeutral)
+    }
+
+    override fun formatAmount(amountTextView: TextView, amount: Double) {
+        val roundAmount = if (amount.absoluteValue < 0.01) 0.0 else amount
+        val color = when {
+            amount >= 0.01 -> colorNegative
+            amount <= -0.01 -> colorPositive
+            else -> colorNeutral
+        }
+
+        amountTextView.text = currencyFormat.format(roundAmount).toString()
+        amountTextView.setTextColor(color!!)
+    }
 }
