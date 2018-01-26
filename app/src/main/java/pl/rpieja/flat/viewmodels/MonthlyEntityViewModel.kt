@@ -9,35 +9,32 @@ import pl.rpieja.flat.authentication.FlatCookieJar
 import pl.rpieja.flat.tasks.AsyncRequest
 import java.util.*
 
-abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
-    var month: Int
-      private set
-    var year: Int
-      private set
 
+abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
     override val data: MutableLiveData<T> = MutableLiveData()
+    val date: MutableLiveData<YearMonth> = MutableLiveData()
 
     init {
         val calendar = Calendar.getInstance()
-        month = calendar.get(Calendar.MONTH) + 1
-        year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH) + 1
+        val year = calendar.get(Calendar.YEAR)
+        date.value = YearMonth(month, year)
     }
 
     override fun load(context: Context) {
-        return load(context, month, year)
+        return load(context, date.value!!)
     }
 
-    override fun load(context: Context, month: Int, year: Int) {
+    override fun load(context: Context, date: YearMonth) {
         val flatAPI = FlatAPI(FlatCookieJar(context))
 
-        // Do not refetch data if month/year are the same
-        if (data.value != null && month == this.month && year == this.year)
+        // Do not refetch data if date has not been changed
+        if (data.value != null && this.date.value == date)
             return
 
-        this.month = month
-        this.year = year
+        this.date.value = date
 
-        asyncRequest(flatAPI, month, year, { data.value = it; defaultSort() },
+        asyncRequest(flatAPI, date.month, date.year, { data.value = it; defaultSort() },
                 { AccountService.removeCurrentAccount(context) }).execute()
     }
 

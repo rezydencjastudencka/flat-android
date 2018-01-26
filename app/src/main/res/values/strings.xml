@@ -8,6 +8,7 @@
 
     <!--Charges activity-->
     <string name="charges_name">Charges</string>
+    <string name="charges_title">Charges – %1$tb %1$tY</string>
     <string name="tab_text_1">Charges</string>
     <string name="tab_text_2">Expenses</string>
     <string name="tab_text_3">Summary</string>
@@ -15,6 +16,7 @@
 
     <!--Transfers activity-->
     <string name="transfers_name">Transfers</string>
+    <string name="transfers_title">Transfers – %1$tb %1$tY</string>
     <string name="transfers_tab_1">Outgoing</string>
     <string name="transfers_tab_2">Incoming</string>
     <string name="transfers_tab_3">Summary</string>
