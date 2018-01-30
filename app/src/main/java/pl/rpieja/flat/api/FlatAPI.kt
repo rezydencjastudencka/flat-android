@@ -1,5 +1,6 @@
 package pl.rpieja.flat.api
 
+import android.content.Context
 import android.util.Log
 
 import com.google.gson.Gson
@@ -15,6 +16,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.Charge
 import pl.rpieja.flat.dto.ChargesDTO
 import pl.rpieja.flat.dto.CreateChargeDTO
@@ -23,10 +25,18 @@ import pl.rpieja.flat.dto.SessionCheckResponse
 import pl.rpieja.flat.dto.TransfersDTO
 import pl.rpieja.flat.dto.User
 
-class FlatAPI(cookieJar: CookieJar) {
+class FlatAPI(context: Context, cookieJar: CookieJar) {
 
     private val client: OkHttpClient = OkHttpClient.Builder().cookieJar(cookieJar).build()
     private val gson = Gson()
+
+    private val API_ADDRESS = context.getString(R.string.api_uri)
+    private val SESSION_CHECK_URL = API_ADDRESS + "session/check"
+    private val CREATE_SESSION_URL = API_ADDRESS + "session/create"
+    private val GET_CHARGES_URL = API_ADDRESS + "charge/"
+    private val GET_TRANSFERS_URL = API_ADDRESS + "transfer/"
+    private val CREATE_CHARGE_URL = API_ADDRESS + "charge/create"
+    private val GET_USERS_URL = API_ADDRESS + "user/"
 
     fun login(username: String, password: String): Boolean? {
         //TODO: use Gson
@@ -112,16 +122,7 @@ class FlatAPI(cookieJar: CookieJar) {
     }
 
     companion object {
-
-        private const val API_ADDRESS = "https://api.flat.memleak.pl/"
         private val JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8")
-        private const val SESSION_CHECK_URL = API_ADDRESS + "session/check"
-        private const val CREATE_SESSION_URL = API_ADDRESS + "session/create"
-        private const val GET_CHARGES_URL = API_ADDRESS + "charge/"
-        private const val GET_TRANSFERS_URL = API_ADDRESS + "transfer/"
-        private const val CREATE_CHARGE_URL = API_ADDRESS + "charge/create"
-        private const val GET_USERS_URL = API_ADDRESS + "user/"
-
         private val TAG = FlatAPI::class.java.simpleName
     }
 
