@@ -1,23 +1,32 @@
 package pl.rpieja.flat.api
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import okhttp3.*
+import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.*
 import java.util.*
 
-class FlatAPI(cookieJar: CookieJar) {
-
+class FlatAPI(context: Context, cookieJar: CookieJar) {
     private val client: OkHttpClient = OkHttpClient.Builder().cookieJar(cookieJar).build()
     private val gson = Gson()
+
+    private val apiAddress = context.getString(R.string.api_uri)
+    private val sessionCheckUrl = apiAddress + "session/check"
+    private val createSessionUrl = apiAddress + "session/create"
+    private val getChargesUrl = apiAddress + "charge/"
+    private val getTransfersUrl = apiAddress + "transfer/"
+    private val createChargeUrl = apiAddress + "charge/create"
+    private val getUsersUrl = apiAddress + "user/"
 
     fun login(username: String, password: String): Boolean? {
         //TODO: use Gson
         val json = "{\"name\":\"$username\", \"password\": \"$password\"}"
 
         val request = Request.Builder()
-                .url(CREATE_SESSION_URL)
+                .url(createSessionUrl)
                 .post(RequestBody.create(JSON_MEDIA_TYPE, json))
                 .build()
         val response = client.newCall(request).execute()
@@ -26,7 +35,7 @@ class FlatAPI(cookieJar: CookieJar) {
 
     fun validateSession(): Boolean? {
         val request = Request.Builder()
-                .url(SESSION_CHECK_URL)
+                .url(sessionCheckUrl)
                 .build()
 
         val response = client.newCall(request).execute()
@@ -37,17 +46,17 @@ class FlatAPI(cookieJar: CookieJar) {
     }
 
     fun fetchCharges(month: Int, year: Int): ChargesDTO {
-        val requestUrl = GET_CHARGES_URL + Integer.toString(year) + "/" + Integer.toString(month)
+        val requestUrl = getChargesUrl + Integer.toString(year) + "/" + Integer.toString(month)
         return fetch(requestUrl, ChargesDTO::class.java)
     }
 
     fun fetchTransfers(month: Int, year: Int): TransfersDTO {
-        val requestUrl = GET_TRANSFERS_URL + Integer.toString(year) + "/" + Integer.toString(month)
+        val requestUrl = getTransfersUrl + Integer.toString(year) + "/" + Integer.toString(month)
         return fetch(requestUrl, TransfersDTO::class.java)
     }
 
     fun fetchUsers(): List<User> {
-        return Arrays.asList(*fetch(GET_USERS_URL, Array<User>::class.java))
+        return Arrays.asList(*fetch(getUsersUrl, Array<User>::class.java))
     }
 
     private fun <T> createEntity(entity: CreateDTO<T>, entityUrl: String): T {
@@ -56,7 +65,7 @@ class FlatAPI(cookieJar: CookieJar) {
     }
 
     fun createCharge(charge: CreateChargeDTO): Charge {
-        return createEntity(charge, CREATE_CHARGE_URL)
+        return createEntity(charge, createChargeUrl)
     }
 
     private fun <T> post(url: String, data: T): Response {
@@ -95,17 +104,7 @@ class FlatAPI(cookieJar: CookieJar) {
     }
 
     companion object {
-
-        private const val API_ADDRESS = "https://api.flat.memleak.pl/"
         private val JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8")
-        private const val SESSION_CHECK_URL = API_ADDRESS + "session/check"
-        private const val CREATE_SESSION_URL = API_ADDRESS + "session/create"
-        private const val GET_CHARGES_URL = API_ADDRESS + "charge/"
-        private const val GET_TRANSFERS_URL = API_ADDRESS + "transfer/"
-        private const val CREATE_CHARGE_URL = API_ADDRESS + "charge/create"
-        private const val GET_USERS_URL = API_ADDRESS + "user/"
-
         private val TAG = FlatAPI::class.java.simpleName
     }
-
 }
