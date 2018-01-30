@@ -76,7 +76,7 @@ class NewChargeViewModel : ViewModel() {
 
     private fun getFlatApi(context: Context): FlatAPI {
         if (flatApi == null) {
-            flatApi = FlatAPI(FlatCookieJar(context))
+            flatApi = FlatAPI(context, FlatCookieJar(context))
         }
         return flatApi!!
     }
