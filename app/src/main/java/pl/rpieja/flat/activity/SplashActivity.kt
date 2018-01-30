@@ -13,7 +13,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val flatAPI = FlatAPI(FlatCookieJar(this))
+        val flatAPI = FlatAPI(this, FlatCookieJar(this))
         AsyncValidate(flatAPI) { result ->
             if (result) {
                 val intent = Intent(this@SplashActivity, MainActivity::class.java)
