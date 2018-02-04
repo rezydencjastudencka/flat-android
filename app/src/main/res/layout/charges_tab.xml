@@ -11,7 +11,7 @@
         android:divider="@null"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:listSelector="@color/transparent"
+        android:listSelector="@color/colorBackgroundLight"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical" />
 </RelativeLayout>
