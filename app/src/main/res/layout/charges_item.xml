@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:paddingLeft="8dp"
@@ -13,45 +14,51 @@
         android:layout_height="match_parent"
         android:layout_margin="6dp">
 
-        <TextView
-            android:id="@+id/chargeName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/roboto_medium"
-            android:textSize="20sp"
-            android:paddingStart="8dp"
-            android:textColor="@color/textColorDark"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/chargeAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/roboto_medium"
-            android:textSize="15sp"
-            android:paddingEnd="10dp"
-            android:textAlignment="viewStart"
-            android:textColor="@color/textColorGreyDark"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/chargeName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_medium"
+                android:maxLines="1"
+                android:textColor="@color/textColorDark"
+                android:textSize="20sp"
+                tools:text="Name" />
+
+            <TextView
+                android:id="@+id/chargeAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/textColorGreyDark"
+                android:textSize="15sp"
+                tools:text="$ Amount" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/chargeUsers"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:drawableStart="@drawable/ic_person_black_24dp"
             android:paddingBottom="10dp"
-            android:paddingStart="10dp"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chargeName" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>
