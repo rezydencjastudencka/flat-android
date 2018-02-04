@@ -1,27 +1,11 @@
 package pl.rpieja.flat.api
 
 import android.util.Log
-
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonIOException
-
-import java.io.IOException
-import java.util.Arrays
-
-import okhttp3.CookieJar
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
-import pl.rpieja.flat.dto.Charge
-import pl.rpieja.flat.dto.ChargesDTO
-import pl.rpieja.flat.dto.CreateChargeDTO
-import pl.rpieja.flat.dto.CreateDTO
-import pl.rpieja.flat.dto.SessionCheckResponse
-import pl.rpieja.flat.dto.TransfersDTO
-import pl.rpieja.flat.dto.User
+import okhttp3.*
+import pl.rpieja.flat.dto.*
+import java.util.*
 
 class FlatAPI(cookieJar: CookieJar) {
 
@@ -47,7 +31,6 @@ class FlatAPI(cookieJar: CookieJar) {
 
         val response = client.newCall(request).execute()
         if (!response.isSuccessful) return false
-        val gson = GsonBuilder().setDateFormat("YYYY-MM-DD").create()
         val (error) = gson.fromJson(response.body()!!.string(), SessionCheckResponse::class.java)
                 ?: return false
         return "ok" == error
