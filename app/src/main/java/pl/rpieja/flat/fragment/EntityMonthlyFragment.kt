@@ -36,8 +36,8 @@ abstract class EntityMonthlyFragment<T, VM : MonthlyEntityViewModel<T>> : Fragme
 
     fun showDatePickerDialog() {
         val yearMonthPickerDialog = YearMonthPickerDialog(context, YearMonthPickerDialog.OnDateSetListener { year, month ->
-            viewModel!!.load(context!!, month, year)
-        }, R.style.monthPickerStyle, R.color.white)
+            viewModel!!.load(context!!, month+1, year)
+        }, R.style.monthPickerStyle, R.color.colorBackgroundLight)
         yearMonthPickerDialog.show()
     }
 
