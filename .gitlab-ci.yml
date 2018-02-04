@@ -7,6 +7,10 @@ stages:
   - build
   - test
 
+cache:
+    paths:
+    - /root/.gradle
+
 build:
   stage: build
   script:
@@ -19,12 +23,17 @@ build:
 build-release:
   stage: build
   script:
-    - ./gradlew assemble
+    - echo $KEYSTORE_FILE | base64 -di > app/store.jks
+    - echo storePassword=$KEYSTORE_PASS > keystore.properties
+    - echo keyPassword=$KEY_PASS >> keystore.properties
+    - echo keyAlias=flat >> keystore.properties
+    - echo storeFile=store.jks >> keystore.properties
+    - ./gradlew assembleRelease
   artifacts:
     paths:
     - app/build/outputs/
-  only:
-    - /^v.*$/
+#  only:
+#    - /^v.*$/
 
 unitTests:
   stage: test
