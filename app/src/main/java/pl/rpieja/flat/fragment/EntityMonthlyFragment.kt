@@ -9,13 +9,14 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.*
-import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
 import pl.rpieja.flat.R
+import pl.rpieja.flat.dialog.MonthPickerDialogFragment
 import pl.rpieja.flat.viewmodels.MonthlyEntityViewModel
 import pl.rpieja.flat.viewmodels.YearMonth
 import java.util.*
 import java.util.Calendar.MONTH
 import java.util.Calendar.YEAR
+
 
 abstract class EntityMonthlyFragment<T, VM : MonthlyEntityViewModel<T>> : Fragment() {
     companion object {
@@ -44,15 +45,9 @@ abstract class EntityMonthlyFragment<T, VM : MonthlyEntityViewModel<T>> : Fragme
         return getString(titleId, calendar)
     }
 
-    fun showDatePickerDialog() = RackMonthPicker(context)
-            .setLocale(Locale.ENGLISH)
-            .setColorTheme(R.color.colorPrimaryDark)
-            .setSelectedMonth(viewModel!!.date.value!!.month - 1)
-            .setPositiveButton({ month, _, _, year, _ ->
-                viewModel!!.load(context!!, YearMonth(month, year))
-            })
-            .setNegativeButton({ picker -> picker.dismiss() })
-            .show()
+    fun showDatePickerDialog() {
+        MonthPickerDialogFragment().show(fragmentManager, MonthPickerDialogFragment.TAG)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
