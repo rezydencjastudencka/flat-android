@@ -53,7 +53,7 @@ class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
 
     override val viewModelClass: Class<ChargesViewModel> = ChargesViewModel::class.java
     override val layoutId: Int = R.layout.content_charges
-    override val titleId: Int = R.string.charges_name
+    override val titleId: Int = R.string.charges_title
     override val menuId: Int = R.menu.menu_charges
 
     override fun getTabFragment(position: Int): Fragment = when (position) {

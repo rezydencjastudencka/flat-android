@@ -40,7 +40,7 @@ class TransfersFragment : EntityMonthlyFragment<TransfersDTO, TransfersViewModel
 
     override val viewModelClass: Class<TransfersViewModel> = TransfersViewModel::class.java
     override val layoutId: Int = R.layout.content_transfers
-    override val titleId: Int = R.string.transfers_name
+    override val titleId: Int = R.string.transfers_title
     override val menuId: Int = R.menu.menu_transfers
 
     override fun getTabFragment(position: Int): Fragment =
