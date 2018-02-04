@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.*
 import pl.rpieja.flat.R
 import pl.rpieja.flat.viewmodels.MonthlyEntityViewModel
-import com.twinkle94.monthyearpicker.picker.YearMonthPickerDialog
+import pl.rpieja.flat.dialog.MonthPickerDialogFragment
 
 
 abstract class EntityMonthlyFragment<T, VM : MonthlyEntityViewModel<T>> : Fragment() {
@@ -35,10 +35,7 @@ abstract class EntityMonthlyFragment<T, VM : MonthlyEntityViewModel<T>> : Fragme
     }
 
     fun showDatePickerDialog() {
-        val yearMonthPickerDialog = YearMonthPickerDialog(context, YearMonthPickerDialog.OnDateSetListener { year, month ->
-            viewModel!!.load(context!!, month+1, year)
-        }, R.style.monthPickerStyle, R.color.colorBackgroundLight)
-        yearMonthPickerDialog.show()
+        MonthPickerDialogFragment().show(fragmentManager, MonthPickerDialogFragment.TAG)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
