@@ -1,3 +1,6 @@
+keystore.properties
+*.jks
+
 
 # Created by https://www.gitignore.io/api/android,androidstudio
 
