@@ -43,6 +43,11 @@ public class YearMonthPickerDialog implements Dialog.OnClickListener {
             };
 
     /**
+     * Set Init Date.
+     */
+    private Calendar mCalendar;
+
+    /**
      * Listener for user's date picking.
      */
     private OnDateSetListener mOnDateSetListener;
@@ -56,6 +61,10 @@ public class YearMonthPickerDialog implements Dialog.OnClickListener {
      * The builder for our dialog.
      */
     private AlertDialog.Builder mDialogBuilder;
+
+    public AlertDialog getDialog() {
+        return mDialog;
+    }
 
     /**
      * Resulting dialog.
@@ -85,37 +94,43 @@ public class YearMonthPickerDialog implements Dialog.OnClickListener {
     /**
      * Creates a new YearMonthPickerDialog object that represents the dialog for
      * picking year and month.
-     * @param context The application's context.
+     *
+     * @param context           The application's context.
      * @param onDateSetListener Listener for user's date picking.
      */
-    public YearMonthPickerDialog(Context context, OnDateSetListener onDateSetListener) {
-        this(context, onDateSetListener, -1, -1);
+
+    public YearMonthPickerDialog(Context context, OnDateSetListener onDateSetListener, Calendar calendar) {
+        this(context, onDateSetListener, -1, -1, calendar);
     }
 
     /**
      * Creates a new YearMonthPickerDialog object that represents the dialog for
      * picking year and month. Specifies custom user's theme
-     * @param context The application's context.
+     *
+     * @param context           The application's context.
      * @param onDateSetListener Listener for user's date picking.
-     * @param theme Custom user's theme for dialog.
+     * @param theme             Custom user's theme for dialog.
      */
-    public YearMonthPickerDialog(Context context, OnDateSetListener onDateSetListener, int theme) {
-        this(context, onDateSetListener, theme, -1);
+    public YearMonthPickerDialog(Context context, OnDateSetListener onDateSetListener, Calendar calendar, int theme) {
+        this(context, onDateSetListener, theme, -1, calendar);
     }
 
     /**
      * Creates a new YearMonthPickerDialog object that represents the dialog for
      * picking year and month. Specifies custom user's theme and title text color
-     * @param context The application's context.
+     *
+     * @param context           The application's context.
      * @param onDateSetListener Listener for user's date picking.
-     * @param theme Custom user's theme for dialog.
-     * @param titleTextColor Custom user's color for title text.
+     * @param theme             Custom user's theme for dialog.
+     * @param titleTextColor    Custom user's color for title text.
      */
-    public YearMonthPickerDialog(Context context, OnDateSetListener onDateSetListener, int theme, int titleTextColor) {
+    public YearMonthPickerDialog(Context context, OnDateSetListener onDateSetListener, int theme,
+                                 int titleTextColor, Calendar calendar) {
         mContext = context;
         mOnDateSetListener = onDateSetListener;
         mTheme = theme;
         mTextTitleColor = titleTextColor;
+        mCalendar = calendar;
 
         //Builds the dialog using listed parameters.
         build();
@@ -123,8 +138,9 @@ public class YearMonthPickerDialog implements Dialog.OnClickListener {
 
     /**
      * Listens for user's actions.
+     *
      * @param dialog Current instance of dialog.
-     * @param which Id of pressed button.
+     * @param which  Id of pressed button.
      */
     @Override
     public void onClick(DialogInterface dialog, int which) {
@@ -177,8 +193,7 @@ public class YearMonthPickerDialog implements Dialog.OnClickListener {
         final TextView yearValue = (TextView) titleView.findViewById(R.id.year_name);
 
         //If there is user's title color,
-        if(mTextTitleColor != -1)
-        {
+        if (mTextTitleColor != -1) {
             //Then apply it.
             setTextColor(monthName);
             setTextColor(yearValue);
@@ -215,31 +230,31 @@ public class YearMonthPickerDialog implements Dialog.OnClickListener {
 
     /**
      * Sets color to given TextView.
+     *
      * @param titleView Given TextView.
      */
-    private void setTextColor(TextView titleView)
-    {
+    private void setTextColor(TextView titleView) {
         titleView.setTextColor(ContextCompat.getColor(mContext, mTextTitleColor));
     }
 
     /**
      * Sets current date for title and pickers.
-     * @param yearPicker year picker.
+     *
+     * @param yearPicker  year picker.
      * @param monthPicker month picker.
-     * @param monthName month name in the dialog title.
-     * @param yearValue year value in the dialog title.
+     * @param monthName   month name in the dialog title.
+     * @param yearValue   year value in the dialog title.
      */
     private void setCurrentDate(NumberPickerWithColor yearPicker, NumberPickerWithColor monthPicker, TextView monthName, TextView yearValue) {
         //Getting current date values from Calendar instance.
-        Calendar calendar = Calendar.getInstance();
-        mMonth = calendar.get(Calendar.MONTH);
-        mYear = calendar.get(Calendar.YEAR);
+        mMonth = mCalendar.get(Calendar.MONTH);
+        mYear = mCalendar.get(Calendar.YEAR);
 
         //Setting output format.
         SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
 
         //Setting current date values to dialog title views.
-        monthName.setText(monthFormat.format(calendar.getTime()));
+        monthName.setText(monthFormat.format(mCalendar.getTime()));
         yearValue.setText(Integer.toString(mYear));
 
         //Setting current date values to pickers.
@@ -249,10 +264,11 @@ public class YearMonthPickerDialog implements Dialog.OnClickListener {
 
     /**
      * Sets current date for title and pickers.
-     * @param yearPicker year picker.
+     *
+     * @param yearPicker  year picker.
      * @param monthPicker month picker.
-     * @param monthName month name in the dialog title.
-     * @param yearValue year value in the dialog title.
+     * @param monthName   month name in the dialog title.
+     * @param yearValue   year value in the dialog title.
      */
     private void setListeners(final NumberPickerWithColor yearPicker, final NumberPickerWithColor monthPicker, final TextView monthName, final TextView yearValue) {
         //Setting listener to month name view.

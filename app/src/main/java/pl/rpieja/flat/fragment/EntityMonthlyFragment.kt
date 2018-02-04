@@ -9,13 +9,14 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.*
-import com.twinkle94.monthyearpicker.picker.YearMonthPickerDialog
 import pl.rpieja.flat.R
+import pl.rpieja.flat.dialog.MonthPickerDialogFragment
 import pl.rpieja.flat.viewmodels.MonthlyEntityViewModel
 import pl.rpieja.flat.viewmodels.YearMonth
 import java.util.*
 import java.util.Calendar.MONTH
 import java.util.Calendar.YEAR
+
 
 abstract class EntityMonthlyFragment<T, VM : MonthlyEntityViewModel<T>> : Fragment() {
     companion object {
@@ -45,10 +46,7 @@ abstract class EntityMonthlyFragment<T, VM : MonthlyEntityViewModel<T>> : Fragme
     }
 
     fun showDatePickerDialog() {
-        val yearMonthPickerDialog = YearMonthPickerDialog(context, YearMonthPickerDialog.OnDateSetListener { year, month ->
-            viewModel!!.load(context!!, YearMonth(month + 1, year))
-        }, R.style.monthPickerStyle, R.color.white)
-        yearMonthPickerDialog.show()
+        MonthPickerDialogFragment().show(fragmentManager, MonthPickerDialogFragment.TAG)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
