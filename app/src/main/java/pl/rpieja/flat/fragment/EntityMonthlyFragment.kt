@@ -8,12 +8,12 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.*
-import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker
 import pl.rpieja.flat.R
 import pl.rpieja.flat.viewmodels.MonthlyEntityViewModel
-import java.util.*
+import com.twinkle94.monthyearpicker.picker.YearMonthPickerDialog
 
-abstract class EntityMonthlyFragment<T, VM: MonthlyEntityViewModel<T>>: Fragment() {
+
+abstract class EntityMonthlyFragment<T, VM : MonthlyEntityViewModel<T>> : Fragment() {
     companion object {
         private const val YEAR_BUNDLE_KEY = "pl.rpieja.flat.fragment.EntityMonthlyFragment.year"
         private const val MONTH_BUNDLE_KEY = "pl.rpieja.flat.fragment.EntityMonthlyFragment.month"
@@ -34,13 +34,12 @@ abstract class EntityMonthlyFragment<T, VM: MonthlyEntityViewModel<T>>: Fragment
         setHasOptionsMenu(true)
     }
 
-    fun showDatePickerDialog() = RackMonthPicker(context)
-            .setLocale(Locale.ENGLISH)
-            .setColorTheme(R.color.colorPrimaryDark)
-            .setSelectedMonth(viewModel!!.month - 1)
-            .setPositiveButton({ month, _, _, year, _ -> viewModel!!.load(context!!, month, year) })
-            .setNegativeButton({ picker -> picker.dismiss() })
-            .show()
+    fun showDatePickerDialog() {
+        val yearMonthPickerDialog = YearMonthPickerDialog(context, YearMonthPickerDialog.OnDateSetListener { year, month ->
+            viewModel!!.load(context!!, month, year)
+        }, R.style.monthPickerStyle, R.color.white)
+        yearMonthPickerDialog.show()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -58,7 +57,7 @@ abstract class EntityMonthlyFragment<T, VM: MonthlyEntityViewModel<T>>: Fragment
             viewModel!!.load(context!!, month, year)
         }
 
-        val mSectionsPagerAdapter = object: FragmentPagerAdapter(childFragmentManager) {
+        val mSectionsPagerAdapter = object : FragmentPagerAdapter(childFragmentManager) {
             override fun getItem(position: Int): Fragment = getTabFragment(position)
             override fun getCount(): Int = getItemCount()
         }
