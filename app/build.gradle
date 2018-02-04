@@ -1,6 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+
+if(keystorePropertiesFile.canRead()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+    android.signingConfigs.release.storeFile = file(props['storeFile'])
+    android.signingConfigs.release.storePassword = props['storePassword']
+    android.signingConfigs.release.keyAlias = props['keyAlias']
+    android.signingConfigs.release.keyPassword = props['keyPassword']
+}
+
 android {
     compileSdkVersion 27
     buildToolsVersion "26.0.2"
@@ -14,6 +26,7 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
