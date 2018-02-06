@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import okhttp3.*
 import pl.rpieja.flat.R
+import pl.rpieja.flat.authentication.FlatCookieJar
 import pl.rpieja.flat.dto.*
 import java.util.*
 
@@ -48,6 +49,15 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     fun fetchCharges(month: Int, year: Int): ChargesDTO {
         val requestUrl = getChargesUrl + Integer.toString(year) + "/" + Integer.toString(month)
         return fetch(requestUrl, ChargesDTO::class.java)
+    }
+
+    fun fetchCharge(charge_id: Int): Charge {
+        return Charge("Sample charge", "", Calendar.getInstance().time,
+                99, charge_id, emptyList(), 54.65)
+    }
+
+    fun fetchUser(user_id: Int): User {
+        return User("Someone", user_id)
     }
 
     fun fetchTransfers(month: Int, year: Int): TransfersDTO {
@@ -106,5 +116,15 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     companion object {
         private val JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8")
         private val TAG = FlatAPI::class.java.simpleName
+
+        fun getFlatApi(context: Context): FlatAPI {
+            if (flatAPI == null) {
+                flatAPI = FlatAPI(context, FlatCookieJar(context))
+            }
+
+            return flatAPI!!
+        }
+
+        private var flatAPI: FlatAPI? = null
     }
 }
