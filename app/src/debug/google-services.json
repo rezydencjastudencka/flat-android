@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "666760320742",
+    "firebase_url": "https://flat-debug.firebaseio.com",
+    "project_id": "flat-debug",
+    "storage_bucket": "flat-debug.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666760320742:android:9247f5907bb8166c",
+        "android_client_info": {
+          "package_name": "pl.rpieja.flat.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "666760320742-6amp435rrenlj06qf4jhkls5t496p7jm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.rpieja.flat.debug",
+            "certificate_hash": "d8a88480fadb1ff1d449fc2249df37a280ab9d04"
+          }
+        },
+        {
+          "client_id": "666760320742-9rep3lqd9840oj8u1trtvbs2rlf8hjgp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMkaJGJxm1zjIg9DTjRJIcdXCntQ14vCo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "666760320742-9rep3lqd9840oj8u1trtvbs2rlf8hjgp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
