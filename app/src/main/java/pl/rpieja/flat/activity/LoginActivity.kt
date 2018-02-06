@@ -7,12 +7,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-
+import com.google.firebase.iid.FirebaseInstanceId
 import pl.rpieja.flat.R
+import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.authentication.AccountService
 import pl.rpieja.flat.authentication.FlatCookieJar
-import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.tasks.AsyncLogin
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -38,7 +39,8 @@ class LoginActivity : AppCompatActivity() {
             val cookieJar = FlatCookieJar(this@LoginActivity)
             val flatAPI = FlatAPI(this, cookieJar)
 
-            AsyncLogin(flatAPI, username, password, {
+            val registrationToken = FirebaseInstanceId.getInstance().token
+            AsyncLogin(flatAPI, username, password, registrationToken, {
                 AccountService.addAccount(this@LoginActivity,
                         username, cookieJar.sessionId!!)
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
