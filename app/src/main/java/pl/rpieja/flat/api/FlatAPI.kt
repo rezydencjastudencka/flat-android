@@ -21,6 +21,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     private val getTransfersUrl = apiAddress + "transfer/"
     private val createRevenueUrl = apiAddress + "charge/create"
     private val getUsersUrl = apiAddress + "user/"
+    private val registerFCMUrl = apiAddress + "fcm/device"
 
     fun login(username: String, password: String): Boolean? {
         //TODO: use Gson
@@ -54,6 +55,10 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     fun fetchCharge(charge_id: Int): Charge {
         return Charge("Sample charge", "", Calendar.getInstance().time,
                 99, charge_id, emptyList(), 54.65)
+    }
+
+    fun registerFCM(registration_token: String){
+        post(registerFCMUrl, RegisterFCM(registration_token))
     }
 
     fun fetchUser(user_id: Int): User {
