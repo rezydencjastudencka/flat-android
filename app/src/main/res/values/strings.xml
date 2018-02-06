@@ -45,4 +45,10 @@
     <string name="nav_settings_title">Settings</string>
     <string name="nav_logout_title">Logout</string>
 
+    <!--Notifications-->
+    <string name="notification_charges_name">Charges</string>
+    <string name="notification_charges_summary_title">Charges</string>
+    <string name="notification_charges_summary_text">You have new charges</string>
+    <string name="notification_charges_text">%1$s charged you %2$f for %3$s</string>
+
 </resources>
