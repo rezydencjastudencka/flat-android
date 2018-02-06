@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             val cookieJar = FlatCookieJar(this@LoginActivity)
-            val flatAPI = FlatAPI(cookieJar)
+            val flatAPI = FlatAPI(this, cookieJar)
 
             AsyncLogin(flatAPI, username, password, {
                 AccountService.addAccount(this@LoginActivity,

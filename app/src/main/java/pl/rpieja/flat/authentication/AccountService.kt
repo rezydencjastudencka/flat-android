@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
+import pl.rpieja.flat.R
 
 class AccountService : Service() {
     private var authenticator: Authenticator? = null
@@ -53,29 +54,29 @@ class AccountService : Service() {
     }
 
     companion object {
-        private const val ACCOUNT_TYPE = "pl.memleak.flat"
+        fun getAccountType(context: Context) = context.getString(R.string.account_type)
 
         fun removeCurrentAccount(context: Context) {
             val am = AccountManager.get(context)
-            val accounts = am.getAccountsByType(ACCOUNT_TYPE)
+            val accounts = am.getAccountsByType(getAccountType(context))
             if (accounts.isEmpty()) return
             am.removeAccountExplicitly(accounts[0])
         }
 
         fun addAccount(context: Context, username: String, token: String) {
             val am = AccountManager.get(context)
-            val account = AccountService.getAccount(username)
+            val account = AccountService.getAccount(context, username)
             am.addAccountExplicitly(account, token, null)
         }
 
         fun getAuthToken(context: Context): String? {
             val am = AccountManager.get(context)
-            val accounts = am.getAccountsByType(ACCOUNT_TYPE)
+            val accounts = am.getAccountsByType(getAccountType(context))
             return if (accounts.isEmpty()) null else am.getPassword(accounts[0])
         }
 
-        private fun getAccount(accountName: String): Account {
-            return Account(accountName, ACCOUNT_TYPE)
+        private fun getAccount(context: Context, accountName: String): Account {
+            return Account(accountName, getAccountType(context))
         }
     }
 }
