@@ -20,6 +20,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     private val getChargesUrl = apiAddress + "charge/"
     private val getTransfersUrl = apiAddress + "transfer/"
     private val createRevenueUrl = apiAddress + "charge/create"
+    private val fetchExpenseUrl = apiAddress + "charge/expense/"
     private val getUsersUrl = apiAddress + "user/"
     private val registerFCMUrl = apiAddress + "fcm/device"
 
@@ -52,17 +53,13 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
         return fetch(requestUrl, ChargesDTO::class.java)
     }
 
-    fun fetchCharge(charge_id: Int): Charge {
-        return Charge("Sample charge", "", Calendar.getInstance().time,
-                99, charge_id, emptyList(), 54.65)
+    fun fetchExpense(charge_id: Int): Expense {
+        val requestUrl = fetchExpenseUrl + charge_id.toString()
+        return fetch(requestUrl, Expense::class.java)
     }
 
     fun registerFCM(registration_token: String){
         post(registerFCMUrl, RegisterFCM(registration_token))
-    }
-
-    fun fetchUser(user_id: Int): User {
-        return User("Someone", user_id)
     }
 
     fun fetchTransfers(month: Int, year: Int): TransfersDTO {
