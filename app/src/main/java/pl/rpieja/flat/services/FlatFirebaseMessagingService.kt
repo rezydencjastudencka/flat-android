@@ -12,8 +12,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import pl.rpieja.flat.R
 import pl.rpieja.flat.api.FlatAPI
-import pl.rpieja.flat.dto.Charge
-import pl.rpieja.flat.dto.User
+import pl.rpieja.flat.dto.Expense
 
 
 class FlatFirebaseMessagingService : FirebaseMessagingService() {
@@ -21,11 +20,11 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
         private val TAG = FlatFirebaseMessagingService::class.simpleName
 
         private const val TYPE = "type"
-        private const val NEW_CHARGE = "new_charge"
-        private const val CHARGE_ID = "charge_id"
+        private const val NEW_EXPENSE = "new_expense"
+        private const val EXPENSE_ID = "expense_id"
 
-        private const val CHARGES_CHANNEL = "charges"
-        private const val CHARGES_GROUP = "charges"
+        private const val EXPENSES_CHANNEL = "expenses"
+        private const val EXPENSES_GROUP = "expenses"
 
         private const val SUMMARY_NOTIFICATION_ID = Int.MAX_VALUE
     }
@@ -39,19 +38,18 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
             Log.d(TAG, "Message data payload: " + message.data)
 
             when (message.data[TYPE]) {
-                NEW_CHARGE -> createNewChargeNotification(message.data[CHARGE_ID]!!.toInt())
+                NEW_EXPENSE -> createNewExpenseNotification(message.data[EXPENSE_ID]!!.toInt())
             }
 
         }
 
     }
 
-    private fun createNewChargeNotification(charge_id: Int) {
-        Log.d(TAG, "Creating new charge " + charge_id)
+    private fun createNewExpenseNotification(expense_id: Int) {
+        Log.d(TAG, "Creating new expense " + expense_id)
 
         val flatAPI = FlatAPI.getFlatApi(this)
-        val charge = flatAPI.fetchCharge(charge_id)
-        val user = flatAPI.fetchUser(charge.from)
+        val expense = flatAPI.fetchExpense(expense_id)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -63,26 +61,26 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.notify(SUMMARY_NOTIFICATION_ID, buildSummary())
         }
 
-        notificationManager.notify(charge_id, buildNotification(charge, user))
+        notificationManager.notify(expense_id, buildNotification(expense))
     }
 
-    private fun buildNotification(charge: Charge, user: User): Notification {
-        return NotificationCompat.Builder(this, CHARGES_CHANNEL)
+    private fun buildNotification(expense: Expense): Notification {
+        return NotificationCompat.Builder(this, EXPENSES_CHANNEL)
                 .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle(charge.name)
-                .setGroup(CHARGES_GROUP)
-                .setContentText(getString(R.string.notification_charges_text,
-                        user.name, charge.amount, charge.name))
+                .setContentTitle(expense.name)
+                .setGroup(EXPENSES_GROUP)
+                .setContentText(getString(R.string.notification_expenses_text,
+                        expense.from.name, expense.amount, expense.name))
                 .build()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun buildSummary(): Notification {
-        return NotificationCompat.Builder(this, CHARGES_CHANNEL)
+        return NotificationCompat.Builder(this, EXPENSES_CHANNEL)
                 .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle(getString(R.string.notification_charges_summary_title))
-                .setContentText(getString(R.string.notification_charges_summary_text))
-                .setGroup(CHARGES_GROUP)
+                .setContentTitle(getString(R.string.notification_expenses_summary_title))
+                .setContentText(getString(R.string.notification_expenses_summary_text))
+                .setGroup(EXPENSES_GROUP)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                 .setGroupSummary(true)
                 .build()
@@ -90,9 +88,9 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(): NotificationChannel {
-        val name = getString(R.string.notification_charges_name)
+        val name = getString(R.string.notification_expenses_name)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
-        return NotificationChannel(CHARGES_CHANNEL, name, importance)
+        return NotificationChannel(EXPENSES_CHANNEL, name, importance)
     }
 
 
