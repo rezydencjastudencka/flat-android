@@ -3,7 +3,9 @@ package pl.rpieja.flat.services
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
@@ -11,6 +13,7 @@ import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import pl.rpieja.flat.R
+import pl.rpieja.flat.activity.MainActivity
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.dto.Expense
 
@@ -65,12 +68,18 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun buildNotification(expense: Expense): Notification {
+        val resultIntent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
+                PendingIntent.FLAG_ONE_SHOT)
+
         return NotificationCompat.Builder(this, EXPENSES_CHANNEL)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(expense.name)
                 .setGroup(EXPENSES_GROUP)
                 .setContentText(getString(R.string.notification_expenses_text,
                         expense.from.name, expense.amount, expense.name))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .build()
     }
 
@@ -83,6 +92,7 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
                 .setGroup(EXPENSES_GROUP)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                 .setGroupSummary(true)
+                .setAutoCancel(true)
                 .build()
     }
 
