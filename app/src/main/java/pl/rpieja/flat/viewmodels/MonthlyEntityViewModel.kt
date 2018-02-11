@@ -21,15 +21,15 @@ abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
         date.value = YearMonth(month, year)
     }
 
-    override fun load(context: Context) {
-        return load(context, date.value!!)
+    override fun load(context: Context, force: Boolean) {
+        return load(context, date.value!!, force)
     }
 
-    override fun load(context: Context, date: YearMonth) {
+    override fun load(context: Context, date: YearMonth, force: Boolean) {
         val flatAPI = FlatAPI(context, FlatCookieJar(context))
 
         // Do not refetch data if date has not been changed
-        if (data.value != null && this.date.value == date)
+        if (!force && data.value != null && this.date.value == date)
             return
 
         this.date.value = date
