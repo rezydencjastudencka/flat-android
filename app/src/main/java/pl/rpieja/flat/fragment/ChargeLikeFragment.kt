@@ -1,22 +1,23 @@
 package pl.rpieja.flat.fragment
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.ChargeLike
 import pl.rpieja.flat.dto.User
 import java.text.NumberFormat
 import java.util.*
-import android.arch.lifecycle.Observer
-import android.support.v7.widget.LinearLayoutManager
 
 abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM: ViewModel, DTO>:
         Fragment() {
@@ -78,6 +79,8 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
 
         recyclerView?.layoutManager = LinearLayoutManager(activity)
         recyclerView?.adapter = ItemAdapter(elements ?: emptyList())
+        OverScrollDecoratorHelper.setUpOverScroll(recyclerView,
+                OverScrollDecoratorHelper.ORIENTATION_VERTICAL)
 
         return rootView
     }
