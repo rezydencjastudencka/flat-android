@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -16,11 +17,12 @@ import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.ChargeLike
 import pl.rpieja.flat.dto.User
+import pl.rpieja.flat.viewmodels.Loadable
 import java.text.NumberFormat
 import java.util.*
 
-abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM: ViewModel, DTO>:
-        Fragment() {
+abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM , DTO>:
+        Fragment() where VM: Loadable<DTO>, VM: ViewModel {
     open val layoutId: Int = R.layout.charges_tab
     open val itemLayoutId: Int = R.layout.charges_item
     open val recyclerViewId: Int = R.id.chargesListView
@@ -40,6 +42,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
     abstract fun formatAmount(amountTextView: TextView, amount: Double)
 
     private var recyclerView: RecyclerView? = null
+    private var swipeRefreshLayout: SwipeRefreshLayout? = null
     private var elements: List<T>? = null
 
     private fun setData(data: List<T>) {
@@ -69,12 +72,21 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
         val viewModel: VM = ViewModelProviders.of(activity!!).get(modelClass)
         extractLiveData(viewModel).observe(this, Observer<DTO> { dto ->
             setData(extractEntityFromDTO(dto!!))
+            swipeRefreshLayout?.isRefreshing = false
         })
     }
+
+    private fun reload() {
+        val viewModel: VM = ViewModelProviders.of(activity!!).get(modelClass)
+        viewModel.load(context!!, true)
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(layoutId, container, false)
+        swipeRefreshLayout = rootView as SwipeRefreshLayout
+        swipeRefreshLayout!!.setOnRefreshListener { reload() }
         recyclerView = rootView.findViewById(recyclerViewId)
 
         recyclerView?.layoutManager = LinearLayoutManager(activity)
@@ -92,8 +104,8 @@ class ChargeViewHolder(view: View): RecyclerView.ViewHolder(view) {
     val chargeUsers: TextView = itemView.findViewById(R.id.chargeUsers)
 }
 
-abstract class ChargeLayoutFragment<T: ChargeLike, VM: ViewModel, DTO>:
-        ChargeLikeFragment<T, ChargeViewHolder, VM, DTO>() {
+abstract class ChargeLayoutFragment<T: ChargeLike, VM, DTO>:
+        ChargeLikeFragment<T, ChargeViewHolder, VM, DTO>() where VM: Loadable<DTO>, VM: ViewModel {
     override fun createViewHolder(view: View): ChargeViewHolder = ChargeViewHolder(view)
 
     override fun updateItemView(viewHolder: ChargeViewHolder, item: T) {
