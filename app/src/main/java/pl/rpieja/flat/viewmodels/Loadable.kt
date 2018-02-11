@@ -7,7 +7,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 interface Loadable<T> {
-    fun load(context: Context)
+    fun load(context: Context, force: Boolean = false)
     val data: MutableLiveData<T>
 }
 
@@ -22,5 +22,5 @@ interface Loadable<T> {
 data class YearMonth(val month: Int, val year: Int) : Parcelable
 
 interface MonthlyLoadable<T>: Loadable<T> {
-    fun load(context: Context, date: YearMonth)
+    fun load(context: Context, date: YearMonth, force: Boolean = false)
 }

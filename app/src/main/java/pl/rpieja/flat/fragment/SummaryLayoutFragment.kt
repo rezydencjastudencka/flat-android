@@ -8,6 +8,7 @@ import android.widget.TextView
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.Summary
 import pl.rpieja.flat.dto.User
+import pl.rpieja.flat.viewmodels.Loadable
 import kotlin.math.absoluteValue
 
 class SummaryViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -15,8 +16,9 @@ class SummaryViewHolder(view: View): RecyclerView.ViewHolder(view) {
     val userTextView: TextView = itemView.findViewById(R.id.summaryUser)
 }
 
-abstract class SummaryLayoutFragment<VM: ViewModel, DTO>:
-        ChargeLikeFragment<Summary, SummaryViewHolder, VM, DTO>() {
+abstract class SummaryLayoutFragment<VM, DTO>:
+        ChargeLikeFragment<Summary, SummaryViewHolder, VM, DTO>()
+        where VM: Loadable<DTO>, VM: ViewModel{
     override val itemLayoutId: Int = R.layout.summary_item
 
     override fun getUsers(item: Summary): List<User> = item.fromUsers
