@@ -14,5 +14,6 @@
         android:headerDividersEnabled="false"
         android:listSelector="@color/colorBackgroundLight"
         android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:clipToPadding="false" />
 </android.support.v4.widget.SwipeRefreshLayout>

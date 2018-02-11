@@ -29,6 +29,7 @@ abstract class ChargeTab<T: ChargeLike> : ChargeLayoutFragment<T, ChargesViewMod
 }
 
 class ChargeIncomeTab : ChargeTab<Charge>() {
+    override val listBottomPaddingDp = 80f
     override fun getUsers(item: Charge): List<User> = item.toUsers
     override fun extractEntityFromDTO(dto: ChargesDTO): List<Charge> = dto.charges
 }
