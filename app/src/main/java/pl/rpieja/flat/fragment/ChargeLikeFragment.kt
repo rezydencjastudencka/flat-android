@@ -1,6 +1,7 @@
 package pl.rpieja.flat.fragment
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +20,10 @@ import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.viewmodels.Loadable
 import java.text.NumberFormat
 import java.util.*
-import android.arch.lifecycle.Observer
 
 abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM , DTO>:
         Fragment() where VM: Loadable<DTO>, VM: ViewModel {
+    open val listBottomPaddingDp = 0f
     open val layoutId: Int = R.layout.charges_tab
     open val itemLayoutId: Int = R.layout.charges_item
     open val recyclerViewId: Int = R.id.chargesListView
@@ -90,6 +92,9 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
 
         recyclerView?.layoutManager = LinearLayoutManager(activity)
         recyclerView?.adapter = ItemAdapter(elements ?: emptyList())
+        val paddingPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, listBottomPaddingDp,
+                resources.displayMetrics).toInt()
+        recyclerView?.setPadding(0, 0, 0, paddingPx)
 
         return rootView
     }
