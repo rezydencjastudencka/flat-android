@@ -15,9 +15,9 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import pl.rpieja.flat.R
-import pl.rpieja.flat.activity.NewChargeActivity
-import pl.rpieja.flat.activity.NewChargeActivity.Constants.REQUEST_CREATE
-import pl.rpieja.flat.activity.NewChargeActivity.Constants.RESULT_CREATE
+import pl.rpieja.flat.activity.NewRevenueActivity
+import pl.rpieja.flat.activity.NewRevenueActivity.Constants.REQUEST_CREATE
+import pl.rpieja.flat.activity.NewRevenueActivity.Constants.RESULT_CREATE
 import pl.rpieja.flat.dialog.ChargesSortDialogFragment
 import pl.rpieja.flat.dto.*
 import pl.rpieja.flat.viewmodels.ChargesViewModel
@@ -28,14 +28,14 @@ abstract class ChargeTab<T: ChargeLike> : ChargeLayoutFragment<T, ChargesViewMod
     override fun createViewHolder(view: View): ChargeViewHolder = ChargeViewHolder(view)
 }
 
-class ChargeIncomeTab : ChargeTab<Charge>() {
-    override fun getUsers(item: Charge): List<User> = item.toUsers
-    override fun extractEntityFromDTO(dto: ChargesDTO): List<Charge> = dto.charges
+class ChargeRevenueTab : ChargeTab<Revenue>() {
+    override fun getUsers(item: Revenue): List<User> = item.toUsers
+    override fun extractEntityFromDTO(dto: ChargesDTO): List<Revenue> = dto.revenues
 }
 
 class ChargeExpenseTab : ChargeTab<Expense>() {
     override fun getUsers(item: Expense): List<User> = item.fromUsers
-    override fun extractEntityFromDTO(dto: ChargesDTO): List<Expense> = dto.incomes
+    override fun extractEntityFromDTO(dto: ChargesDTO): List<Expense> = dto.expenses
 }
 
 class ChargeSummaryTab : SummaryLayoutFragment<ChargesViewModel, ChargesDTO>() {
@@ -46,7 +46,7 @@ class ChargeSummaryTab : SummaryLayoutFragment<ChargesViewModel, ChargesDTO>() {
 
 class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
     companion object {
-        const val INCOME_TAB_INDEX = 0
+        const val REVENUE_TAB_INDEX = 0
         const val EXPENSE_TAB_INDEX = 1
         const val SUMMARY_TAB_INDEX = 2
     }
@@ -57,7 +57,7 @@ class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
     override val menuId: Int = R.menu.menu_charges
 
     override fun getTabFragment(position: Int): Fragment = when (position) {
-        INCOME_TAB_INDEX -> ChargeIncomeTab()
+        REVENUE_TAB_INDEX -> ChargeRevenueTab()
         EXPENSE_TAB_INDEX -> ChargeExpenseTab()
         SUMMARY_TAB_INDEX -> ChargeSummaryTab()
         else -> TODO()
@@ -96,7 +96,7 @@ class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
             when {
                 requestCode == REQUEST_CREATE && resultCode == RESULT_OK ->
                     ViewModelProviders.of(activity!!).get(viewModelClass)
-                            .addCharge(data!!.getParcelableExtra(RESULT_CREATE))
+                            .addRevenue(data!!.getParcelableExtra(RESULT_CREATE))
 
                 else ->
                     super.onActivityResult(requestCode, resultCode, data)
@@ -105,12 +105,12 @@ class ChargesFragment : EntityMonthlyFragment<ChargesDTO, ChargesViewModel>() {
     private fun setupFab(tabLayout: TabLayout) {
         val fab: FloatingActionButton = activity!!.findViewById(R.id.fab)
         val updateVisibility = { position: Int ->
-            fab.visibility = if (position == INCOME_TAB_INDEX) VISIBLE else GONE
+            fab.visibility = if (position == REVENUE_TAB_INDEX) VISIBLE else GONE
         }
 
         updateVisibility(tabLayout.selectedTabPosition)
         fab.setOnClickListener {
-            startActivityForResult(Intent(activity, NewChargeActivity::class.java), REQUEST_CREATE)
+            startActivityForResult(Intent(activity, NewRevenueActivity::class.java), REQUEST_CREATE)
         }
 
         tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {

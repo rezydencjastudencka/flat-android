@@ -1,11 +1,11 @@
 package pl.rpieja.flat.dto
 
-data class CreateChargeDTO(
+data class CreateRevenueDTO(
         var name: String,
         var date: String,
         var rawAmount: String,
         var to: List<Int>
-) : CreateDTO<Charge> {
-    override val entityClass: Class<Charge>
-        get() = Charge::class.java
+) : CreateDTO<Revenue> {
+    override val entityClass: Class<Revenue>
+        get() = Revenue::class.java
 }

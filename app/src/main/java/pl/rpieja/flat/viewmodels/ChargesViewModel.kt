@@ -1,27 +1,26 @@
 package pl.rpieja.flat.viewmodels
 
-import java.util.Collections
-import java.util.Comparator
 import pl.rpieja.flat.api.FlatAPI
-import pl.rpieja.flat.dto.Charge
 import pl.rpieja.flat.dto.ChargesDTO
 import pl.rpieja.flat.dto.Expense
+import pl.rpieja.flat.dto.Revenue
 import pl.rpieja.flat.dto.Summary
 import pl.rpieja.flat.tasks.AsyncGetCharges
 import pl.rpieja.flat.tasks.AsyncRequest
+import java.util.*
 
 class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
-    fun sortCharges(comparator: Comparator<Charge>) {
-        if (data.value?.charges == null) return
+    fun sortRevenues(comparator: Comparator<Revenue>) {
+        if (data.value?.revenues == null) return
 
-        Collections.sort(data.value!!.charges, comparator)
+        Collections.sort(data.value!!.revenues, comparator)
         data.value = data.value
     }
 
-    fun sortIncomes(comparator: Comparator<Expense>) {
-        if (data.value?.incomes == null) return
+    fun sortExpenses(comparator: Comparator<Expense>) {
+        if (data.value?.expenses == null) return
 
-        Collections.sort(data.value!!.incomes, comparator)
+        Collections.sort(data.value!!.expenses, comparator)
         data.value = data.value
     }
 
@@ -32,14 +31,14 @@ class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
         data.value = data.value
     }
 
-    fun addCharge(charge: Charge) {
-        if (data.value?.charges == null) return
-        data.value!!.charges = data.value!!.charges + charge
+    fun addRevenue(revenue: Revenue) {
+        if (data.value?.revenues == null) return
+        data.value!!.revenues = data.value!!.revenues + revenue
         data.value = data.value
     }
 
     override fun defaultSort(){
-        sortCharges(Comparator { o1, o2 -> o2.date.compareTo(o1.date) })
+        sortRevenues(Comparator { o1, o2 -> o2.date.compareTo(o1.date) })
     }
 
     override fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int,

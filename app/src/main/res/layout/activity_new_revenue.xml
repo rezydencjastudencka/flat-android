@@ -61,7 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="roboto_light"
-                        android:text="@string/new_charge_activity_title"
+                        android:text="@string/new_revenue_activity_title"
                         android:textSize="30sp"
                         android:typeface="normal" />
 
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/new_charge_name"
+                    android:id="@+id/new_revenue_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textAutoCorrect|textCapSentences"
@@ -88,27 +88,27 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
                     android:ems="10"
-                    android:hint="@string/new_charge_title"
+                    android:hint="@string/new_revenue_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/newChargeAmount"
+                    android:id="@+id/new_revenue_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:ems="10"
-                    android:hint="@string/new_charge_amount"
+                    android:hint="@string/new_revenue_amount"
                     android:inputType="numberDecimal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_charge_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/new_revenue_name" />
 
                 <TextView
-                    android:id="@+id/newChargeDate"
+                    android:id="@+id/new_revenue_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
@@ -121,17 +121,17 @@
                     android:background="?attr/editTextBackground"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/newChargeAmount" />
+                    app:layout_constraintTop_toBottomOf="@+id/new_revenue_amount" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/newChargeUsersList"
+                    android:id="@+id/new_revenue_users_list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:choiceMode="multipleChoice"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/newChargeDate" />
+                    app:layout_constraintTop_toBottomOf="@+id/new_revenue_date" />
 
             </android.support.constraint.ConstraintLayout>
         </ScrollView>

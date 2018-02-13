@@ -9,9 +9,9 @@
     <!--Charges activity-->
     <string name="charges_name">Charges</string>
     <string name="charges_title">Charges – %1$tb %1$tY</string>
-    <string name="tab_text_1">Charges</string>
-    <string name="tab_text_2">Expenses</string>
-    <string name="tab_text_3">Summary</string>
+    <string name="charges_revenues_tab">Revenues</string>
+    <string name="charges_expenses_tab">Expenses</string>
+    <string name="charges_summary_tab">Summary</string>
     <string name="action_setmonth">Set Date</string>
 
     <!--Transfers activity-->
@@ -21,12 +21,12 @@
     <string name="transfers_tab_2">Incoming</string>
     <string name="transfers_tab_3">Summary</string>
 
-    <!--New charge activity-->
-    <string name="title_activity_new_charge">NewChargeActivity</string>
-    <string name="new_charge_activity_title">New Charge</string>
-    <string name="new_charge_title">Enter charge name</string>
-    <string name="new_charge_amount">Enter amount</string>
-    <string name="new_charge_date">Set date</string>
+    <!--New revenue activity-->
+    <string name="title_activity_new_revenue">NewRevenueActivity</string>
+    <string name="new_revenue_activity_title">New Revenue</string>
+    <string name="new_revenue_title">Enter revenue name</string>
+    <string name="new_revenue_amount">Enter amount</string>
+    <string name="new_revenue_date">Set date</string>
 
     <!--Sorting-->
     <string name="name">Name</string>
