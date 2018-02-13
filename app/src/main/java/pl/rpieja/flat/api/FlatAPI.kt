@@ -101,7 +101,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
         Log.d(TAG, String.format("Sending %s %s with data %s", methodName, url, json))
         val response = client.newCall(request).execute()
         if (response.code() == 403) throw UnauthorizedException()
-        if (!response.isSuccessful) throw NoInternetConnectionException()
+        if (!response.isSuccessful) throw FlatApiException()
         return response
     }
 
@@ -112,7 +112,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
 
         val response = client.newCall(request).execute()
         if (response.code() == 403) throw UnauthorizedException()
-        if (!response.isSuccessful) throw NoInternetConnectionException()
+        if (!response.isSuccessful) throw FlatApiException()
 
         return gson.fromJson(response.body()!!.string(), tClass)
                 ?: throw JsonIOException("JSON parsing exception")
