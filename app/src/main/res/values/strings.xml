@@ -44,5 +44,6 @@
     <string name="nav_transfers_title">Transfers</string>
     <string name="nav_settings_title">Settings</string>
     <string name="nav_logout_title">Logout</string>
+    <string name="empty_charges_list_text">There is nothing to show</string>
 
 </resources>
