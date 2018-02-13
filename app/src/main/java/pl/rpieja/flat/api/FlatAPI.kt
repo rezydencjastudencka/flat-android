@@ -127,6 +127,10 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
             return flatAPI!!
         }
 
+        fun reset(){
+            flatAPI = null
+        }
+
         private var flatAPI: FlatAPI? = null
     }
 }
