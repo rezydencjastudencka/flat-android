@@ -1,10 +1,12 @@
 package pl.rpieja.flat.fragment
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -13,16 +15,16 @@ import android.widget.TextView
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.ChargeLike
 import pl.rpieja.flat.dto.User
+import pl.rpieja.flat.views.EmptyRecyclerView
 import java.text.NumberFormat
 import java.util.*
-import android.arch.lifecycle.Observer
-import android.support.v7.widget.LinearLayoutManager
 
 abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM: ViewModel, DTO>:
         Fragment() {
     open val layoutId: Int = R.layout.charges_tab
     open val itemLayoutId: Int = R.layout.charges_item
     open val recyclerViewId: Int = R.id.chargesListView
+    open val emptyListViewId: Int = R.id.emptyChargesList
     abstract val modelClass: Class<VM>
 
     val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance()
@@ -38,7 +40,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
     abstract fun createViewHolder(view: View): VH
     abstract fun formatAmount(amountTextView: TextView, amount: Double)
 
-    private var recyclerView: RecyclerView? = null
+    private var recyclerView: EmptyRecyclerView? = null
     private var elements: List<T>? = null
 
     private fun setData(data: List<T>) {
@@ -78,6 +80,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
 
         recyclerView?.layoutManager = LinearLayoutManager(activity)
         recyclerView?.adapter = ItemAdapter(elements ?: emptyList())
+        recyclerView?.emptyView = rootView.findViewById(emptyListViewId)
 
         return rootView
     }
