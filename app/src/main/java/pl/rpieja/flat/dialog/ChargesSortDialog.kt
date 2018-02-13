@@ -5,15 +5,16 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import pl.rpieja.flat.R
-import pl.rpieja.flat.dto.Charge
 import pl.rpieja.flat.dto.Expense
+import pl.rpieja.flat.dto.Revenue
 import pl.rpieja.flat.dto.Summary
+import pl.rpieja.flat.fragment.ChargesFragment
 import pl.rpieja.flat.viewmodels.ChargesViewModel
 
 data class SortOption<T>(val description: String, val comparator: Comparator<T>)
 
 class ChargesSortDialog(private val context: Context, private val viewModel: ChargesViewModel) {
-    private val chargesSortOptions: List<SortOption<Charge>> = listOf(
+    private val chargesSortOptions: List<SortOption<Revenue>> = listOf(
             SortOption(context.getString(R.string.date),
                     Comparator { o1, o2 -> o1.date.compareTo(o2.date) }),
             SortOption(context.getString(R.string.name),
@@ -50,20 +51,20 @@ class ChargesSortDialog(private val context: Context, private val viewModel: Cha
                 .create()
     }
 
-    private fun chargesSortDialog(): Dialog =
-            dialog(chargesSortOptions, { c -> viewModel.sortCharges(c) })
+    private fun revenuesSortDialog(): Dialog =
+            dialog(chargesSortOptions, { c -> viewModel.sortRevenues(c) })
 
-    private fun incomesSortDialog(): Dialog =
-            dialog(incomesSortOptions, { c -> viewModel.sortIncomes(c) })
+    private fun expensesSortDialog(): Dialog =
+            dialog(incomesSortOptions, { c -> viewModel.sortExpenses(c) })
 
     private fun summarySortDialog(): Dialog =
             dialog(summarySortOptions, { c -> viewModel.sortSummary(c) })
 
     fun create(tabNum: Int): Dialog? =
             when (tabNum) {
-                0 -> chargesSortDialog()
-                1 -> incomesSortDialog()
-                2 -> summarySortDialog()
-                else -> null
+                ChargesFragment.REVENUE_TAB_INDEX -> revenuesSortDialog()
+                ChargesFragment.EXPENSE_TAB_INDEX -> expensesSortDialog()
+                ChargesFragment.SUMMARY_TAB_INDEX -> summarySortDialog()
+                else -> TODO()
             }
 }

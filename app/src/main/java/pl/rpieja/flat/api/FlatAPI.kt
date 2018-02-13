@@ -18,7 +18,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     private val createSessionUrl = apiAddress + "session/create"
     private val getChargesUrl = apiAddress + "charge/"
     private val getTransfersUrl = apiAddress + "transfer/"
-    private val createChargeUrl = apiAddress + "charge/create"
+    private val createRevenueUrl = apiAddress + "charge/create"
     private val getUsersUrl = apiAddress + "user/"
 
     fun login(username: String, password: String): Boolean? {
@@ -64,8 +64,8 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
         return gson.fromJson(response.body()!!.charStream(), entity.entityClass)
     }
 
-    fun createCharge(charge: CreateChargeDTO): Charge {
-        return createEntity(charge, createChargeUrl)
+    fun createRevenue(revenue: CreateRevenueDTO): Revenue {
+        return createEntity(revenue, createRevenueUrl)
     }
 
     private fun <T> post(url: String, data: T): Response {

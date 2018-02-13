@@ -23,43 +23,45 @@ import android.widget.TextView
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dialog.DateDialog
 import pl.rpieja.flat.dto.User
-import pl.rpieja.flat.viewmodels.NewChargeViewModel
+import pl.rpieja.flat.viewmodels.NewRevenueViewModel
 
-class NewChargeActivity : AppCompatActivity() {
+class NewRevenueActivity : AppCompatActivity() {
     object Constants {
-        const val SET_DATE_TAG = "pl.rpieja.flat.newCharge.setDate"
+        const val SET_DATE_TAG = "pl.rpieja.flat.newRevenue.setDate"
 
         const val REQUEST_CREATE = 0
-        const val RESULT_CREATE = "pl.rpieja.flat.newCharge.resultCreate"
+        const val RESULT_CREATE = "pl.rpieja.flat.newRevenue.resultCreate"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_charge)
+        setContentView(R.layout.activity_new_revenue)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar_1)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-        val newChargeViewModel = ViewModelProviders.of(this)
-                .get(NewChargeViewModel::class.java)
-        newChargeViewModel.loadUsers(applicationContext)
+        val newRevenueViewModel = ViewModelProviders.of(this)
+                .get(NewRevenueViewModel::class.java)
+        newRevenueViewModel.loadUsers(applicationContext)
 
-        prepareDateSelectionField(newChargeViewModel)
+        prepareDateSelectionField(newRevenueViewModel)
 
-        bindEditTextWithLiveData(findViewById(R.id.new_charge_name), newChargeViewModel.chargeName)
+        bindEditTextWithLiveData(findViewById(R.id.new_revenue_name),
+                newRevenueViewModel.name)
 
-        bindEditTextWithLiveData(findViewById(R.id.newChargeAmount), newChargeViewModel.chargeAmount)
+        bindEditTextWithLiveData(findViewById(R.id.new_revenue_amount),
+                newRevenueViewModel.amount)
 
-        val users: RecyclerView = findViewById(R.id.newChargeUsersList)
+        val users: RecyclerView = findViewById(R.id.new_revenue_users_list)
         users.layoutManager = LinearLayoutManager(this)
-        users.adapter = UsersListAdapter(newChargeViewModel.users,
-                newChargeViewModel.selectedUsers, this)
+        users.adapter = UsersListAdapter(newRevenueViewModel.users,
+                newRevenueViewModel.selectedUsers, this)
 
         val accept: FloatingActionButton = findViewById(R.id.accept_button)
-        accept.isEnabled = newChargeViewModel.isValid.value ?: false
-        newChargeViewModel.isValid.observe(this, Observer { isValid ->
+        accept.isEnabled = newRevenueViewModel.isValid.value ?: false
+        newRevenueViewModel.isValid.observe(this, Observer { isValid ->
             accept.isEnabled = isValid ?: false
             if (isValid == true) {
                 accept.backgroundTintList = ColorStateList.valueOf(
@@ -70,7 +72,7 @@ class NewChargeActivity : AppCompatActivity() {
             }
         })
         accept.setOnClickListener({
-            newChargeViewModel.createCharge(this, {
+            newRevenueViewModel.createRevenue(this, {
                 intent.putExtra(Constants.RESULT_CREATE, it)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
@@ -96,22 +98,22 @@ class NewChargeActivity : AppCompatActivity() {
         })
     }
 
-    private fun prepareDateSelectionField(newChargeViewModel: NewChargeViewModel) {
+    private fun prepareDateSelectionField(newRevenueViewModel: NewRevenueViewModel) {
         val currentSetDate = fragmentManager.findFragmentByTag(Constants.SET_DATE_TAG) as DateDialog?
-        currentSetDate?.setDateSetListener(newChargeViewModel.chargeDate::setValue)
+        currentSetDate?.setDateSetListener(newRevenueViewModel.date::setValue)
 
 
-        val newChargeDate: TextView = findViewById(R.id.newChargeDate)
-        newChargeDate.setOnClickListener({
+        val newRevenueDate: TextView = findViewById(R.id.new_revenue_date)
+        newRevenueDate.setOnClickListener({
             val dialog = DateDialog()
-            dialog.setDateSetListener(newChargeViewModel.chargeDate::setValue)
+            dialog.setDateSetListener(newRevenueViewModel.date::setValue)
             val ft = fragmentManager.beginTransaction()
             dialog.show(ft, Constants.SET_DATE_TAG)
         })
 
 
-        newChargeViewModel.chargeDate.observe(this, Observer { calendar ->
-            newChargeDate.text = DateFormat.getLongDateFormat(this).format(calendar!!.time)
+        newRevenueViewModel.date.observe(this, Observer { calendar ->
+            newRevenueDate.text = DateFormat.getLongDateFormat(this).format(calendar!!.time)
         })
     }
 }

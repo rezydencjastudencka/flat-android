@@ -51,8 +51,8 @@
         </service>
 
         <activity
-            android:name=".activity.NewChargeActivity"
-            android:label="@string/title_activity_new_charge">
+            android:name=".activity.NewRevenueActivity"
+            android:label="@string/title_activity_new_revenue">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />

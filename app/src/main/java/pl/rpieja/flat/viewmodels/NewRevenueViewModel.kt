@@ -7,33 +7,38 @@ import android.content.Context
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.authentication.AccountService
 import pl.rpieja.flat.authentication.FlatCookieJar
-import pl.rpieja.flat.dto.Charge
-import pl.rpieja.flat.dto.CreateChargeDTO
+import pl.rpieja.flat.dto.CreateRevenueDTO
+import pl.rpieja.flat.dto.Revenue
 import pl.rpieja.flat.dto.User
-import pl.rpieja.flat.tasks.AsyncCreateCharge
+import pl.rpieja.flat.tasks.AsyncCreateRevenue
 import pl.rpieja.flat.tasks.AsyncFetchUsers
 import pl.rpieja.flat.util.IsoTimeFormatter
 import java.util.Calendar
+import kotlin.collections.HashSet
+import kotlin.collections.List
+import kotlin.collections.Set
+import kotlin.collections.emptyList
+import kotlin.collections.map
 
-class NewChargeViewModel : ViewModel() {
+class NewRevenueViewModel : ViewModel() {
 
     val users = MutableLiveData<List<User>>()
     val selectedUsers = MutableLiveData<Set<User>>()
-    val chargeDate = MutableLiveData<Calendar>()
-    val chargeName = MutableLiveData<String>()
-    val chargeAmount = MutableLiveData<String>()
+    val date = MutableLiveData<Calendar>()
+    val name = MutableLiveData<String>()
+    val amount = MutableLiveData<String>()
     val isValid = MediatorLiveData<Boolean>()
     private var flatApi: FlatAPI? = null
 
 
     init {
         selectedUsers.value = HashSet()
-        chargeDate.value = Calendar.getInstance()
+        date.value = Calendar.getInstance()
 
         validate()
         isValid.addSource(selectedUsers) { this.validate() }
-        isValid.addSource(chargeName) { this.validate() }
-        isValid.addSource(chargeAmount) { this.validate() }
+        isValid.addSource(name) { this.validate() }
+        isValid.addSource(amount) { this.validate() }
 
     }
 
@@ -43,12 +48,12 @@ class NewChargeViewModel : ViewModel() {
             return
         }
 
-        if (chargeName.value?.isEmpty() != false){
+        if (name.value?.isEmpty() != false){
             isValid.value = false
             return
         }
 
-        if (chargeAmount.value?.isEmpty() != false){
+        if (amount.value?.isEmpty() != false){
             isValid.value = false
             return
         }
@@ -63,14 +68,14 @@ class NewChargeViewModel : ViewModel() {
                 { AccountService.removeCurrentAccount(context) }).execute()
     }
 
-    fun createCharge(context: Context, onSuccess: (Charge) -> Unit) {
+    fun createRevenue(context: Context, onSuccess: (Revenue) -> Unit) {
         getFlatApi(context)
 
-        val date = IsoTimeFormatter.toIso8601(chargeDate.value?.time ?: Calendar.getInstance().time)
+        val date = IsoTimeFormatter.toIso8601(date.value?.time ?: Calendar.getInstance().time)
         val to = selectedUsers.value?.map { user -> user.id } ?: emptyList()
-        val charge = CreateChargeDTO(chargeName.value!!, date, chargeAmount.value!!, to)
+        val charge = CreateRevenueDTO(name.value!!, date, amount.value!!, to)
 
-        AsyncCreateCharge(getFlatApi(context), onSuccess,
+        AsyncCreateRevenue(getFlatApi(context), onSuccess,
                 { AccountService.removeCurrentAccount(context) }, charge).execute()
     }
 
