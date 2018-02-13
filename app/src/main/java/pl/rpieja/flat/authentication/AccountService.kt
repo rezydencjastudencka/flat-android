@@ -10,6 +10,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
 import pl.rpieja.flat.R
+import pl.rpieja.flat.api.FlatAPI
 
 class AccountService : Service() {
     private var authenticator: Authenticator? = null
@@ -61,6 +62,7 @@ class AccountService : Service() {
             val accounts = am.getAccountsByType(getAccountType(context))
             if (accounts.isEmpty()) return
             am.removeAccountExplicitly(accounts[0])
+            FlatAPI.reset()
         }
 
         fun addAccount(context: Context, username: String, token: String) {

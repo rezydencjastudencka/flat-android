@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import okhttp3.*
 import pl.rpieja.flat.R
+import pl.rpieja.flat.authentication.FlatCookieJar
 import pl.rpieja.flat.dto.*
 import java.util.*
 
@@ -19,7 +20,9 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     private val getChargesUrl = apiAddress + "charge/"
     private val getTransfersUrl = apiAddress + "transfer/"
     private val createRevenueUrl = apiAddress + "charge/create"
+    private val fetchExpenseUrl = apiAddress + "charge/expense/"
     private val getUsersUrl = apiAddress + "user/"
+    private val registerFCMUrl = apiAddress + "fcm/device"
 
     fun login(username: String, password: String): Boolean? {
         //TODO: use Gson
@@ -48,6 +51,15 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     fun fetchCharges(month: Int, year: Int): ChargesDTO {
         val requestUrl = getChargesUrl + Integer.toString(year) + "/" + Integer.toString(month)
         return fetch(requestUrl, ChargesDTO::class.java)
+    }
+
+    fun fetchExpense(charge_id: Int): Expense {
+        val requestUrl = fetchExpenseUrl + charge_id.toString()
+        return fetch(requestUrl, Expense::class.java)
+    }
+
+    fun registerFCM(registration_token: String){
+        post(registerFCMUrl, RegisterFCM(registration_token))
     }
 
     fun fetchTransfers(month: Int, year: Int): TransfersDTO {
@@ -86,7 +98,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
         Log.d(TAG, String.format("Sending %s %s with data %s", methodName, url, json))
         val response = client.newCall(request).execute()
         if (response.code() == 403) throw UnauthorizedException()
-        if (!response.isSuccessful) throw NoInternetConnectionException()
+        if (!response.isSuccessful) throw FlatApiException()
         return response
     }
 
@@ -97,7 +109,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
 
         val response = client.newCall(request).execute()
         if (response.code() == 403) throw UnauthorizedException()
-        if (!response.isSuccessful) throw NoInternetConnectionException()
+        if (!response.isSuccessful) throw FlatApiException()
 
         return gson.fromJson(response.body()!!.string(), tClass)
                 ?: throw JsonIOException("JSON parsing exception")
@@ -106,5 +118,19 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     companion object {
         private val JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8")
         private val TAG = FlatAPI::class.java.simpleName
+
+        fun getFlatApi(context: Context): FlatAPI {
+            if (flatAPI == null) {
+                flatAPI = FlatAPI(context, FlatCookieJar(context))
+            }
+
+            return flatAPI!!
+        }
+
+        fun reset(){
+            flatAPI = null
+        }
+
+        private var flatAPI: FlatAPI? = null
     }
 }

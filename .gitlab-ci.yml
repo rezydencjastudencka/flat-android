@@ -20,6 +20,7 @@ build:
 build-release:
   stage: build
   script:
+    - echo $GOOGLE_SERVICES_FILE | base64 -di > app/google-services.json
     - echo $KEYSTORE_FILE | base64 -di > app/store.jks
     - echo storePassword=$KEYSTORE_PASS > keystore.properties
     - echo keyPassword=$KEY_PASS >> keystore.properties
@@ -35,4 +36,5 @@ build-release:
 unitTests:
   stage: test
   script:
+    - cp app/src/debug/google-services.json app/
     - ./gradlew test
