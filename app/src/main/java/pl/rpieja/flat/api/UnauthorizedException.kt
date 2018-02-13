@@ -1,3 +1,3 @@
 package pl.rpieja.flat.api
 
-class UnauthorizedException : RuntimeException()
+class UnauthorizedException : FlatApiException()
