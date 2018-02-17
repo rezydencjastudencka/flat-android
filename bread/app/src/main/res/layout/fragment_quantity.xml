@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_quantity"
+    tools:context=".fragment.QuantityFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/quantity_picker"
+            android:layout_gravity="center"
+            android:scaleX="1.5"
+            android:scaleY="1.5" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        style="@android:style/DeviceDefault.ButtonBar">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/increment_button_label"
+            android:id="@+id/increment_button"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/decrement_button_label"
+            android:id="@+id/decrement_button"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            />
+    </LinearLayout>
+
+</LinearLayout>

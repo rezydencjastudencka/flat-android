@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chleb</string>
+
+    <string name="widget_missing_placeholder">\?</string>
+
+    <!-- Strings related to login -->
+    <string name="title_activity_api_login">Logowanie</string>
+    <string name="prompt_username">Nazwa użytkownika</string>
+    <string name="prompt_password">Hasło</string>
+    <string name="action_sign_in">Zaloguj się</string>
+    <string name="error_invalid_username">Nieprawidłowy użytkownik</string>
+    <string name="error_incorrect_password">Hasło nieprawidłowe</string>
+    <string name="error_field_required">To pole jest wymagane</string>
+
+    <!-- Strings related to notification -->
+    <!-- See: http://www.wykop.pl/wpis/16479039/coolstory-heheszki-mieszkam-z-dziewczyna-mamy-kota/ -->
+    <string name="notification_title_missing">Drodzu ludzia</string>
+    <string name="notification_content_missing">nie maciu chlebo, kupujcia - Android</string>
+
+    <!-- Strings related to resource count change -->
+    <string name="title_activity_resource_update">Aktualizacja ilości chleba</string>
+    <string name="increment_button_label">Zwiększ</string>
+    <string name="decrement_button_label">Zmniejsz</string>
+    <string name="update_button_label">Aktualizuj</string>
+
+    <!-- Strings related to authentication notification -->
+    <string name="notification_title_authentication">Sesja wygasła</string>
+    <string name="notification_content_authentication">Dotknij tutaj, aby się zalogować</string>
+
+    <!-- Strings related to value picker -->
+    <string name="value_title">Kwota</string>
+    <string name="value_separator">,</string>
+    <string name="value_currency">PLN</string>
+
+    <!-- Strings related to user picker -->
+    <string name="users_title">Użytkownicy</string>
+    <string name="users_everybody_label">Wszyscy</string>
+    <string name="users_selected_label">Wybrani</string>
+
+    <!-- Strings related to charges -->
+    <string name="charge_name">Chleb «przez widżet»</string>
+
+    <string name="error_network">Błąd sieci</string>
+    <string name="error_update">Błąd aktualizacji</string>
+</resources>
