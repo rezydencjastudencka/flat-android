@@ -18,6 +18,7 @@ import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.ChargeLike
 import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.viewmodels.Loadable
+import pl.rpieja.flat.views.EmptyRecyclerView
 import java.text.NumberFormat
 import java.util.*
 
@@ -27,6 +28,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
     open val layoutId: Int = R.layout.charges_tab
     open val itemLayoutId: Int = R.layout.charges_item
     open val recyclerViewId: Int = R.id.chargesListView
+    open val emptyListViewId: Int = R.id.emptyChargesList
     abstract val modelClass: Class<VM>
 
     val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance()
@@ -42,7 +44,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
     abstract fun createViewHolder(view: View): VH
     abstract fun formatAmount(amountTextView: TextView, amount: Double)
 
-    private var recyclerView: RecyclerView? = null
+    private var recyclerView: EmptyRecyclerView? = null
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
     private var elements: List<T>? = null
 
@@ -95,6 +97,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
         val paddingPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, listBottomPaddingDp,
                 resources.displayMetrics).toInt()
         recyclerView?.setPadding(0, 0, 0, paddingPx)
+        recyclerView?.emptyView = rootView.findViewById(emptyListViewId)
 
         return rootView
     }
