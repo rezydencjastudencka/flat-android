@@ -17,6 +17,7 @@ import pl.rpieja.flat.activity.MainActivity
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.api.FlatApiException
 import pl.rpieja.flat.dto.Expense
+import pl.rpieja.flat.fragment.AmountFormatter
 
 
 class FlatFirebaseMessagingService : FirebaseMessagingService() {
@@ -69,6 +70,8 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.notify(expense_id, buildNotification(expense))
         } catch (e: FlatApiException) {
             Log.d(TAG,"Unable to fetch expense: $expense_id", e)
+        } catch (e: Exception) {
+            Log.d(TAG, "EXC: ${e.message}", e)
         }
     }
 
@@ -76,13 +79,14 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
         val resultIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
                 PendingIntent.FLAG_ONE_SHOT)
+        val formattedAmount = AmountFormatter().format(expense.amount).value
 
         return NotificationCompat.Builder(this, EXPENSES_CHANNEL)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(expense.name)
                 .setGroup(EXPENSES_GROUP)
                 .setContentText(getString(R.string.notification_expenses_text,
-                        expense.from.name, expense.amount, expense.name))
+                        expense.from.name, formattedAmount, expense.name))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build()

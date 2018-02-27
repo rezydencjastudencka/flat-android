@@ -19,8 +19,6 @@ import pl.rpieja.flat.dto.ChargeLike
 import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.viewmodels.Loadable
 import pl.rpieja.flat.views.EmptyRecyclerView
-import java.text.NumberFormat
-import java.util.*
 
 abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM , DTO>:
         Fragment() where VM: Loadable<DTO>, VM: ViewModel {
@@ -31,11 +29,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
     open val emptyListViewId: Int = R.id.emptyChargesList
     abstract val modelClass: Class<VM>
 
-    val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance()
-
-    init {
-        currencyFormat.currency = Currency.getInstance("USD") // TODO fetch
-    }
+    val amountFormatter: AmountFormatter = AmountFormatter()
 
     abstract fun getUsers(item: T): List<User>
     abstract fun extractLiveData(vm: VM): LiveData<DTO>
@@ -121,6 +115,6 @@ abstract class ChargeLayoutFragment<T: ChargeLike, VM, DTO>:
     }
 
     override fun formatAmount(amountTextView: TextView, amount: Double) {
-        amountTextView.text = currencyFormat.format(amount).toString()
+        amountTextView.text = amountFormatter.format(amount).value
     }
 }
