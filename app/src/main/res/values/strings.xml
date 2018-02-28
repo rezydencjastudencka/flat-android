@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Flat</string>
+    <string name="app_name" translatable="false">Flat</string>
 
     <!--Login activity-->
     <string name="usernameTextField">Username</string>
@@ -22,7 +22,7 @@
     <string name="transfers_tab_3">Summary</string>
 
     <!--New revenue activity-->
-    <string name="title_activity_new_revenue">NewRevenueActivity</string>
+    <string name="title_activity_new_revenue" translatable="false">NewRevenueActivity</string>
     <string name="new_revenue_activity_title">New Revenue</string>
     <string name="new_revenue_title">Enter revenue name</string>
     <string name="new_revenue_amount">Enter amount</string>
@@ -37,8 +37,8 @@
     <string name="action_sort_by">Sort by</string>
 
     <!--Navigation drawer-->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="nav_charges_title">Charges</string>
     <string name="nav_statistics_title">Statistics</string>
     <string name="nav_transfers_title">Transfers</string>

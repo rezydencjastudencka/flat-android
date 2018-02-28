@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="usernameTextField">Login</string>
+    <string name="passwordTextField">Hasło</string>
+    <string name="signInButtonText">Zaloguj</string>
+    <string name="charges_name">Rachunki</string>
+    <string name="charges_title">Rachunki – %1$tb %1$tY</string>
+    <string name="charges_expenses_tab">Wychodzące</string>
+    <string name="charges_revenues_tab">Przychodzące</string>
+    <string name="charges_summary_tab">Podsumowanie</string>
+    <string name="action_setmonth">Wybierz Miesiąc</string>
+    <string name="transfers_name">Przelewy</string>
+    <string name="transfers_title">Przelewy – %1$tb %1$tY</string>
+    <string name="transfers_tab_1">Wychodzące</string>
+    <string name="transfers_tab_2">Przychodzące</string>
+    <string name="transfers_tab_3">Podsumowanie</string>
+    <string name="new_revenue_activity_title">Nowy Rachunek</string>
+    <string name="new_revenue_title">Podaj nazwę</string>
+    <string name="new_revenue_amount">Podaj kwotę</string>
+    <string name="new_revenue_date">Wybierz datę</string>
+    <string name="name">Nazwa</string>
+    <string name="amount">Kwota</string>
+    <string name="user">Użytkownik</string>
+    <string name="date">Data</string>
+    <string name="sort_order_title">Wybierz sposób sortowania</string>
+    <string name="action_sort_by">Sortuj według</string>
+    <string name="nav_charges_title">Rachunki</string>
+    <string name="nav_statistics_title">Statystyki</string>
+    <string name="nav_transfers_title">Przelewy</string>
+    <string name="nav_settings_title">Ustawienia</string>
+    <string name="nav_logout_title">Wyloguj</string>
+    <string name="empty_charges_list_text">Pusto!</string>
+    <string name="notification_expenses_name">Wydatki</string>
+    <string name="notification_expenses_summary_title">Wydatki</string>
+    <string name="notification_expenses_summary_text">Masz nowy wydatek</string>
+    <string name="notification_expenses_text">%1$s obciążył Cię kwotą %2$.2f za %3$s</string>
+</resources>
