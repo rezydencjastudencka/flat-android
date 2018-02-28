@@ -2,21 +2,11 @@
 
 ![screen](https://raw.githubusercontent.com/rpieja/flat/master/pic/flat-logo.png)
 
-Android client for flat app.
+Flat is the easiest way to keep track on your daily and monthly expenses you share with your flatmates. 
 
-### TODO List
-- [x] Charges/Expenses tabs
-- [x] Google Account Service
-- [x] Adding Charges
-- [x] Invalid token handling
-- [ ] UI Refactoring (messed up ListView component and colors naming)
-- [x] Navigation Drawer
-- [ ] Transfers tab
-- [x] Logout function
-- [ ] Adding transfers
-- [ ] Notification service (to be implemented on server side @maxmati )
-- [ ] Move from ListView to RecyclerView
-- [x] Summary tab
-- [ ] "Force touch" like menu on launcher icon -> AppShortcuts
+- Split your monthly apartment and media payments between your roommates 
+- Never forget about that lunch you got your mate last tuesday
+- Get live summary of amounts you owe to your friends
+- We'll send you a push notification every time you get charged for anything
 
-And much more
+Flat is currently a closed beta, we're working on improving our web client app and enhancing functionalities.
