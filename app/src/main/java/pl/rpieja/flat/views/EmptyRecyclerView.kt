@@ -49,8 +49,8 @@ class EmptyRecyclerView : RecyclerView {
     fun checkIfEmpty() {
         if (emptyView != null) {
             emptyView!!.visibility =
-                    if (adapter.itemCount > 0) View.GONE else View.VISIBLE
-            visibility = if (adapter.itemCount > 0) View.VISIBLE else View.GONE
+                    if (adapter!!.itemCount > 0) View.GONE else View.VISIBLE
+            visibility = if (adapter!!.itemCount > 0) View.VISIBLE else View.GONE
         }
     }
 

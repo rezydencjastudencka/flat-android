@@ -54,7 +54,7 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
     }
 
     inner class ItemAdapter(val list: List<T>): RecyclerView.Adapter<VH>() {
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
             val view = LayoutInflater.from(context)
                     .inflate(this@ChargeLikeFragment.itemLayoutId, parent, false)
             return this@ChargeLikeFragment.createViewHolder(view)
@@ -62,8 +62,8 @@ abstract class ChargeLikeFragment<T: ChargeLike, VH: RecyclerView.ViewHolder, VM
 
         override fun getItemCount(): Int = list.size
 
-        override fun onBindViewHolder(holder: VH?, position: Int) =
-                this@ChargeLikeFragment.updateItemView(holder!!, list[position])
+        override fun onBindViewHolder(holder: VH, position: Int) =
+                this@ChargeLikeFragment.updateItemView(holder, list[position])
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

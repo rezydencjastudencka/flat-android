@@ -129,16 +129,16 @@ private class UsersListAdapter(
         users.observe(lifecycleOwner, Observer { this.notifyDataSetChanged() })
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val checkbox = LayoutInflater.from(parent!!.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val checkbox = LayoutInflater.from(parent.context)
                 .inflate(R.layout.user_list_item, parent, false) as CheckBox
 
         return ViewHolder(checkbox)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = users.value!![position]
-        holder!!.mCheckBox.text = user.name
+        holder.mCheckBox.text = user.name
         holder.mCheckBox.isChecked = selectedUsers.value?.contains(user) ?: false
         holder.mCheckBox.setOnClickListener {
             val newUsers = if (selectedUsers.value?.contains(user) == true) {
