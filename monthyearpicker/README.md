@@ -17,7 +17,7 @@ Fancy year and month picker library for your android app
 
 ```Gradle
 dependencies {
-    compile 'com.github.twinkle942910:monthyearpicker:0.0.1'
+    api 'com.github.twinkle942910:monthyearpicker:0.0.1'
 }
 ```
 
