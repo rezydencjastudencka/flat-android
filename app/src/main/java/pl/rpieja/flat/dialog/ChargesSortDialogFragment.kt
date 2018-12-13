@@ -10,7 +10,7 @@ import pl.rpieja.flat.viewmodels.ChargesViewModel
 
 class ChargesSortDialogFragment: DialogFragment() {
     companion object {
-        val tag = "pl.rpieja.flat.dialog.ChargesSortDialogFragment"
+        const val tag = "pl.rpieja.flat.dialog.ChargesSortDialogFragment"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

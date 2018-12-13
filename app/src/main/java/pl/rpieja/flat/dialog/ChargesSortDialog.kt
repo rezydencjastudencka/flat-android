@@ -52,13 +52,13 @@ class ChargesSortDialog(private val context: Context, private val viewModel: Cha
     }
 
     private fun revenuesSortDialog(): Dialog =
-            dialog(chargesSortOptions, { c -> viewModel.sortRevenues(c) })
+            dialog(chargesSortOptions) { c -> viewModel.sortRevenues(c) }
 
     private fun expensesSortDialog(): Dialog =
-            dialog(incomesSortOptions, { c -> viewModel.sortExpenses(c) })
+            dialog(incomesSortOptions) { c -> viewModel.sortExpenses(c) }
 
     private fun summarySortDialog(): Dialog =
-            dialog(summarySortOptions, { c -> viewModel.sortSummary(c) })
+            dialog(summarySortOptions) { c -> viewModel.sortSummary(c) }
 
     fun create(tabNum: Int): Dialog? =
             when (tabNum) {

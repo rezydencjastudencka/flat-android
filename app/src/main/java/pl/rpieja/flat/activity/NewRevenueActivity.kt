@@ -71,13 +71,13 @@ class NewRevenueActivity : AppCompatActivity() {
                         resources.getColor(R.color.iconColorGreyDark, theme))
             }
         })
-        accept.setOnClickListener({
-            newRevenueViewModel.createRevenue(this, {
+        accept.setOnClickListener { _ ->
+            newRevenueViewModel.createRevenue(this) {
                 intent.putExtra(Constants.RESULT_CREATE, it)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            })
-        })
+            }
+        }
     }
 
     private fun bindEditTextWithLiveData(field: EditText, liveData: MutableLiveData<String>) {
@@ -99,17 +99,17 @@ class NewRevenueActivity : AppCompatActivity() {
     }
 
     private fun prepareDateSelectionField(newRevenueViewModel: NewRevenueViewModel) {
-        val currentSetDate = fragmentManager.findFragmentByTag(Constants.SET_DATE_TAG) as DateDialog?
+        val currentSetDate = supportFragmentManager.findFragmentByTag(Constants.SET_DATE_TAG) as DateDialog?
         currentSetDate?.setDateSetListener(newRevenueViewModel.date::setValue)
 
 
         val newRevenueDate: TextView = findViewById(R.id.new_revenue_date)
-        newRevenueDate.setOnClickListener({
+        newRevenueDate.setOnClickListener {
             val dialog = DateDialog()
             dialog.setDateSetListener(newRevenueViewModel.date::setValue)
-            val ft = fragmentManager.beginTransaction()
+            val ft = supportFragmentManager.beginTransaction()
             dialog.show(ft, Constants.SET_DATE_TAG)
-        })
+        }
 
 
         newRevenueViewModel.date.observe(this, Observer { calendar ->

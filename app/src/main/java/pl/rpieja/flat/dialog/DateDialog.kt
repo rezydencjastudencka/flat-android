@@ -2,8 +2,8 @@ package pl.rpieja.flat.dialog
 
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.app.DialogFragment
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.widget.DatePicker
 
 import java.util.Calendar
@@ -23,7 +23,7 @@ class DateDialog : DialogFragment(), DatePickerDialog.OnDateSetListener {
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
-        return DatePickerDialog(activity, this, year, month, day)
+        return DatePickerDialog(activity!!, this, year, month, day)
     }
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {

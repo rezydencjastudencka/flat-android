@@ -16,6 +16,7 @@ import pl.rpieja.flat.R
 import pl.rpieja.flat.activity.MainActivity
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.api.FlatApiException
+import pl.rpieja.flat.api.UnauthorizedException
 import pl.rpieja.flat.dto.Expense
 
 
@@ -108,5 +109,11 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
         return NotificationChannel(EXPENSES_CHANNEL, name, importance)
     }
 
-
+    override fun onNewToken(refreshedToken: String?) {
+        try {
+            FlatAPI.getFlatApi(this).registerFCM(refreshedToken!!)
+        } catch (e: UnauthorizedException){
+            //Do nothing we will register on login
+        }
+    }
 }

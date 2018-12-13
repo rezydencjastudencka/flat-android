@@ -24,7 +24,7 @@ class MonthPickerDialogFragment : DialogFragment() {
 
         return YearMonthPickerDialog(context, YearMonthPickerDialog.OnDateSetListener { year, month ->
             viewModel.load(context!!, YearMonth(month + 1, year))
-        }, R.style.monthPickerStyle, R.color.colorBackgroundLight, cal).getDialog()
+        }, R.style.monthPickerStyle, R.color.colorBackgroundLight, cal).dialog
 
     }
 }
