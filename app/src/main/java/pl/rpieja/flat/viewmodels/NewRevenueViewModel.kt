@@ -1,9 +1,9 @@
 package pl.rpieja.flat.viewmodels
 
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.content.Context
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.authentication.AccountService
 import pl.rpieja.flat.authentication.FlatCookieJar
@@ -15,10 +15,6 @@ import pl.rpieja.flat.tasks.AsyncFetchUsers
 import pl.rpieja.flat.util.IsoTimeFormatter
 import java.util.Calendar
 import kotlin.collections.HashSet
-import kotlin.collections.List
-import kotlin.collections.Set
-import kotlin.collections.emptyList
-import kotlin.collections.map
 
 class NewRevenueViewModel : ViewModel() {
 

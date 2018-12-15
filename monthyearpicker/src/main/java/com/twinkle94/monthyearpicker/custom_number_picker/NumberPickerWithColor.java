@@ -2,13 +2,14 @@ package com.twinkle94.monthyearpicker.custom_number_picker;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.content.res.AppCompatResources;
 import android.util.AttributeSet;
 import android.widget.NumberPicker;
 
 import com.twinkle94.monthyearpicker.R;
 
 import java.lang.reflect.Field;
+
+import androidx.appcompat.content.res.AppCompatResources;
 
 /**
  * This class changes color of NumberPicker divider using reflection

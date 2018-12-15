@@ -3,12 +3,9 @@ package pl.rpieja.flat.dialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.widget.DatePicker
-
-import java.util.Calendar
-import java.util.GregorianCalendar
-import java.util.TimeZone
+import androidx.fragment.app.DialogFragment
+import java.util.*
 
 class DateDialog : DialogFragment(), DatePickerDialog.OnDateSetListener {
 

@@ -1,10 +1,10 @@
 package pl.rpieja.flat.fragment
 
-import android.arch.lifecycle.ViewModel
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.Summary
 import pl.rpieja.flat.dto.User
