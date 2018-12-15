@@ -1,12 +1,11 @@
 package pl.rpieja.flat.activity
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-
+import androidx.appcompat.app.AppCompatActivity
+import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.authentication.AccountService
 import pl.rpieja.flat.authentication.FlatCookieJar
-import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.tasks.AsyncValidate
 
 class SplashActivity : AppCompatActivity() {

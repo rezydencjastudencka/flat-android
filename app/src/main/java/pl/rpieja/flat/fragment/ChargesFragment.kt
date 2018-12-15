@@ -1,19 +1,19 @@
 package pl.rpieja.flat.fragment
 
 import android.app.Activity.RESULT_OK
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import pl.rpieja.flat.R
 import pl.rpieja.flat.activity.NewRevenueActivity
 import pl.rpieja.flat.activity.NewRevenueActivity.Constants.REQUEST_CREATE

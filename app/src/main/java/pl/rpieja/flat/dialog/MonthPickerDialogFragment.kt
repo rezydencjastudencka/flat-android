@@ -1,9 +1,9 @@
 package pl.rpieja.flat.dialog
 
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProviders
 import com.twinkle94.monthyearpicker.picker.YearMonthPickerDialog
 import pl.rpieja.flat.R
 import pl.rpieja.flat.viewmodels.ChargesViewModel
@@ -24,7 +24,7 @@ class MonthPickerDialogFragment : DialogFragment() {
 
         return YearMonthPickerDialog(context, YearMonthPickerDialog.OnDateSetListener { year, month ->
             viewModel.load(context!!, YearMonth(month + 1, year))
-        }, R.style.monthPickerStyle, R.color.colorBackgroundLight, cal).getDialog()
+        }, R.style.monthPickerStyle, R.color.colorBackgroundLight, cal).dialog
 
     }
 }

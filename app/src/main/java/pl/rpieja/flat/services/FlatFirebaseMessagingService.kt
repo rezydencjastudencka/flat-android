@@ -7,15 +7,16 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.app.NotificationCompat
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import pl.rpieja.flat.R
 import pl.rpieja.flat.activity.MainActivity
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.api.FlatApiException
+import pl.rpieja.flat.api.UnauthorizedException
 import pl.rpieja.flat.dto.Expense
 
 
@@ -108,5 +109,11 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
         return NotificationChannel(EXPENSES_CHANNEL, name, importance)
     }
 
-
+    override fun onNewToken(refreshedToken: String?) {
+        try {
+            FlatAPI.getFlatApi(this).registerFCM(refreshedToken!!)
+        } catch (e: UnauthorizedException){
+            //Do nothing we will register on login
+        }
+    }
 }

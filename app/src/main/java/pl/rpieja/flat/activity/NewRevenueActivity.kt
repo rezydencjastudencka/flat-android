@@ -1,17 +1,8 @@
 package pl.rpieja.flat.activity
 
 import android.app.Activity
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
@@ -20,6 +11,15 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dialog.DateDialog
 import pl.rpieja.flat.dto.User
@@ -71,13 +71,13 @@ class NewRevenueActivity : AppCompatActivity() {
                         resources.getColor(R.color.iconColorGreyDark, theme))
             }
         })
-        accept.setOnClickListener({
-            newRevenueViewModel.createRevenue(this, {
+        accept.setOnClickListener { _ ->
+            newRevenueViewModel.createRevenue(this) {
                 intent.putExtra(Constants.RESULT_CREATE, it)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            })
-        })
+            }
+        }
     }
 
     private fun bindEditTextWithLiveData(field: EditText, liveData: MutableLiveData<String>) {
@@ -99,17 +99,17 @@ class NewRevenueActivity : AppCompatActivity() {
     }
 
     private fun prepareDateSelectionField(newRevenueViewModel: NewRevenueViewModel) {
-        val currentSetDate = fragmentManager.findFragmentByTag(Constants.SET_DATE_TAG) as DateDialog?
+        val currentSetDate = supportFragmentManager.findFragmentByTag(Constants.SET_DATE_TAG) as DateDialog?
         currentSetDate?.setDateSetListener(newRevenueViewModel.date::setValue)
 
 
         val newRevenueDate: TextView = findViewById(R.id.new_revenue_date)
-        newRevenueDate.setOnClickListener({
+        newRevenueDate.setOnClickListener {
             val dialog = DateDialog()
             dialog.setDateSetListener(newRevenueViewModel.date::setValue)
-            val ft = fragmentManager.beginTransaction()
+            val ft = supportFragmentManager.beginTransaction()
             dialog.show(ft, Constants.SET_DATE_TAG)
-        })
+        }
 
 
         newRevenueViewModel.date.observe(this, Observer { calendar ->
@@ -129,16 +129,16 @@ private class UsersListAdapter(
         users.observe(lifecycleOwner, Observer { this.notifyDataSetChanged() })
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val checkbox = LayoutInflater.from(parent!!.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val checkbox = LayoutInflater.from(parent.context)
                 .inflate(R.layout.user_list_item, parent, false) as CheckBox
 
         return ViewHolder(checkbox)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = users.value!![position]
-        holder!!.mCheckBox.text = user.name
+        holder.mCheckBox.text = user.name
         holder.mCheckBox.isChecked = selectedUsers.value?.contains(user) ?: false
         holder.mCheckBox.setOnClickListener {
             val newUsers = if (selectedUsers.value?.contains(user) == true) {

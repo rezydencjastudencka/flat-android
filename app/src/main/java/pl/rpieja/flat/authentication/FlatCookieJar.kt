@@ -51,6 +51,6 @@ class FlatCookieJar(context: Context) : CookieJar {
     }
 
     companion object {
-        private val SESSIONID_NAME = "sessionid"
+        private const val SESSIONID_NAME = "sessionid"
     }
 }

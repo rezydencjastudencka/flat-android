@@ -1,8 +1,8 @@
 package pl.rpieja.flat.fragment
 
-import android.arch.lifecycle.LiveData
-import android.support.v4.app.Fragment
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dto.Summary
 import pl.rpieja.flat.dto.Transfer

@@ -1,9 +1,9 @@
 package pl.rpieja.flat.viewmodels
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.os.Parcelable
+import androidx.lifecycle.MutableLiveData
 import kotlinx.android.parcel.Parcelize
 
 interface Loadable<T> {

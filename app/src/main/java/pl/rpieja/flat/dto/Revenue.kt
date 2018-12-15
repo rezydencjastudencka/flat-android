@@ -1,11 +1,9 @@
 package pl.rpieja.flat.dto
 
-import android.annotation.SuppressLint
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-@SuppressLint("ParcelCreator") // FIXME maybe caused by Kotlin Android ticket KT-19300
 @Parcelize
 data class Revenue(
         var name: String,

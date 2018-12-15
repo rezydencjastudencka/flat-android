@@ -24,7 +24,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     private val getUsersUrl = apiAddress + "user/"
     private val registerFCMUrl = apiAddress + "fcm/device"
 
-    fun login(username: String, password: String): Boolean? {
+    fun login(username: String, password: String): Boolean {
         //TODO: use Gson
         val json = "{\"name\":\"$username\", \"password\": \"$password\"}"
 

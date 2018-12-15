@@ -20,9 +20,9 @@ package pl.rpieja.flat.views
 
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 
 class EmptyRecyclerView : RecyclerView {
@@ -49,8 +49,8 @@ class EmptyRecyclerView : RecyclerView {
     fun checkIfEmpty() {
         if (emptyView != null) {
             emptyView!!.visibility =
-                    if (adapter.itemCount > 0) View.GONE else View.VISIBLE
-            visibility = if (adapter.itemCount > 0) View.VISIBLE else View.GONE
+                    if (adapter!!.itemCount > 0) View.GONE else View.VISIBLE
+            visibility = if (adapter!!.itemCount > 0) View.VISIBLE else View.GONE
         }
     }
 

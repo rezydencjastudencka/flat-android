@@ -1,7 +1,5 @@
 package com.twinkle94.monthyearpicker.picker;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +13,9 @@ import com.twinkle94.monthyearpicker.custom_number_picker.NumberPickerWithColor;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 /**
  * Creates a dialog for picking the year and month.

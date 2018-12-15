@@ -5,13 +5,14 @@ import pl.rpieja.flat.api.FlatAPI
 class AsyncLogin (
         flatAPI: FlatAPI, username: String, password: String,
         registration_token: String?,
-        onSuccess: (Unit) -> Unit, unauthorized: () -> Unit)
-    : AsyncRequest <Unit>(
+        onSuccess: (Boolean) -> Unit, unauthorized: () -> Unit)
+    : AsyncRequest<Boolean>(
         onSuccess, unauthorized,
         {
-            flatAPI.login(username, password)
+            val result = flatAPI.login(username, password)
             if(registration_token != null) {
                 flatAPI.registerFCM(registration_token)
             }
+            result
         },
-        Unit)
+        false)
