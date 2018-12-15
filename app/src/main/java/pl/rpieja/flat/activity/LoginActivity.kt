@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
         usernameTextEdit = findViewById(R.id.usernameTextEdit)
         passwordTextEdit = findViewById(R.id.passwordTextEdit)
 
-        signInButton!!.setOnClickListener(View.OnClickListener {
+        signInButton!!.setOnClickListener(View.OnClickListener { _ ->
             val username = usernameTextEdit!!.text.toString()
             val password = passwordTextEdit!!.text.toString()
             if (username == "" || password == "") {
@@ -41,15 +41,19 @@ class LoginActivity : AppCompatActivity() {
 
             val registrationToken = FirebaseInstanceId.getInstance().token
             AsyncLogin(flatAPI, username, password, registrationToken, {
-                AccountService.addAccount(this@LoginActivity,
-                        username, cookieJar.sessionId!!)
-                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }, {
-                Toast.makeText(applicationContext,
-                        "Wrong username or password.", Toast.LENGTH_SHORT).show()
-            }).execute()
+                if (!it) {
+                    runOnUiThread {
+                        Toast.makeText(applicationContext,
+                                "Wrong username or password.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    AccountService.addAccount(this@LoginActivity,
+                            username, cookieJar.sessionId!!)
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }, {}).execute()
 
         })
     }
