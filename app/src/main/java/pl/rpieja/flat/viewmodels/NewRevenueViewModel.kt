@@ -4,14 +4,12 @@ import android.content.Context
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import pl.rpieja.flat.api.FlatAPI
-import pl.rpieja.flat.authentication.AccountService
 import pl.rpieja.flat.dto.CreateRevenueDTO
 import pl.rpieja.flat.dto.Revenue
 import pl.rpieja.flat.dto.User
-import pl.rpieja.flat.tasks.AsyncCreateRevenue
-import pl.rpieja.flat.tasks.AsyncFetchUsers
-import pl.rpieja.flat.util.IsoTimeFormatter
 import java.util.Calendar
 import kotlin.collections.HashSet
 
@@ -23,7 +21,8 @@ class NewRevenueViewModel : ViewModel() {
     val name = MutableLiveData<String>()
     val amount = MutableLiveData<String>()
     val isValid = MediatorLiveData<Boolean>()
-    private var flatApi: FlatAPI? = null
+
+    private var requests = CompositeDisposable()
 
 
     init {
@@ -59,25 +58,19 @@ class NewRevenueViewModel : ViewModel() {
     fun loadUsers(context: Context) {
         if (users.value != null) return
 
-        AsyncFetchUsers(getFlatApi(context), { usersList -> users.value = usersList },
-                { AccountService.removeCurrentAccount(context) }).execute()
+        this.requests.add(FlatAPI.getFlatApi(context).fetchUsers()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { users.value = it })
     }
 
     fun createRevenue(context: Context, onSuccess: (Revenue) -> Unit) {
-        getFlatApi(context)
 
-        val date = IsoTimeFormatter.toIso8601(date.value?.time ?: Calendar.getInstance().time)
+        val date = date.value?.time ?: Calendar.getInstance().time
         val to = selectedUsers.value?.map { user -> user.id } ?: emptyList()
-        val charge = CreateRevenueDTO(name.value!!, date, amount.value!!, to.map { it.toInt() })
+        val charge = CreateRevenueDTO(name.value!!, date, amount.value!!, to)
 
-        AsyncCreateRevenue(getFlatApi(context), onSuccess,
-                { AccountService.removeCurrentAccount(context) }, charge).execute()
-    }
-
-    private fun getFlatApi(context: Context): FlatAPI {
-        if (flatApi == null) {
-            flatApi = FlatAPI.getFlatApi(context)
-        }
-        return flatApi!!
+        this.requests.add(FlatAPI.getFlatApi(context).createRevenue(charge)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { onSuccess(it) })
     }
 }

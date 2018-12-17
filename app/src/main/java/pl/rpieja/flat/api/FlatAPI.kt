@@ -11,7 +11,9 @@ import com.google.gson.JsonIOException
 import io.reactivex.Observable
 import okhttp3.*
 import pl.memleak.flat.ChargesQuery
+import pl.memleak.flat.NewRevenueMutation
 import pl.memleak.flat.TransfersQuery
+import pl.memleak.flat.UsersQuery
 import pl.memleak.flat.type.CustomType
 import pl.rpieja.flat.R
 import pl.rpieja.flat.authentication.AccountService
@@ -46,15 +48,14 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
     private val sessionCheckUrl = apiAddress + "session/check"
     private val createSessionUrl = apiAddress + "session/create"
     private val getGraphqlUrl = apiAddress + "graphql"
-    private val createRevenueUrl = apiAddress + "charge/create"
     private val fetchExpenseUrl = apiAddress + "charge/expense/"
-    private val getUsersUrl = apiAddress + "user/"
     private val registerFCMUrl = apiAddress + "fcm/device"
 
     private val apolloClient = ApolloClient.builder()
             .serverUrl(getGraphqlUrl)
             .okHttpClient(httpClient)
             .addCustomTypeAdapter(CustomType.DATETIME, dateCustomTypeAdapter)
+            .addCustomTypeAdapter(CustomType.DATE, dateCustomTypeAdapter)
             .build()
 
     fun login(username: String, password: String): Boolean {
@@ -101,6 +102,26 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
                 .map { TransfersDTO(it.data()!!) }
     }
 
+    fun fetchUsers(): Observable<List<User>> {
+        val query = UsersQuery.builder().build()
+        return Rx2Apollo.from(apolloClient.query(query))
+                .map { parseErrors(it) }
+                .map { it.data()?.users()?.map { User(it) }.orEmpty() }
+    }
+
+    fun createRevenue(revenue: CreateRevenueDTO): Observable<Revenue> {
+        val mutation = NewRevenueMutation.builder()
+                .amount(revenue.rawAmount)
+                .date(revenue.date)
+                .name(revenue.name)
+                .to(revenue.to)
+                .build()
+
+        return Rx2Apollo.from(apolloClient.mutate(mutation))
+                .map { parseErrors(it) }
+                .map { Revenue(it.data()?.addRevenue()!!) }
+    }
+
     private fun <T> parseErrors(resp: com.apollographql.apollo.api.Response<T>)
             : com.apollographql.apollo.api.Response<T> {
         if (resp.hasErrors()) {
@@ -118,19 +139,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
 
     fun registerFCM(registration_token: String){
         post(registerFCMUrl, RegisterFCM(registration_token))
-    }
-
-    fun fetchUsers(): List<User> {
-        return Arrays.asList(*fetch(getUsersUrl, Array<User>::class.java))
-    }
-
-    private fun <T> createEntity(entity: CreateDTO<T>, entityUrl: String): T {
-        val response = post(entityUrl, entity)
-        return gson.fromJson(response.body()!!.charStream(), entity.entityClass)
-    }
-
-    fun createRevenue(revenue: CreateRevenueDTO): Revenue {
-        return createEntity(revenue, createRevenueUrl)
     }
 
     private fun <T> post(url: String, data: T): Response {

@@ -4,7 +4,8 @@ apply plugin: 'com.apollographql.android'
 
 apollo {
     customTypeMapping = [
-            "DateTime" : "java.util.Date"
+            "DateTime" : "java.util.Date",
+            "Date" : "java.util.Date"
     ]
 }
 
