@@ -6,7 +6,7 @@ data class Expense(
         var name: String,
         var rawAmount: String,
         var date: Date,
-        var id: Int,
+        var id: String,
         var to: List<User>,
         var from: User,
         var amount: Double

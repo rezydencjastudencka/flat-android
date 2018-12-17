@@ -9,8 +9,8 @@ data class Revenue(
         var name: String,
         var rawAmount: String,
         var date: Date,
-        var from: Int,
-        var id: Int,
+        var from: String,
+        var id: String,
         var to: List<User>,
         var amount: Double
 ) : ChargeLike, Parcelable {

@@ -2,13 +2,22 @@ package pl.rpieja.flat.api
 
 import android.content.Context
 import android.util.Log
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.response.CustomTypeAdapter
+import com.apollographql.apollo.response.CustomTypeValue
+import com.apollographql.apollo.rx2.Rx2Apollo
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
+import io.reactivex.Observable
 import okhttp3.*
+import pl.memleak.flat.ChargesQuery
+import pl.memleak.flat.type.CustomType
 import pl.rpieja.flat.R
 import pl.rpieja.flat.authentication.FlatCookieJar
 import pl.rpieja.flat.dto.*
+import pl.rpieja.flat.util.IsoTimeFormatter
 import java.util.*
+
 
 class FlatAPI(context: Context, cookieJar: CookieJar) {
     private val client: OkHttpClient = OkHttpClient.Builder().cookieJar(cookieJar).build()
@@ -18,6 +27,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
     private val sessionCheckUrl = apiAddress + "session/check"
     private val createSessionUrl = apiAddress + "session/create"
     private val getChargesUrl = apiAddress + "charge/"
+    private val getGraphqlUrl = apiAddress + "graphql"
     private val getTransfersUrl = apiAddress + "transfer/"
     private val createRevenueUrl = apiAddress + "charge/create"
     private val fetchExpenseUrl = apiAddress + "charge/expense/"
@@ -48,9 +58,29 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
         return "ok" == error
     }
 
-    fun fetchCharges(month: Int, year: Int): ChargesDTO {
-        val requestUrl = getChargesUrl + Integer.toString(year) + "/" + Integer.toString(month)
-        return fetch(requestUrl, ChargesDTO::class.java)
+    fun fetchCharges(month: Int, year: Int):
+            Observable<com.apollographql.apollo.api.Response<ChargesQuery.Data>> {
+        val dateCustomTypeAdapter = object : CustomTypeAdapter<Date> {
+            override fun decode(value: CustomTypeValue<*>): Date {
+                return IsoTimeFormatter.fromGraphqlDate(value.value.toString())
+
+            }
+
+            override fun encode(value: Date): CustomTypeValue<*> {
+                return CustomTypeValue.GraphQLString(IsoTimeFormatter.toGraphqlDate(value))
+            }
+        }
+        val apolloClient = ApolloClient.builder()
+                .serverUrl(getGraphqlUrl)
+                .okHttpClient(client)
+                .addCustomTypeAdapter(CustomType.DATETIME, dateCustomTypeAdapter)
+                .build()
+
+        val query = ChargesQuery.builder()
+                .month(month)
+                .year(year)
+                .build()
+        return Rx2Apollo.from(apolloClient.query(query))
     }
 
     fun fetchExpense(charge_id: Int): Expense {

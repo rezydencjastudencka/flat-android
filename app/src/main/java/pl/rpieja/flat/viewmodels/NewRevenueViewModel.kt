@@ -69,7 +69,7 @@ class NewRevenueViewModel : ViewModel() {
 
         val date = IsoTimeFormatter.toIso8601(date.value?.time ?: Calendar.getInstance().time)
         val to = selectedUsers.value?.map { user -> user.id } ?: emptyList()
-        val charge = CreateRevenueDTO(name.value!!, date, amount.value!!, to)
+        val charge = CreateRevenueDTO(name.value!!, date, amount.value!!, to.map { it.toInt() })
 
         AsyncCreateRevenue(getFlatApi(context), onSuccess,
                 { AccountService.removeCurrentAccount(context) }, charge).execute()

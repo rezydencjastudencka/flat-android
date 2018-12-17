@@ -1,0 +1,35 @@
+query ChargesQuery($year: Int!, $month: Int!) {
+    summary {
+        monthly(year: $year, month: $month) {
+            amount
+            user {
+                id
+                username
+            }
+         }
+    }
+    revenues(year: $year, month: $month) {
+        id
+        name
+        amount
+        date
+        fromUser {
+            id
+            username
+        }
+        toUsers {
+            id
+            username
+        }
+    }
+    expenses(year: $year, month: $month) {
+        id
+        amount
+        date
+        name
+        fromUser {
+            id
+            username
+        }
+    }
+}

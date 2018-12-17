@@ -1,12 +1,8 @@
 package pl.rpieja.flat.viewmodels
 
+import io.reactivex.Observable
 import pl.rpieja.flat.api.FlatAPI
-import pl.rpieja.flat.dto.ChargesDTO
-import pl.rpieja.flat.dto.Expense
-import pl.rpieja.flat.dto.Revenue
-import pl.rpieja.flat.dto.Summary
-import pl.rpieja.flat.tasks.AsyncGetCharges
-import pl.rpieja.flat.tasks.AsyncRequest
+import pl.rpieja.flat.dto.*
 import java.util.*
 
 class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
@@ -42,7 +38,26 @@ class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
     }
 
     override fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int,
-                              onSuccess: (ChargesDTO) -> Unit,
-                              unauthorized: () -> Unit): AsyncRequest<ChargesDTO> =
-            AsyncGetCharges(flatAPI, month, year, onSuccess, unauthorized)
+                              unauthorized: () -> Unit): Observable<ChargesDTO> {
+        return flatAPI.fetchCharges(month = month, year = year)
+                .filter { !it.hasErrors() }
+                .map { it.data()!! }
+
+                .map { ChargesDTO(
+                        it.revenues()!!.map { Revenue(
+                                it.name(), "", it.date(), it.fromUser().id(),
+                                it.id(), it.toUsers()!!.map { User(it.username(), it.id()) },
+                                it.amount()
+                        ) },
+                        it.summary()!!.monthly()!!.map {
+                            Summary(
+                                it.user()!!.username(), it.amount()!!, 0, 0
+
+                        ) },
+                        it.expenses()!!.map { Expense(
+                                it.name(), "", it.date(), it.id(), emptyList(),
+                                User(it.fromUser().username(), it.fromUser().id()), it.amount()!!
+                        ) }
+                )}
+    }
 }
