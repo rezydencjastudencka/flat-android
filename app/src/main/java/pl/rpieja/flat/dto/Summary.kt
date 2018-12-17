@@ -1,12 +1,18 @@
 package pl.rpieja.flat.dto
 
 import pl.memleak.flat.ChargesQuery
+import pl.memleak.flat.TransfersQuery
 
 data class Summary(
         var user: User,
         var amount: Double
 ) : ChargeLike {
     constructor(obj: ChargesQuery.Monthly) : this(
+            user = User(obj.user()!!),
+            amount = obj.amount()!!
+    )
+
+    constructor(obj: TransfersQuery.Monthly) : this(
             user = User(obj.user()!!),
             amount = obj.amount()!!
     )

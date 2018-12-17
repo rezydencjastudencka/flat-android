@@ -8,7 +8,6 @@ class TransfersViewModel : MonthlyEntityViewModel<TransfersDTO>() {
     override fun defaultSort() {
     }
 
-    override fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int): Observable<TransfersDTO> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int)
+            : Observable<TransfersDTO> = flatAPI.fetchTransfers(month, year)
 }

@@ -11,6 +11,7 @@ import com.google.gson.JsonIOException
 import io.reactivex.Observable
 import okhttp3.*
 import pl.memleak.flat.ChargesQuery
+import pl.memleak.flat.TransfersQuery
 import pl.memleak.flat.type.CustomType
 import pl.rpieja.flat.R
 import pl.rpieja.flat.authentication.AccountService
@@ -45,7 +46,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
     private val sessionCheckUrl = apiAddress + "session/check"
     private val createSessionUrl = apiAddress + "session/create"
     private val getGraphqlUrl = apiAddress + "graphql"
-    private val getTransfersUrl = apiAddress + "transfer/"
     private val createRevenueUrl = apiAddress + "charge/create"
     private val fetchExpenseUrl = apiAddress + "charge/expense/"
     private val getUsersUrl = apiAddress + "user/"
@@ -91,6 +91,16 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
                 .map { ChargesDTO(it.data()!!) }
     }
 
+    fun fetchTransfers(month: Int, year: Int): Observable<TransfersDTO> {
+        val query = TransfersQuery.builder()
+                .month(month)
+                .year(year)
+                .build()
+        return Rx2Apollo.from(apolloClient.query(query))
+                .map { parseErrors(it) }
+                .map { TransfersDTO(it.data()!!) }
+    }
+
     private fun <T> parseErrors(resp: com.apollographql.apollo.api.Response<T>)
             : com.apollographql.apollo.api.Response<T> {
         if (resp.hasErrors()) {
@@ -110,11 +120,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
         post(registerFCMUrl, RegisterFCM(registration_token))
     }
 
-    fun fetchTransfers(month: Int, year: Int): TransfersDTO {
-        val requestUrl = getTransfersUrl + Integer.toString(year) + "/" + Integer.toString(month)
-        return fetch(requestUrl, TransfersDTO::class.java)
-    }
-
     fun fetchUsers(): List<User> {
         return Arrays.asList(*fetch(getUsersUrl, Array<User>::class.java))
     }
@@ -130,10 +135,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
 
     private fun <T> post(url: String, data: T): Response {
         return method("POST", url, data)
-    }
-
-    private fun <T> put(url: String, data: T) {
-        method("PUT", url, data)
     }
 
     private fun <T> method(methodName: String, url: String, data: T): Response {
