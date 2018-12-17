@@ -31,5 +31,9 @@ query ChargesQuery($year: Int!, $month: Int!) {
             id
             username
         }
+        toUsers {
+            id
+            username
+        }
     }
 }

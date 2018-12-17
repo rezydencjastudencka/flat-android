@@ -7,8 +7,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import pl.rpieja.flat.api.FlatAPI
-import pl.rpieja.flat.authentication.AccountService
-import pl.rpieja.flat.authentication.FlatCookieJar
 import java.util.*
 
 
@@ -31,7 +29,7 @@ abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
 
 
     override fun load(context: Context, date: YearMonth, force: Boolean) {
-        val flatAPI = FlatAPI(context, FlatCookieJar(context))
+        val flatAPI = FlatAPI.getFlatApi(context)
 
         // Do not refetch data if date has not been changed
         if (!force && data.value != null && this.date.value == date)
@@ -39,14 +37,12 @@ abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
 
         this.date.value = date
 
-        this.request = asyncRequest(flatAPI, date.month, date.year) { AccountService
-                .removeCurrentAccount(context) }
+        this.request = asyncRequest(flatAPI, date.month, date.year)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { data.value = it }
     }
 
     protected abstract fun defaultSort()
 
-    abstract fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int,
-                              unauthorized: () -> Unit): Observable<T>
+    abstract fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int): Observable<T>
 }

@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.authentication.AccountService
-import pl.rpieja.flat.authentication.FlatCookieJar
 import pl.rpieja.flat.dto.CreateRevenueDTO
 import pl.rpieja.flat.dto.Revenue
 import pl.rpieja.flat.dto.User
@@ -77,7 +76,7 @@ class NewRevenueViewModel : ViewModel() {
 
     private fun getFlatApi(context: Context): FlatAPI {
         if (flatApi == null) {
-            flatApi = FlatAPI(context, FlatCookieJar(context))
+            flatApi = FlatAPI.getFlatApi(context)
         }
         return flatApi!!
     }

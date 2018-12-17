@@ -11,7 +11,6 @@ import com.google.firebase.iid.FirebaseInstanceId
 import pl.rpieja.flat.R
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.authentication.AccountService
-import pl.rpieja.flat.authentication.FlatCookieJar
 import pl.rpieja.flat.tasks.AsyncLogin
 
 
@@ -36,8 +35,7 @@ class LoginActivity : AppCompatActivity() {
                 return@OnClickListener
             }
 
-            val cookieJar = FlatCookieJar(this@LoginActivity)
-            val flatAPI = FlatAPI(this, cookieJar)
+            val flatAPI = FlatAPI.getFlatApi(this)
 
             val registrationToken = FirebaseInstanceId.getInstance().token
             AsyncLogin(flatAPI, username, password, registrationToken, {
@@ -47,8 +45,8 @@ class LoginActivity : AppCompatActivity() {
                                 "Wrong username or password.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    AccountService.addAccount(this@LoginActivity,
-                            username, cookieJar.sessionId!!)
+                    AccountService.addAccount(this@LoginActivity, username,
+                            FlatAPI.getCookieJar(this@LoginActivity).sessionId!!)
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()

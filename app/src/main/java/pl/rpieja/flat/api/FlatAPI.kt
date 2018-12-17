@@ -13,26 +13,49 @@ import okhttp3.*
 import pl.memleak.flat.ChargesQuery
 import pl.memleak.flat.type.CustomType
 import pl.rpieja.flat.R
+import pl.rpieja.flat.authentication.AccountService
 import pl.rpieja.flat.authentication.FlatCookieJar
 import pl.rpieja.flat.dto.*
 import pl.rpieja.flat.util.IsoTimeFormatter
 import java.util.*
 
 
-class FlatAPI(context: Context, cookieJar: CookieJar) {
-    private val client: OkHttpClient = OkHttpClient.Builder().cookieJar(cookieJar).build()
+class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
+    private val httpClient: OkHttpClient = OkHttpClient
+            .Builder()
+            .cookieJar(cookieJar)
+            .build()
+
     private val gson = Gson()
+
+    private val dateCustomTypeAdapter = object : CustomTypeAdapter<Date> {
+        override fun decode(value: CustomTypeValue<*>): Date {
+            return IsoTimeFormatter.fromGraphqlDate(value.value.toString())
+
+        }
+
+        override fun encode(value: Date): CustomTypeValue<*> {
+            return CustomTypeValue.GraphQLString(IsoTimeFormatter.toGraphqlDate(value))
+        }
+    }
+
+    private val onUnauthorized = { AccountService.removeCurrentAccount(context) }
 
     private val apiAddress = context.getString(R.string.api_uri)
     private val sessionCheckUrl = apiAddress + "session/check"
     private val createSessionUrl = apiAddress + "session/create"
-    private val getChargesUrl = apiAddress + "charge/"
     private val getGraphqlUrl = apiAddress + "graphql"
     private val getTransfersUrl = apiAddress + "transfer/"
     private val createRevenueUrl = apiAddress + "charge/create"
     private val fetchExpenseUrl = apiAddress + "charge/expense/"
     private val getUsersUrl = apiAddress + "user/"
     private val registerFCMUrl = apiAddress + "fcm/device"
+
+    private val apolloClient = ApolloClient.builder()
+            .serverUrl(getGraphqlUrl)
+            .okHttpClient(httpClient)
+            .addCustomTypeAdapter(CustomType.DATETIME, dateCustomTypeAdapter)
+            .build()
 
     fun login(username: String, password: String): Boolean {
         //TODO: use Gson
@@ -42,7 +65,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
                 .url(createSessionUrl)
                 .post(RequestBody.create(JSON_MEDIA_TYPE, json))
                 .build()
-        val response = client.newCall(request).execute()
+        val response = httpClient.newCall(request).execute()
         return response.isSuccessful
     }
 
@@ -51,36 +74,31 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
                 .url(sessionCheckUrl)
                 .build()
 
-        val response = client.newCall(request).execute()
+        val response = httpClient.newCall(request).execute()
         if (!response.isSuccessful) return false
         val (error) = gson.fromJson(response.body()!!.string(), SessionCheckResponse::class.java)
                 ?: return false
         return "ok" == error
     }
 
-    fun fetchCharges(month: Int, year: Int):
-            Observable<com.apollographql.apollo.api.Response<ChargesQuery.Data>> {
-        val dateCustomTypeAdapter = object : CustomTypeAdapter<Date> {
-            override fun decode(value: CustomTypeValue<*>): Date {
-                return IsoTimeFormatter.fromGraphqlDate(value.value.toString())
-
-            }
-
-            override fun encode(value: Date): CustomTypeValue<*> {
-                return CustomTypeValue.GraphQLString(IsoTimeFormatter.toGraphqlDate(value))
-            }
-        }
-        val apolloClient = ApolloClient.builder()
-                .serverUrl(getGraphqlUrl)
-                .okHttpClient(client)
-                .addCustomTypeAdapter(CustomType.DATETIME, dateCustomTypeAdapter)
-                .build()
-
+    fun fetchCharges(month: Int, year: Int): Observable<ChargesDTO> {
         val query = ChargesQuery.builder()
                 .month(month)
                 .year(year)
                 .build()
         return Rx2Apollo.from(apolloClient.query(query))
+                .map { parseErrors(it) }
+                .map { ChargesDTO(it.data()!!) }
+    }
+
+    private fun <T> parseErrors(resp: com.apollographql.apollo.api.Response<T>)
+            : com.apollographql.apollo.api.Response<T> {
+        if (resp.hasErrors()) {
+            onUnauthorized()
+            throw GraphqlException(resp.errors())
+        } else {
+            return resp
+        }
     }
 
     fun fetchExpense(charge_id: Int): Expense {
@@ -126,7 +144,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
                 .build()
 
         Log.d(TAG, String.format("Sending %s %s with data %s", methodName, url, json))
-        val response = client.newCall(request).execute()
+        val response = httpClient.newCall(request).execute()
         if (response.code() == 403) throw UnauthorizedException()
         if (!response.isSuccessful) throw FlatApiException()
         return response
@@ -137,7 +155,7 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
                 .url(requestUrl)
                 .build()
 
-        val response = client.newCall(request).execute()
+        val response = httpClient.newCall(request).execute()
         if (response.code() == 403) throw UnauthorizedException()
         if (!response.isSuccessful) throw FlatApiException()
 
@@ -151,10 +169,18 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
 
         fun getFlatApi(context: Context): FlatAPI {
             if (flatAPI == null) {
-                flatAPI = FlatAPI(context, FlatCookieJar(context))
+                flatAPI = FlatAPI(context, getCookieJar(context))
             }
 
             return flatAPI!!
+        }
+
+        fun getCookieJar(context: Context): FlatCookieJar {
+            if (cookieJar == null) {
+                cookieJar = FlatCookieJar(context)
+            }
+
+            return cookieJar!!
         }
 
         fun reset(){
@@ -162,5 +188,6 @@ class FlatAPI(context: Context, cookieJar: CookieJar) {
         }
 
         private var flatAPI: FlatAPI? = null
+        private var cookieJar: FlatCookieJar? = null
     }
 }
