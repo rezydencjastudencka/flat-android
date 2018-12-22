@@ -1,7 +1,6 @@
 package pl.rpieja.flat.api
 
 import android.content.Context
-import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.response.CustomTypeAdapter
 import com.apollographql.apollo.response.CustomTypeValue
@@ -10,7 +9,9 @@ import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import io.reactivex.Observable
 import io.reactivex.Single
-import okhttp3.*
+import okhttp3.CookieJar
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import pl.memleak.flat.*
 import pl.memleak.flat.type.CustomType
 import pl.rpieja.flat.R
@@ -43,10 +44,8 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
     private val onUnauthorized = { AccountService.removeCurrentAccount(context) }
 
     private val apiAddress = context.getString(R.string.api_uri)
-    private val createSessionUrl = apiAddress + "session/create"
     private val getGraphqlUrl = apiAddress + "graphql"
     private val fetchExpenseUrl = apiAddress + "charge/expense/"
-    private val registerFCMUrl = apiAddress + "fcm/device"
 
     private val apolloClient = ApolloClient.builder()
             .serverUrl(getGraphqlUrl)
@@ -55,16 +54,17 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
             .addCustomTypeAdapter(CustomType.DATE, dateCustomTypeAdapter)
             .build()
 
-    fun login(username: String, password: String): Boolean {
-        //TODO: use Gson
-        val json = "{\"name\":\"$username\", \"password\": \"$password\"}"
-
-        val request = Request.Builder()
-                .url(createSessionUrl)
-                .post(RequestBody.create(JSON_MEDIA_TYPE, json))
+    fun login(username: String, password: String): Single<Boolean> {
+        val mutation = LoginMutation.builder()
+                .username(username)
+                .password(password)
                 .build()
-        val response = httpClient.newCall(request).execute()
-        return response.isSuccessful
+
+        return Rx2Apollo.from(apolloClient.mutate(mutation))
+                .map { parseErrors(it) }
+                .map { true }
+                .onErrorReturnItem(false)
+                .first(false)
     }
 
     fun validateSession(): Single<Boolean> {
@@ -132,26 +132,16 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
         return fetch(requestUrl, Expense::class.java)
     }
 
-    fun registerFCM(registration_token: String){
-        post(registerFCMUrl, RegisterFCM(registration_token))
-    }
-
-    private fun <T> post(url: String, data: T): Response {
-        return method("POST", url, data)
-    }
-
-    private fun <T> method(methodName: String, url: String, data: T): Response {
-        val json = gson.toJson(data)
-        val request = Request.Builder()
-                .url(url)
-                .method(methodName, RequestBody.create(JSON_MEDIA_TYPE, json))
+    fun registerFCM(registrationToken: String) : Single<Boolean> {
+        val mutation = RegisterDeviceMutation.builder()
+                .token(registrationToken)
                 .build()
 
-        Log.d(TAG, String.format("Sending %s %s with data %s", methodName, url, json))
-        val response = httpClient.newCall(request).execute()
-        if (response.code() == 403) throw UnauthorizedException()
-        if (!response.isSuccessful) throw FlatApiException()
-        return response
+        return Rx2Apollo.from(apolloClient.mutate(mutation))
+                .map { parseErrors(it) }
+                .map { true }
+                .onErrorReturnItem(false)
+                .first(false)
     }
 
     private fun <T> fetch(requestUrl: String, tClass: Class<T>): T {
@@ -168,8 +158,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
     }
 
     companion object {
-        private val JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8")
-        private val TAG = FlatAPI::class.java.simpleName
 
         fun getFlatApi(context: Context): FlatAPI {
             if (flatAPI == null) {

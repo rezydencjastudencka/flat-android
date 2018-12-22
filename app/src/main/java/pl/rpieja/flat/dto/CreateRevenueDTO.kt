@@ -7,7 +7,4 @@ data class CreateRevenueDTO(
         var date: Date,
         var rawAmount: String,
         var to: List<String>
-) : CreateDTO<Revenue> {
-    override val entityClass: Class<Revenue>
-        get() = Revenue::class.java
-}
+)
