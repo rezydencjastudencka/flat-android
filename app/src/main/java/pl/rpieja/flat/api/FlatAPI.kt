@@ -2,16 +2,15 @@ package pl.rpieja.flat.api
 
 import android.content.Context
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.response.CustomTypeAdapter
 import com.apollographql.apollo.response.CustomTypeValue
 import com.apollographql.apollo.rx2.Rx2Apollo
-import com.google.gson.Gson
-import com.google.gson.JsonIOException
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import pl.memleak.flat.*
 import pl.memleak.flat.type.CustomType
 import pl.rpieja.flat.R
@@ -28,8 +27,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
             .cookieJar(cookieJar)
             .build()
 
-    private val gson = Gson()
-
     private val dateCustomTypeAdapter = object : CustomTypeAdapter<Date> {
         override fun decode(value: CustomTypeValue<*>): Date {
             return IsoTimeFormatter.fromGraphqlDate(value.value.toString())
@@ -45,7 +42,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
 
     private val apiAddress = context.getString(R.string.api_uri)
     private val getGraphqlUrl = apiAddress + "graphql"
-    private val fetchExpenseUrl = apiAddress + "charge/expense/"
 
     private val apolloClient = ApolloClient.builder()
             .serverUrl(getGraphqlUrl)
@@ -117,8 +113,7 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
                 .map { Revenue(it.data()?.addRevenue()!!) }
     }
 
-    private fun <T> parseErrors(resp: com.apollographql.apollo.api.Response<T>)
-            : com.apollographql.apollo.api.Response<T> {
+    private fun <T> parseErrors(resp: Response<T>) : Response<T> {
         if (resp.hasErrors()) {
             onUnauthorized()
             throw GraphqlException(resp.errors())
@@ -127,9 +122,15 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
         }
     }
 
-    fun fetchExpense(charge_id: Int): Expense {
-        val requestUrl = fetchExpenseUrl + charge_id.toString()
-        return fetch(requestUrl, Expense::class.java)
+    fun fetchExpense(chargeId: Int): Maybe<Expense> {
+        val query = ExpenseQuery.builder()
+                .id(chargeId.toString())
+                .build()
+
+        return Rx2Apollo.from(apolloClient.query(query))
+                .map { parseErrors(it) }
+                .map { Expense(it.data()?.expense()!!) }
+                .firstElement()
     }
 
     fun registerFCM(registrationToken: String) : Single<Boolean> {
@@ -142,19 +143,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
                 .map { true }
                 .onErrorReturnItem(false)
                 .first(false)
-    }
-
-    private fun <T> fetch(requestUrl: String, tClass: Class<T>): T {
-        val request = Request.Builder()
-                .url(requestUrl)
-                .build()
-
-        val response = httpClient.newCall(request).execute()
-        if (response.code() == 403) throw UnauthorizedException()
-        if (!response.isSuccessful) throw FlatApiException()
-
-        return gson.fromJson(response.body()!!.string(), tClass)
-                ?: throw JsonIOException("JSON parsing exception")
     }
 
     companion object {

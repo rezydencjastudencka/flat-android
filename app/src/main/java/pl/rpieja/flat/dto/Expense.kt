@@ -1,6 +1,7 @@
 package pl.rpieja.flat.dto
 
 import pl.memleak.flat.ChargesQuery
+import pl.memleak.flat.ExpenseQuery
 import java.util.*
 
 data class Expense(
@@ -12,6 +13,15 @@ data class Expense(
         var amount: Double
 ) : ChargeLike {
     constructor(obj: ChargesQuery.Expense) : this(
+            id = obj.id(),
+            name = obj.name(),
+            date = obj.date(),
+            to = obj.toUsers()?.map { User(it) }.orEmpty(),
+            from = User(obj.fromUser()),
+            amount = obj.amount()!!
+    )
+
+    constructor(obj: ExpenseQuery.Expense) : this(
             id = obj.id(),
             name = obj.name(),
             date = obj.date(),

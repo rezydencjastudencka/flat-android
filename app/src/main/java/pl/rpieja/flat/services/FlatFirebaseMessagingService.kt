@@ -55,7 +55,7 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
 
         try {
             val flatAPI = FlatAPI.getFlatApi(this)
-            val expense = flatAPI.fetchExpense(expense_id)
+            val expense = flatAPI.fetchExpense(expense_id).blockingGet()
 
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
