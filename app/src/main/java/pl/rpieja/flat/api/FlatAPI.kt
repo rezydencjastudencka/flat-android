@@ -9,11 +9,9 @@ import com.apollographql.apollo.rx2.Rx2Apollo
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import io.reactivex.Observable
+import io.reactivex.Single
 import okhttp3.*
-import pl.memleak.flat.ChargesQuery
-import pl.memleak.flat.NewRevenueMutation
-import pl.memleak.flat.TransfersQuery
-import pl.memleak.flat.UsersQuery
+import pl.memleak.flat.*
 import pl.memleak.flat.type.CustomType
 import pl.rpieja.flat.R
 import pl.rpieja.flat.authentication.AccountService
@@ -45,7 +43,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
     private val onUnauthorized = { AccountService.removeCurrentAccount(context) }
 
     private val apiAddress = context.getString(R.string.api_uri)
-    private val sessionCheckUrl = apiAddress + "session/check"
     private val createSessionUrl = apiAddress + "session/create"
     private val getGraphqlUrl = apiAddress + "graphql"
     private val fetchExpenseUrl = apiAddress + "charge/expense/"
@@ -70,16 +67,14 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
         return response.isSuccessful
     }
 
-    fun validateSession(): Boolean? {
-        val request = Request.Builder()
-                .url(sessionCheckUrl)
-                .build()
+    fun validateSession(): Single<Boolean> {
+        val query = MeQuery.builder().build()
 
-        val response = httpClient.newCall(request).execute()
-        if (!response.isSuccessful) return false
-        val (error) = gson.fromJson(response.body()!!.string(), SessionCheckResponse::class.java)
-                ?: return false
-        return "ok" == error
+        return Rx2Apollo.from(apolloClient.query(query))
+                .map { parseErrors(it)}
+                .map { true }
+                .onErrorReturnItem(false)
+                .first(false)
     }
 
     fun fetchCharges(month: Int, year: Int): Observable<ChargesDTO> {
