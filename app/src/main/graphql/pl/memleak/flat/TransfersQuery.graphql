@@ -1,13 +1,4 @@
 query TransfersQuery($year: Int!, $month: Int!) {
-  summary {
-    monthly(year: $year, month: $month) {
-      amount
-      user {
-        ...UserFragment
-      }
-    }
-  }
-
   transfers(year: $year, month: $month) {
     id
     amount

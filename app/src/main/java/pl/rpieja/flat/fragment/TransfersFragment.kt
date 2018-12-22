@@ -25,17 +25,10 @@ class TransferIncomingTab : TransferTab() {
     override fun extractEntityFromDTO(dto: TransfersDTO): List<Transfer> = dto.incoming
 }
 
-class TransferSummaryTab : SummaryLayoutFragment<TransfersViewModel, TransfersDTO>() {
-    override val modelClass: Class<TransfersViewModel> = TransfersViewModel::class.java
-    override fun extractLiveData(vm: TransfersViewModel): LiveData<TransfersDTO> = vm.data
-    override fun extractEntityFromDTO(dto: TransfersDTO): List<Summary> = dto.summary
-}
-
 class TransfersFragment : EntityMonthlyFragment<TransfersDTO, TransfersViewModel>() {
     companion object {
         const val OUTGOING_TAB_INDEX = 0
         const val INCOMING_TAB_INDEX = 1
-        const val SUMMARY_TAB_INDEX = 2
     }
 
     override val viewModelClass: Class<TransfersViewModel> = TransfersViewModel::class.java
@@ -47,11 +40,10 @@ class TransfersFragment : EntityMonthlyFragment<TransfersDTO, TransfersViewModel
             when (position) {
                 OUTGOING_TAB_INDEX -> TransferOutgoingTab()
                 INCOMING_TAB_INDEX -> TransferIncomingTab()
-                SUMMARY_TAB_INDEX -> TransferSummaryTab()
                 else -> TODO() // FIXME throw meaningful exception
             }
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = 2
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         super.onOptionsItemSelected(item)
