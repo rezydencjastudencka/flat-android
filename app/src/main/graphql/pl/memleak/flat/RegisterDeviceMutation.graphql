@@ -1,0 +1,5 @@
+mutation RegisterDeviceMutation($token: String!){
+  registerDevice(registrationToken: $token){
+    status
+  }
+}

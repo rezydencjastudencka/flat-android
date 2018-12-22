@@ -8,11 +8,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.iid.FirebaseInstanceId
+import io.reactivex.Maybe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import pl.rpieja.flat.R
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.authentication.AccountService
-import pl.rpieja.flat.authentication.FlatCookieJar
-import pl.rpieja.flat.tasks.AsyncLogin
 
 
 class LoginActivity : AppCompatActivity() {
@@ -21,6 +22,8 @@ class LoginActivity : AppCompatActivity() {
     private var passwordTextEdit: EditText? = null
     private var usernameTextEdit: EditText? = null
 
+    private var loginDisposable: Disposable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
@@ -28,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         usernameTextEdit = findViewById(R.id.usernameTextEdit)
         passwordTextEdit = findViewById(R.id.passwordTextEdit)
 
-        signInButton!!.setOnClickListener(View.OnClickListener { _ ->
+        signInButton!!.setOnClickListener(View.OnClickListener {
             val username = usernameTextEdit!!.text.toString()
             val password = passwordTextEdit!!.text.toString()
             if (username == "" || password == "") {
@@ -36,25 +39,35 @@ class LoginActivity : AppCompatActivity() {
                 return@OnClickListener
             }
 
-            val cookieJar = FlatCookieJar(this@LoginActivity)
-            val flatAPI = FlatAPI(this, cookieJar)
+            val flatAPI = FlatAPI.getFlatApi(this)
 
-            val registrationToken = FirebaseInstanceId.getInstance().token
-            AsyncLogin(flatAPI, username, password, registrationToken, {
-                if (!it) {
-                    runOnUiThread {
-                        Toast.makeText(applicationContext,
-                                "Wrong username or password.", Toast.LENGTH_SHORT).show()
+            val registrationToken = FirebaseInstanceId.getInstance().token!!
+            loginDisposable = flatAPI.login(username, password)
+                    .flatMapMaybe {
+                        if (it) {
+                            flatAPI.registerFCM(registrationToken).toMaybe()
+                        } else {
+                            Maybe.just(false)
+                        }
                     }
-                } else {
-                    AccountService.addAccount(this@LoginActivity,
-                            username, cookieJar.sessionId!!)
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-            }, {}).execute()
-
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        if (!it) {
+                            Toast.makeText(applicationContext,
+                                    "Wrong username or password.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            AccountService.addAccount(this, username,
+                                    FlatAPI.getCookieJar(this).sessionId!!)
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loginDisposable?.dispose()
     }
 }

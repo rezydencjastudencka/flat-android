@@ -1,0 +1,5 @@
+mutation NewRevenueMutation($amount: String!, $date: Date!, $name: String!, $to: [ID!]) {
+  addRevenue(amount: $amount, date: $date, name: $name, to: $to) {
+    ...RevenueFragment
+  }
+}

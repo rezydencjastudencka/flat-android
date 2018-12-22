@@ -1,0 +1,17 @@
+query TransfersQuery($year: Int!, $month: Int!) {
+  transfers(year: $year, month: $month) {
+    id
+    amount
+    date
+    name
+    fromUser {
+      ...UserFragment
+    }
+    toUser {
+      ...UserFragment
+    }
+  }
+  me {
+    id
+  }
+}

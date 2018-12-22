@@ -1,0 +1,16 @@
+query ChargesQuery($year: Int!, $month: Int!) {
+  summary {
+    monthly(year: $year, month: $month) {
+      amount
+      user {
+        ...UserFragment
+      }
+    }
+  }
+  revenues(year: $year, month: $month) {
+    ...RevenueFragment
+  }
+  expenses(year: $year, month: $month) {
+    ...ExpenseFragment
+  }
+}

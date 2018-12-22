@@ -1,12 +1,11 @@
 package pl.rpieja.flat.viewmodels
 
+import io.reactivex.Observable
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.dto.ChargesDTO
 import pl.rpieja.flat.dto.Expense
 import pl.rpieja.flat.dto.Revenue
 import pl.rpieja.flat.dto.Summary
-import pl.rpieja.flat.tasks.AsyncGetCharges
-import pl.rpieja.flat.tasks.AsyncRequest
 import java.util.*
 
 class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
@@ -41,8 +40,6 @@ class ChargesViewModel : MonthlyEntityViewModel<ChargesDTO>() {
         sortRevenues(Comparator { o1, o2 -> o2.date.compareTo(o1.date) })
     }
 
-    override fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int,
-                              onSuccess: (ChargesDTO) -> Unit,
-                              unauthorized: () -> Unit): AsyncRequest<ChargesDTO> =
-            AsyncGetCharges(flatAPI, month, year, onSuccess, unauthorized)
+    override fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int) : Observable<ChargesDTO>
+            = flatAPI.fetchCharges(month = month, year = year)
 }

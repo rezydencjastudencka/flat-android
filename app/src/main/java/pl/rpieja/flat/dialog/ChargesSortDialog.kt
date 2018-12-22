@@ -36,7 +36,7 @@ class ChargesSortDialog(private val context: Context, private val viewModel: Cha
 
     private val summarySortOptions: List<SortOption<Summary>> = listOf(
             SortOption(context.getString(R.string.user),
-                    Comparator { o1, o2 -> o1.name.compareTo(o2.name) }),
+                    Comparator { o1, o2 -> o1.user.name.compareTo(o2.user.name) }),
             SortOption(context.getString(R.string.amount),
                     Comparator { o1, o2 -> o1.amount.compareTo(o2.amount) })
     )

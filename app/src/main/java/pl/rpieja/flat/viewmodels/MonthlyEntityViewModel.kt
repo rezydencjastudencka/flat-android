@@ -3,16 +3,17 @@ package pl.rpieja.flat.viewmodels
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import pl.rpieja.flat.api.FlatAPI
-import pl.rpieja.flat.authentication.AccountService
-import pl.rpieja.flat.authentication.FlatCookieJar
-import pl.rpieja.flat.tasks.AsyncRequest
 import java.util.*
 
 
 abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
     override val data: MutableLiveData<T> = MutableLiveData()
     val date: MutableLiveData<YearMonth> = MutableLiveData()
+    private var request: Disposable? = null
 
     init {
         val calendar = Calendar.getInstance()
@@ -25,8 +26,10 @@ abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
         return load(context, date.value!!, force)
     }
 
+
+
     override fun load(context: Context, date: YearMonth, force: Boolean) {
-        val flatAPI = FlatAPI(context, FlatCookieJar(context))
+        val flatAPI = FlatAPI.getFlatApi(context)
 
         // Do not refetch data if date has not been changed
         if (!force && data.value != null && this.date.value == date)
@@ -34,12 +37,12 @@ abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
 
         this.date.value = date
 
-        asyncRequest(flatAPI, date.month, date.year, { data.value = it; defaultSort() },
-                { AccountService.removeCurrentAccount(context) }).execute()
+        this.request = asyncRequest(flatAPI, date.month, date.year)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { data.value = it }
     }
 
     protected abstract fun defaultSort()
 
-    abstract fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int, onSuccess: (T) -> Unit,
-                              unauthorized: () -> Unit): AsyncRequest<T>
+    abstract fun asyncRequest(flatAPI: FlatAPI, month: Int, year: Int): Observable<T>
 }

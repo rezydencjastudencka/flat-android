@@ -1,11 +1,15 @@
 package pl.rpieja.flat.dto
 
-import com.google.gson.annotations.SerializedName
+import pl.memleak.flat.ChargesQuery
 
 data class ChargesDTO(
-    @SerializedName("charges")
-    var revenues: List<Revenue>,
-    var summary: List<Summary>,
-    @SerializedName("incomes")
-    var expenses: List<Expense>
-)
+        var revenues: List<Revenue>,
+        var expenses: List<Expense>,
+        var summary: List<Summary>
+) {
+    constructor(obj: ChargesQuery.Data) : this(
+            revenues = obj.revenues()!!.map { Revenue(it.fragments().revenueFragment()) },
+            expenses = obj.expenses()!!.map { Expense(it.fragments().expenseFragment()) },
+            summary = obj.summary()!!.monthly()!!.map { Summary(it) }
+    )
+}
