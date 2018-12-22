@@ -55,7 +55,7 @@ class AccountService : Service() {
     }
 
     companion object {
-        fun getAccountType(context: Context) = context.getString(R.string.account_type)
+        private fun getAccountType(context: Context): String = context.getString(R.string.account_type)
 
         fun removeCurrentAccount(context: Context) {
             val am = AccountManager.get(context)

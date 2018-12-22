@@ -1,0 +1,30 @@
+fragment UserFragment on UserType {
+  id,
+  username
+}
+
+fragment ExpenseFragment on ExpenseType {
+  id,
+  name,
+  amount,
+  date,
+  fromUser{
+    ...UserFragment
+  }
+  toUsers{
+    ...UserFragment
+  }
+}
+
+fragment RevenueFragment on RevenueType {
+  id
+  name
+  amount
+  date
+  fromUser {
+    ...UserFragment
+  }
+  toUsers {
+    ...UserFragment
+  }
+}

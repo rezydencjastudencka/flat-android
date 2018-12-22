@@ -8,12 +8,12 @@ data class Summary(
         var amount: Double
 ) : ChargeLike {
     constructor(obj: ChargesQuery.Monthly) : this(
-            user = User(obj.user()!!),
+            user = User(obj.user()?.fragments()?.userFragment()!!),
             amount = obj.amount()!!
     )
 
     constructor(obj: TransfersQuery.Monthly) : this(
-            user = User(obj.user()!!),
+            user = User(obj.user()?.fragments()?.userFragment()!!),
             amount = obj.amount()!!
     )
 

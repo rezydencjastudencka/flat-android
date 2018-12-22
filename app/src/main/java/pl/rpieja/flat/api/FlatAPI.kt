@@ -67,7 +67,7 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
         val query = MeQuery.builder().build()
 
         return Rx2Apollo.from(apolloClient.query(query))
-                .map { parseErrors(it)}
+                .map { parseErrors(it) }
                 .map { true }
                 .onErrorReturnItem(false)
                 .first(false)
@@ -97,7 +97,7 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
         val query = UsersQuery.builder().build()
         return Rx2Apollo.from(apolloClient.query(query))
                 .map { parseErrors(it) }
-                .map { it.data()?.users()?.map { User(it) }.orEmpty() }
+                .map { it.data()?.users()?.map { User(it.fragments().userFragment()) }.orEmpty() }
     }
 
     fun createRevenue(revenue: CreateRevenueDTO): Observable<Revenue> {
@@ -110,10 +110,10 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
 
         return Rx2Apollo.from(apolloClient.mutate(mutation))
                 .map { parseErrors(it) }
-                .map { Revenue(it.data()?.addRevenue()!!) }
+                .map { Revenue(it.data()!!.addRevenue()!!.fragments().revenueFragment()) }
     }
 
-    private fun <T> parseErrors(resp: Response<T>) : Response<T> {
+    private fun <T> parseErrors(resp: Response<T>): Response<T> {
         if (resp.hasErrors()) {
             onUnauthorized()
             throw GraphqlException(resp.errors())
@@ -129,11 +129,11 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
 
         return Rx2Apollo.from(apolloClient.query(query))
                 .map { parseErrors(it) }
-                .map { Expense(it.data()?.expense()!!) }
+                .map { Expense(it.data()?.expense()?.fragments()?.expenseFragment()!!) }
                 .firstElement()
     }
 
-    fun registerFCM(registrationToken: String) : Single<Boolean> {
+    fun registerFCM(registrationToken: String): Single<Boolean> {
         val mutation = RegisterDeviceMutation.builder()
                 .token(registrationToken)
                 .build()
@@ -163,7 +163,7 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
             return cookieJar!!
         }
 
-        fun reset(){
+        fun reset() {
             flatAPI = null
         }
 

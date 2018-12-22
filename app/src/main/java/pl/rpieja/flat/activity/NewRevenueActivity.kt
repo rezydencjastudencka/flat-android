@@ -71,7 +71,7 @@ class NewRevenueActivity : AppCompatActivity() {
                         resources.getColor(R.color.iconColorGreyDark, theme))
             }
         })
-        accept.setOnClickListener { _ ->
+        accept.setOnClickListener {
             newRevenueViewModel.createRevenue(this) {
                 intent.putExtra(Constants.RESULT_CREATE, it)
                 setResult(Activity.RESULT_OK, intent)

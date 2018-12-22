@@ -1,16 +1,5 @@
 query ExpenseQuery($id: ID!){
   expense(id: $id){
-    id,
-    name,
-    amount,
-    date,
-    fromUser{
-      id
-      username
-    }
-    toUsers{
-      id,
-      username
-    }
+    ...ExpenseFragment
   }
 }

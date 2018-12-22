@@ -8,8 +8,8 @@ data class ChargesDTO(
         var summary: List<Summary>
 ) {
     constructor(obj: ChargesQuery.Data) : this(
-            revenues = obj.revenues()!!.map { Revenue(it) },
-            expenses = obj.expenses()!!.map { Expense(it) },
+            revenues = obj.revenues()!!.map { Revenue(it.fragments().revenueFragment()) },
+            expenses = obj.expenses()!!.map { Expense(it.fragments().expenseFragment()) },
             summary = obj.summary()!!.monthly()!!.map { Summary(it) }
     )
 }

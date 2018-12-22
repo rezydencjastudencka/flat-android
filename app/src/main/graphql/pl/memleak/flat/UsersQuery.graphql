@@ -1,6 +1,5 @@
 query UsersQuery{
-    users {
-        id
-        username
-    }
+  users {
+    ...UserFragment
+  }
 }

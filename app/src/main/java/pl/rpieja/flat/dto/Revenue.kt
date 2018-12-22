@@ -2,8 +2,7 @@ package pl.rpieja.flat.dto
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import pl.memleak.flat.ChargesQuery
-import pl.memleak.flat.NewRevenueMutation
+import pl.memleak.flat.fragment.RevenueFragment
 import java.util.*
 
 @Parcelize
@@ -15,21 +14,12 @@ data class Revenue(
         var to: List<User>,
         var amount: Double
 ) : ChargeLike, Parcelable {
-    constructor(obj: ChargesQuery.Revenue) : this(
-            id  = obj.id(),
+    constructor(obj: RevenueFragment) : this(
+            id = obj.id(),
             name = obj.name(),
             date = obj.date(),
-            from = User(obj.fromUser()),
-            to = obj.toUsers()?.map { User(it) }.orEmpty(),
-            amount = obj.amount()
-    )
-
-    constructor(obj: NewRevenueMutation.AddRevenue) : this(
-            id  = obj.id(),
-            name = obj.name(),
-            date = obj.date(),
-            from = User(obj.fromUser()),
-            to = obj.toUsers()?.map { User(it) }.orEmpty(),
+            from = User(obj.fromUser().fragments().userFragment()),
+            to = obj.toUsers()?.map { User(it.fragments().userFragment()) }.orEmpty(),
             amount = obj.amount()
     )
 

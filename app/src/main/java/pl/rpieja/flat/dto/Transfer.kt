@@ -15,8 +15,8 @@ data class Transfer(
             id = obj.id(),
             name = obj.name(),
             date = obj.date(),
-            to = User(obj.toUser()),
-            from = User(obj.fromUser()),
+            to = User(obj.toUser().fragments().userFragment()),
+            from = User(obj.fromUser().fragments().userFragment()),
             amount = obj.amount()
     )
 

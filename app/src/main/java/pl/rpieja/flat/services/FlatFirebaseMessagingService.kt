@@ -51,7 +51,7 @@ class FlatFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun createNewExpenseNotification(expense_id: Int) {
-        Log.d(TAG, "Creating new expense " + expense_id)
+        Log.d(TAG, "Creating new expense $expense_id")
 
         try {
             val flatAPI = FlatAPI.getFlatApi(this)
