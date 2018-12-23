@@ -17,8 +17,8 @@ android {
         applicationId "pl.rpieja.flat"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.0.6"
+        versionCode 7
+        versionName "1.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
