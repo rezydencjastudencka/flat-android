@@ -113,15 +113,6 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
                 .map { Revenue(it.data()!!.addRevenue()!!.fragments().revenueFragment()) }
     }
 
-    private fun <T> parseErrors(resp: Response<T>): Response<T> {
-        if (resp.hasErrors()) {
-            onUnauthorized()
-            throw GraphqlException(resp.errors())
-        } else {
-            return resp
-        }
-    }
-
     fun fetchExpense(chargeId: Int): Maybe<Expense> {
         val query = ExpenseQuery.builder()
                 .id(chargeId.toString())
@@ -143,6 +134,15 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
                 .map { true }
                 .onErrorReturnItem(false)
                 .first(false)
+    }
+
+    private fun <T> parseErrors(resp: Response<T>): Response<T> {
+        if (resp.hasErrors()) {
+            onUnauthorized()
+            throw GraphqlException(resp.errors())
+        } else {
+            return resp
+        }
     }
 
     companion object {
