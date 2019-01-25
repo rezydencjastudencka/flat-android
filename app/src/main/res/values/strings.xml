@@ -52,4 +52,7 @@
     <string name="notification_expenses_summary_text">You have new expenses</string>
     <string name="notification_expenses_text">%1$s charged you %2$.2f for %3$s</string>
 
+    <!--General-->
+    <string name="network_error">Network error try again later</string>
+
 </resources>

@@ -1,11 +1,13 @@
 package pl.rpieja.flat.viewmodels
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import pl.rpieja.flat.R
 import pl.rpieja.flat.api.FlatAPI
 import java.util.*
 
@@ -39,7 +41,10 @@ abstract class MonthlyEntityViewModel<T>: MonthlyLoadable<T>, ViewModel() {
 
         this.request = asyncRequest(flatAPI, date.month, date.year)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { data.value = it }
+                .subscribe(
+                        { data.value = it },
+                        { Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show() }
+                )
     }
 
     protected abstract fun defaultSort()

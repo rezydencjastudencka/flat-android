@@ -1,11 +1,13 @@
 package pl.rpieja.flat.viewmodels
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import pl.rpieja.flat.R
 import pl.rpieja.flat.api.FlatAPI
 import pl.rpieja.flat.dto.CreateRevenueDTO
 import pl.rpieja.flat.dto.Revenue
@@ -60,7 +62,10 @@ class NewRevenueViewModel : ViewModel() {
 
         this.requests.add(FlatAPI.getFlatApi(context).fetchUsers()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { users.value = it })
+                .subscribe(
+                        { users.value = it },
+                        { Toast.makeText(context, R.string.network_error, Toast.LENGTH_LONG).show() }
+                ))
     }
 
     fun createRevenue(context: Context, onSuccess: (Revenue) -> Unit) {
@@ -71,6 +76,9 @@ class NewRevenueViewModel : ViewModel() {
 
         this.requests.add(FlatAPI.getFlatApi(context).createRevenue(charge)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { onSuccess(it) })
+                .subscribe(
+                        { onSuccess(it) },
+                        { Toast.makeText(context, R.string.network_error, Toast.LENGTH_LONG).show() }
+                ))
     }
 }

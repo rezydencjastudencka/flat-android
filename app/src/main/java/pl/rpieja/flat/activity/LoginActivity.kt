@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
+                    .subscribe({
                         if (!it) {
                             Toast.makeText(applicationContext,
                                     "Wrong username or password.", Toast.LENGTH_SHORT).show()
@@ -62,7 +62,10 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(intent)
                             finish()
                         }
+                    }, {
+                        Toast.makeText(this, R.string.network_error, Toast.LENGTH_LONG).show()
                     }
+                    )
         })
     }
 
