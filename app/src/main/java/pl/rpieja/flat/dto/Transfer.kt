@@ -24,6 +24,8 @@ data class Transfer(
         get() = amount
     override val chargeName: String
         get() = name
+    override val chargeCategory: String
+        get() = ""
     override val fromUsers: List<User>
         get() = listOf(from)
     override val toUsers: List<User>

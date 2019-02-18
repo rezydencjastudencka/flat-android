@@ -6,5 +6,6 @@ data class CreateRevenueDTO(
         var name: String,
         var date: Date,
         var rawAmount: String,
+        var category: String,
         var to: List<String>
 )

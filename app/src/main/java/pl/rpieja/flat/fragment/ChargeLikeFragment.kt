@@ -107,6 +107,7 @@ class ChargeViewHolder(view: View): RecyclerView.ViewHolder(view) {
     val chargeName: TextView = itemView.findViewById(R.id.chargeName)
     val chargeAmount: TextView = itemView.findViewById(R.id.chargeAmount)
     val chargeUsers: TextView = itemView.findViewById(R.id.chargeUsers)
+    val chargeCategory: TextView = itemView.findViewById(R.id.chargeCategory)
 }
 
 abstract class ChargeLayoutFragment<T: ChargeLike, VM, DTO>:
@@ -118,6 +119,7 @@ abstract class ChargeLayoutFragment<T: ChargeLike, VM, DTO>:
         formatAmount(viewHolder.chargeAmount, item.chargeAmount)
         viewHolder.chargeUsers.text = android.text.TextUtils.join(", ",
                 getUsers(item).map { user -> user.name })
+        viewHolder.chargeCategory.text = item.chargeCategory
     }
 
     override fun formatAmount(amountTextView: TextView, amount: Double) {

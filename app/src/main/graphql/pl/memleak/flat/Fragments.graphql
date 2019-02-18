@@ -3,6 +3,11 @@ fragment UserFragment on UserType {
   username
 }
 
+fragment CategoryFragment on CategoryType {
+  id
+  name
+}
+
 fragment ExpenseFragment on ExpenseType {
   id,
   name,
@@ -13,6 +18,9 @@ fragment ExpenseFragment on ExpenseType {
   }
   toUsers{
     ...UserFragment
+  }
+  category {
+    ...CategoryFragment
   }
 }
 
@@ -26,5 +34,8 @@ fragment RevenueFragment on RevenueType {
   }
   toUsers {
     ...UserFragment
+  }
+  category {
+      ...CategoryFragment
   }
 }

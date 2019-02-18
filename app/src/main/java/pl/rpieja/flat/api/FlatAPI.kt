@@ -93,6 +93,13 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
                 .map { TransfersDTO(it.data()!!) }
     }
 
+    fun fetchCategories(): Observable<List<Category>> {
+        val query = CategoriesQuery.builder().build()
+        return Rx2Apollo.from(apolloClient.query(query))
+                .map { parseErrors(it) }
+                .map { it.data()?.categories()?.map { Category(it.fragments().categoryFragment()) }.orEmpty() }
+    }
+
     fun fetchUsers(): Observable<List<User>> {
         val query = UsersQuery.builder().build()
         return Rx2Apollo.from(apolloClient.query(query))
@@ -106,6 +113,7 @@ class FlatAPI private constructor(context: Context, cookieJar: CookieJar) {
                 .date(revenue.date)
                 .name(revenue.name)
                 .to(revenue.to)
+                .category(revenue.category)
                 .build()
 
         return Rx2Apollo.from(apolloClient.mutate(mutation))

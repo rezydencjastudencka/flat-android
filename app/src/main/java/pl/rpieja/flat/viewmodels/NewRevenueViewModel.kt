@@ -9,6 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import pl.rpieja.flat.R
 import pl.rpieja.flat.api.FlatAPI
+import pl.rpieja.flat.dto.Category
 import pl.rpieja.flat.dto.CreateRevenueDTO
 import pl.rpieja.flat.dto.Revenue
 import pl.rpieja.flat.dto.User
@@ -17,6 +18,8 @@ import kotlin.collections.HashSet
 
 class NewRevenueViewModel : ViewModel() {
 
+    val categories = MutableLiveData<List<Category>>()
+    val selectedCategory = MutableLiveData<Category>()
     val users = MutableLiveData<List<User>>()
     val selectedUsers = MutableLiveData<Set<User>>()
     val date = MutableLiveData<Calendar>()
@@ -53,6 +56,10 @@ class NewRevenueViewModel : ViewModel() {
             isValid.value = false
             return
         }
+        if (selectedCategory.value === null) {
+            isValid.value = false
+            return
+        }
 
         isValid.value = true
     }
@@ -66,13 +73,20 @@ class NewRevenueViewModel : ViewModel() {
                         { users.value = it },
                         { Toast.makeText(context, R.string.network_error, Toast.LENGTH_LONG).show() }
                 ))
+        this.requests.add(FlatAPI.getFlatApi(context).fetchCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { categories.value = it },
+                        { Toast.makeText(context, R.string.network_error, Toast.LENGTH_LONG).show() }
+                ))
     }
 
     fun createRevenue(context: Context, onSuccess: (Revenue) -> Unit) {
 
         val date = date.value?.time ?: Calendar.getInstance().time
         val to = selectedUsers.value?.map { user -> user.id } ?: emptyList()
-        val charge = CreateRevenueDTO(name.value!!, date, amount.value!!, to)
+        val category = selectedCategory.value!!.id
+        val charge = CreateRevenueDTO(name.value!!, date, amount.value!!, category, to)
 
         this.requests.add(FlatAPI.getFlatApi(context).createRevenue(charge)
                 .observeOn(AndroidSchedulers.mainThread())
