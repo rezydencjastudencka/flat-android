@@ -7,10 +7,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.LifecycleOwner
@@ -22,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import pl.rpieja.flat.R
 import pl.rpieja.flat.dialog.DateDialog
+import pl.rpieja.flat.dto.Category
 import pl.rpieja.flat.dto.User
 import pl.rpieja.flat.viewmodels.NewRevenueViewModel
 
@@ -53,6 +53,19 @@ class NewRevenueActivity : AppCompatActivity() {
 
         bindEditTextWithLiveData(findViewById(R.id.new_revenue_amount),
                 newRevenueViewModel.amount)
+
+        val category: Spinner = findViewById(R.id.new_revenue_category)
+        category.adapter = CategoriesAdapter(newRevenueViewModel.categories,this)
+        category.onItemSelectedListener =  object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                newRevenueViewModel.selectedCategory.value = null
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val category = parent!!.getItemAtPosition(position) as Category
+                newRevenueViewModel.selectedCategory.value = category
+            }
+        }
 
         val users: RecyclerView = findViewById(R.id.new_revenue_users_list)
         users.layoutManager = LinearLayoutManager(this)
@@ -115,6 +128,35 @@ class NewRevenueActivity : AppCompatActivity() {
         newRevenueViewModel.date.observe(this, Observer { calendar ->
             newRevenueDate.text = DateFormat.getLongDateFormat(this).format(calendar!!.time)
         })
+    }
+}
+
+private class CategoriesAdapter(
+        private val categories: MutableLiveData<List<Category>>,
+        lifecycleOwner: LifecycleOwner) : BaseAdapter() {
+
+    init {
+        categories.observe(lifecycleOwner, Observer { this.notifyDataSetChanged() })
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view = convertView ?: LayoutInflater.from(parent?.context)
+                .inflate(R.layout.category_list_item, parent, false)
+        val textView = view as TextView
+        textView.text = categories.value?.get(position)!!.name
+        return textView
+    }
+
+    override fun getItem(position: Int): Any {
+        return categories.value?.get(position)!!
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return categories.value?.size ?: 0
     }
 }
 

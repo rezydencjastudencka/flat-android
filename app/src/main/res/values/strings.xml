@@ -27,6 +27,7 @@
     <string name="new_revenue_title">Enter revenue name</string>
     <string name="new_revenue_amount">Enter amount</string>
     <string name="new_revenue_date">Set date</string>
+    <string name="new_revenue_category">Category</string>
 
     <!--Sorting-->
     <string name="name">Name</string>

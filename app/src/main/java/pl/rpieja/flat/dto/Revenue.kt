@@ -12,7 +12,8 @@ data class Revenue(
         var date: Date,
         var from: User,
         var to: List<User>,
-        var amount: Double
+        var amount: Double,
+        var category: Category?
 ) : ChargeLike, Parcelable {
     constructor(obj: RevenueFragment) : this(
             id = obj.id(),
@@ -20,13 +21,16 @@ data class Revenue(
             date = obj.date(),
             from = User(obj.fromUser().fragments().userFragment()),
             to = obj.toUsers()?.map { User(it.fragments().userFragment()) }.orEmpty(),
-            amount = obj.amount()
+            amount = obj.amount(),
+            category = obj.category()?.fragments()?.categoryFragment()?.let { Category(it) }
     )
 
     override val chargeName: String
         get() = name
     override val chargeAmount: Double
         get() = amount
+    override val chargeCategory: String
+        get() = category?.name ?: ""
     override val fromUsers: List<User>
         get() = listOf(from)
     override val toUsers: List<User>

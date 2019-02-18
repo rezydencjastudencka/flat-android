@@ -15,6 +15,8 @@ data class Summary(
         get() = amount
     override val chargeName: String
         get() = user.name
+    override val chargeCategory: String
+        get() = ""
     override val fromUsers: List<User>
         get() = emptyList()
     override val toUsers: List<User>
